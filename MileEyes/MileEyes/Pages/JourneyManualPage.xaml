@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:MileEyes.ViewModels;assembly=MileEyes"
+             xmlns:customControls="clr-namespace:MileEyes.CustomControls;assembly=MileEyes"
+             x:Class="MileEyes.Pages.JourneyManualPage" Title="Manual Journey" BackgroundColor="{StaticResource primaryBackgroundColor}">
+  <ContentPage.BindingContext>
+    <viewModels:JourneyManualViewModel/>
+  </ContentPage.BindingContext>
+
+  <ContentPage.ToolbarItems>
+    <ToolbarItem Text="Cancel" Command="{Binding CancelCommand}" Priority="1" />
+    <ToolbarItem Text="Save" Command="{Binding SaveCommand}" />
+  </ContentPage.ToolbarItems>
+    <StackLayout VerticalOptions="FillAndExpand">
+      <customControls:CustomDatePicker Date="{Binding Date}" HorizontalOptions="Center" TextColor="Gray" />
+      <customControls:CustomTableView Intent="Settings"  BackgroundColor="{StaticResource primaryBackgroundColor}">
+        <TableRoot>
+          <TableSection Title="Journey Details">
+            <customControls:OriginAddressViewCell Tapped="OriginCell_OnTapped" />
+            <customControls:DestinationAddressViewCell Tapped="DestinationCell_OnTapped" />
+          </TableSection>
+
+          <TableSection Title="Expense Details">
+            <customControls:InvoicedViewCell />
+            <customControls:VehicleViewCell Tapped="VehicleCell_OnTapped" />
+            <customControls:CompanyViewCell IsEnabled="{Binding Authenticated}" Tapped="CompanyCell_OnTapped" />
+            <customControls:PassengersViewCell Tapped="PassengersCell_OnTapped" />
+            <customControls:ReasonViewCell Tapped="ReasonCell_OnTapped" />
+          </TableSection>
+
+          <TableSection Title="Premium Features">
+            <customControls:CloudSyncViewCell />
+          </TableSection>
+        </TableRoot>
+      </customControls:CustomTableView>
+    </StackLayout>
+</ContentPage>

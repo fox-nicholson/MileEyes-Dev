@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:MileEyes.Views;assembly=MileEyes"
+             xmlns:customControls="clr-namespace:MileEyes.CustomControls;assembly=MileEyes"
+             xmlns:viewModels="clr-namespace:MileEyes.ViewModels;assembly=MileEyes"
+             x:Class="MileEyes.Pages.SettingsPage" Title="Settings">
+  <ContentPage.BindingContext>
+    <viewModels:SettingsViewModel/>
+  </ContentPage.BindingContext>
+  <customControls:CustomTableView Intent="Settings" BackgroundColor="{StaticResource primaryBackgroundColor}">
+    <TableRoot>
+      <TableSection Title="Cloud Services">
+        <customControls:MileEyesViewCell Tapped="ConnectCell_OnTapped"/>
+      </TableSection>
+
+      <TableSection Title="My Vehicles">
+        <customControls:VehiclesViewCell Tapped="VehiclesCell_OnTapped" />
+        <customControls:ReasonsViewCell Tapped="ReasonsCell_OnTapped"/>
+      </TableSection>
+
+      <TableSection Title="Default Journey Details">
+        <customControls:DefaultInvoicedViewCell />
+        <customControls:DefaultCompanyViewCell IsEnabled="{Binding Authenticated}" Tapped="DefaultCompanyCell_OnTapped"/>
+        <customControls:DefaultVehicleViewCell Tapped="DefaultVehicleCell_OnTapped"/>
+        <customControls:DefaultPassengersViewCell Tapped="DefaultPassengersCell_OnTapped"/>
+        <customControls:DefaultReasonViewCell Tapped="DefaultReasonCell_OnTapped"/>
+      </TableSection>
+    </TableRoot>
+  </customControls:CustomTableView>
+</ContentPage>

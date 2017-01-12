@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:MileEyes.ViewModels;assembly=MileEyes"
+             xmlns:customControls="clr-namespace:MileEyes.CustomControls;assembly=MileEyes"
+             x:Class="MileEyes.Pages.VehicleAddPage" Title="New Vehicle" BackgroundColor="{StaticResource primaryBackgroundColor}">
+  <ContentPage.BindingContext>
+    <viewModels:VehicleViewModel/>
+  </ContentPage.BindingContext>
+
+  <ContentPage.ToolbarItems>
+    <ToolbarItem Text="Save" Command="{Binding SaveCommand}"/>
+  </ContentPage.ToolbarItems>
+
+  <customControls:CustomTableView Intent="Form" BackgroundColor="{StaticResource primaryBackgroundColor}">
+    <TableRoot>
+      <TableSection>
+        <customControls:CustomEntryCell LabelColor="{StaticResource premiumTextColor}" Label="Registration" Text="{Binding Registration}" Placeholder="Required"/>
+      </TableSection>
+
+      <TableSection Title="Vehicle Details">
+        <customControls:EngineTypeCell Tapped="Cell_OnTapped"/>
+      </TableSection>
+    </TableRoot>
+  </customControls:CustomTableView>
+</ContentPage>

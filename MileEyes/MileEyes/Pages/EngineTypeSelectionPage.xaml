@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:MileEyes.ViewModels;assembly=MileEyes"
+             xmlns:customControls="clr-namespace:MileEyes.CustomControls;assembly=MileEyes"
+             x:Class="MileEyes.Pages.EngineTypeSelectionPage" Title="Select Engine Type" BackgroundColor="{StaticResource primaryBackgroundColor}">
+  <ContentPage.BindingContext>
+    <viewModels:EngineTypesViewModel/>
+  </ContentPage.BindingContext>
+
+  <ContentPage.ToolbarItems>
+    <ToolbarItem Text="Done" Command="{Binding SelectCommand}"></ToolbarItem>
+  </ContentPage.ToolbarItems>
+    <ListView ItemsSource="{Binding EngineTypes}" SelectedItem="{Binding SelectedEngineType}"
+              IsPullToRefreshEnabled="True" RefreshCommand="{Binding RefreshCommand}"
+              IsRefreshing="{Binding Refreshing}"  BackgroundColor="{StaticResource primaryBackgroundColor}">
+      <ListView.ItemTemplate>
+        <DataTemplate>
+          <customControls:EngineTypeItemViewCell />
+        </DataTemplate>
+      </ListView.ItemTemplate>
+    </ListView>
+</ContentPage>

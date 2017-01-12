@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:MileEyes.ViewModels;assembly=MileEyes"
+             xmlns:customControls="clr-namespace:MileEyes.CustomControls;assembly=MileEyes"
+             x:Class="MileEyes.Pages.TrackPage" Title="Track Journey" BackgroundColor="{StaticResource primaryBackgroundColor}">
+  <ContentPage.BindingContext>
+    <viewModels:TrackViewModel/>
+  </ContentPage.BindingContext>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="1*"/>
+      <RowDefinition Height="1*"/>
+      <RowDefinition Height="1*"/>
+      <RowDefinition Height="3*"/>
+    </Grid.RowDefinitions>
+    <StackLayout Grid.Row="0"  VerticalOptions="EndAndExpand" HorizontalOptions="Center">
+      <customControls:ManualButton HorizontalOptions="Center" Text="Manual Journey" Clicked="ManualJourneyButton_OnClicked" BorderWidth="1" BackgroundColor="Transparent" BorderColor="#19B4E9" TextColor="#19B4E9" Image="manual_record_icon.png" VerticalOptions="Center"/>
+    </StackLayout>
+    <StackLayout Padding="10" Grid.Row="1"  VerticalOptions="Center" HorizontalOptions="FillAndExpand">
+      <BoxView HeightRequest="1" HorizontalOptions="Fill" VerticalOptions="Center" BackgroundColor="#50FFFFFF"/>
+    </StackLayout>
+    <StackLayout Grid.Row="2" Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="Center">
+      <Image Source="gps_icon.png"/>
+      <Label Text="{Binding CurrentLocation}" TextColor="{StaticResource premiumTextColor}"/>
+    </StackLayout>
+    <StackLayout Grid.Row="3"  VerticalOptions="Center" HorizontalOptions="Center">
+      <customControls:CustomButton IsVisible="{Binding GPSAvailable}" HorizontalOptions="Center" VerticalOptions="Center" Text="Start Journey" TextColor="Lime" HeightRequest="150" Pulse="True" Command="{Binding StartJourneyCommand}" />
+      <customControls:LoadingButton IsVisible="{Binding GPSUnavailable}" TextColor="Gray" HeightRequest="150" Text="GPS Unavailable"/>
+    </StackLayout>
+  </Grid>
+</ContentPage>

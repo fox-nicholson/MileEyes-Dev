@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:MileEyes.ViewModels;assembly=MileEyes"
+             xmlns:customControls="clr-namespace:MileEyes.CustomControls;assembly=MileEyes"
+             x:Class="MileEyes.Pages.ReasonsPage" Title="Reasons" BackgroundColor="{StaticResource primaryBackgroundColor}">
+  <ContentPage.BindingContext>
+    <viewModels:ReasonsViewModel/>
+  </ContentPage.BindingContext>
+
+  <ContentPage.ToolbarItems>
+    <ToolbarItem Text="Add" Clicked="MenuItem_OnClicked"/>
+  </ContentPage.ToolbarItems>
+
+    <customControls:CustomListView ItemsSource="{Binding Reasons}" ItemSelected="ListView_OnItemSelected"
+                                   IsPullToRefreshEnabled="True" IsRefreshing="{Binding Refreshing}"
+                                   RefreshCommand="{Binding RefreshCommand}" BackgroundColor="{StaticResource primaryBackgroundColor}">
+      <customControls:CustomListView.ItemTemplate>
+        <DataTemplate>
+          <customControls:ReasonItemViewCell ShowDisclosure="False">
+            <customControls:ReasonItemViewCell.ContextActions>
+              <MenuItem Text="Remove" IsDestructive="True" Clicked="ReasonDeleteMenuItem_OnClicked" CommandParameter="{Binding .}" />
+            </customControls:ReasonItemViewCell.ContextActions>
+          </customControls:ReasonItemViewCell>
+        </DataTemplate>
+      </customControls:CustomListView.ItemTemplate>
+    </customControls:CustomListView>
+</ContentPage>

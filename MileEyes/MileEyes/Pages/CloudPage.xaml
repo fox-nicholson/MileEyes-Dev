@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:customControls="clr-namespace:MileEyes.CustomControls;assembly=MileEyes"
+             xmlns:viewModels="clr-namespace:MileEyes.ViewModels;assembly=MileEyes"
+             x:Class="MileEyes.Pages.CloudPage" BackgroundColor="{StaticResource primaryBackgroundColor}">
+  <ContentPage.BindingContext>
+    <viewModels:CloudViewModel/>
+  </ContentPage.BindingContext>
+  <ContentPage.ToolbarItems>
+    <ToolbarItem Text="Save" Command="{Binding SaveCommand}"/>
+  </ContentPage.ToolbarItems>
+  <customControls:CustomTableView>
+    <TableRoot>
+      <TableSection>
+        <EntryCell Label="Email" Placeholder="Required" Text="{Binding Email}"/>
+        <EntryCell Label="First Name" Placeholder="Required" Text="{Binding FirstName}"/>
+        <EntryCell Label="Last Name" Placeholder="Required" Text="{Binding LastName}"/>
+        <TextCell Text="Address" Detail="{Binding Address.Label}" Tapped="AddressCell_OnTapped"/>
+      </TableSection>
+    </TableRoot>
+  </customControls:CustomTableView>
+</ContentPage>

@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:MileEyes.ViewModels;assembly=MileEyes"
+             xmlns:views="clr-namespace:MileEyes.Views;assembly=MileEyes"
+             xmlns:customControls="clr-namespace:MileEyes.CustomControls;assembly=MileEyes"
+             x:Class="MileEyes.Pages.JourneysPage" Title="My Journeys" BackgroundColor="{StaticResource primaryBackgroundColor}">
+  <ContentPage.BindingContext>
+    <viewModels:JourneysViewModel/>
+  </ContentPage.BindingContext>
+  <ContentPage.ToolbarItems>
+    <ToolbarItem Text="Add" Clicked="Button_OnClicked"/>
+  </ContentPage.ToolbarItems>
+  <ContentPage.Content>
+    <StackLayout VerticalOptions="Fill">
+      <customControls:CustomListView IsVisible="{Binding HasJourneys}" ItemsSource="{Binding Journeys}" HasUnevenRows="True"
+                                 RefreshCommand="{Binding RefreshCommand}" IsPullToRefreshEnabled="True"
+                                 IsRefreshing="{Binding Refreshing}" BackgroundColor="{StaticResource primaryBackgroundColor}"
+                                 IsGroupingEnabled="True" GroupDisplayBinding="{Binding Title}" ItemSelected="ListView_OnItemSelected">
+        <ListView.ItemTemplate>
+          <DataTemplate>
+            <customControls:CustomJourneyCell />
+          </DataTemplate>
+        </ListView.ItemTemplate>
+        <ListView.GroupHeaderTemplate>
+          <DataTemplate>
+            <views:JourneyGroupCell/>
+          </DataTemplate>
+        </ListView.GroupHeaderTemplate>
+      </customControls:CustomListView>
+      <Grid IsVisible="{Binding HasNoJourneys}" HorizontalOptions="Fill" VerticalOptions="Fill">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="1*"/>
+          <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <StackLayout Grid.Row="0" HorizontalOptions="Fill" VerticalOptions="End">
+          <Label Text="No Journeys Recorded Yet" TextColor="Gray" FontSize="Large" HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center" LineBreakMode="WordWrap"/>
+          <Label Text="Record your business journeys with MileEyes to start claiming mileage expenses quickly and easily." TextColor="Gray" HorizontalOptions="Center" VerticalOptions="Center" Margin="40" HorizontalTextAlignment="Center" LineBreakMode="WordWrap"/>
+        </StackLayout>
+        <StackLayout Grid.Row="1" HorizontalOptions="Fill" VerticalOptions="Start" Padding="25,0,25,0">
+          <Button Text="Record New Journey" Clicked="Button_OnClicked" BorderWidth="1" BackgroundColor="Transparent" BorderColor="Gray" TextColor="Gray" VerticalOptions="Center" HorizontalOptions="Fill"/>
+          <Button Text="Connect MileEyes Account" IsVisible="{Binding NotAuthenticated}" Clicked="ConnectButton_OnClicked" BorderWidth="1" BackgroundColor="Transparent" BorderColor="Lime" TextColor="Lime" VerticalOptions="Center" HorizontalOptions="Fill"/>
+        </StackLayout>
+      </Grid>
+    </StackLayout>
+  </ContentPage.Content>
+</ContentPage>

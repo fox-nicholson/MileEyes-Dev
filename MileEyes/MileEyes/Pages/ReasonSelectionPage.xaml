@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:MileEyes.ViewModels;assembly=MileEyes"
+             xmlns:customControls="clr-namespace:MileEyes.CustomControls;assembly=MileEyes"
+             x:Class="MileEyes.Pages.ReasonSelectionPage" BackgroundColor="{StaticResource primaryBackgroundColor}">
+  <ContentPage.BindingContext>
+    <viewModels:ReasonsViewModel/>
+  </ContentPage.BindingContext>
+
+  <ContentPage.ToolbarItems>
+    <ToolbarItem Text="Done" Command="{Binding SelectCommand}"></ToolbarItem>
+  </ContentPage.ToolbarItems>
+
+  <StackLayout>
+    <ContentView Padding="10,10,10,10">
+          <Entry Text="{Binding SelectedReason.Text}" Placeholder="Please enter a reason."/>
+    </ContentView>
+    <customControls:CustomListView ItemsSource="{Binding Reasons}" SelectedItem="{Binding SelectedReason}"
+              IsRefreshing="{Binding Refreshing}" BackgroundColor="{StaticResource primaryBackgroundColor}">
+      <customControls:CustomListView.ItemTemplate>
+        <DataTemplate>
+          <customControls:ReasonItemViewCell />
+        </DataTemplate>
+      </customControls:CustomListView.ItemTemplate>
+    </customControls:CustomListView>
+  </StackLayout>
+</ContentPage>

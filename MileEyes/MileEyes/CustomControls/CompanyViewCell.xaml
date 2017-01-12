@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ViewCell xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="MileEyes.CustomControls.CompanyViewCell">
+  <StackLayout Orientation="Horizontal" Padding="15, 0, 15, 0">
+    <Image Source="company.png" Margin="0,0,7.5,0"/>
+    <Label Text="Company"
+    TextColor="#FFFFFF" VerticalTextAlignment="Center" />
+
+    <Label Text="{Binding Company.Name}"
+    HorizontalOptions="EndAndExpand"
+    TextColor="#55FFFFFF"  VerticalTextAlignment="Center" />
+  </StackLayout>
+</ViewCell>

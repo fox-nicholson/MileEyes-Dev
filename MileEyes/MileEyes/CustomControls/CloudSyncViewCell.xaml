@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ViewCell xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="MileEyes.CustomControls.CloudSyncViewCell">
+  <StackLayout Orientation="Horizontal" HorizontalOptions="Fill" Padding="15, 0, 12.5, 0">
+    <Image Source="premium.png" Margin="0,0,7.5,0"/>
+    <Label Text="Cloud Syncing"
+    TextColor="#FFFFFF" VerticalTextAlignment="Center" />
+    <ContentView HorizontalOptions="EndAndExpand">
+      <Switch  VerticalOptions="Center" IsToggled="{Binding Sync}" />
+    </ContentView>
+  </StackLayout>
+</ViewCell>
