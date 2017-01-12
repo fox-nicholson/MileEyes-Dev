@@ -65,5 +65,4 @@ namespace MileEyes.Services.Models
         public string description { get; set; }
         public string icon { get; set; }
     }
-
 }
