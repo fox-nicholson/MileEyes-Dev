@@ -5,7 +5,7 @@
     <Label Text="Engine Type"
     TextColor="#FFFFFF" VerticalTextAlignment="Center" />
 
-    <Label Text="{Binding Vehicle.EngineType.Name}"
+    <Label Text="{Binding EngineType.Name}"
     HorizontalOptions="EndAndExpand"
     TextColor="#55FFFFFF"  VerticalTextAlignment="Center" />
   </StackLayout>

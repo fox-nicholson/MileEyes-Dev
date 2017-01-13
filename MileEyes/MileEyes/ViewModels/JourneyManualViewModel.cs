@@ -114,7 +114,20 @@ namespace MileEyes.ViewModels
                 OnPropertyChanged(nameof(Passengers));
             }
         }
+        
+        private Passenger _passenger;
 
+        public Passenger Passenger
+        {
+            get { return _passenger; }
+            set
+            {
+                if (_passenger?.Number == value.Number) return;
+                _passenger = value;
+                OnPropertyChanged(nameof(Passenger));
+            }
+        }
+        
         private bool _sync;
 
         public bool Sync
@@ -131,6 +144,11 @@ namespace MileEyes.ViewModels
         public JourneyManualViewModel()
         {
             Date = DateTime.UtcNow;
+
+            Passenger = new Passenger()
+            {
+                Name = "Required"
+            };
 
             OriginAddress = new Address()
             {

@@ -5,7 +5,7 @@
     <Label Text="Passengers"
     TextColor="#FFFFFF" VerticalTextAlignment="Center" />
 
-    <Label Text="{Binding Passengers.Name}"
+    <Label Text="{Binding Passenger.Name}"
     HorizontalOptions="EndAndExpand"
     TextColor="#55FFFFFF"  VerticalTextAlignment="Center" />
   </StackLayout>

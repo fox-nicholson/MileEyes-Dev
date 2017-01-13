@@ -91,6 +91,7 @@ namespace MileEyes.Pages
         private void JourneyManualPage_PassengersSelected(object sender, Passenger e)
         {
             (BindingContext as JourneyConfirmViewModel).Passengers = e.Number;
+            (BindingContext as JourneyConfirmViewModel).Passenger = e;
             Device.BeginInvokeOnMainThread(async () =>
             {
                 await Navigation.PopAsync();

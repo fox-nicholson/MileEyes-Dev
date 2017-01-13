@@ -91,6 +91,19 @@ namespace MileEyes.ViewModels
             }
         }
 
+        private Passenger _passenger;
+
+        public Passenger Passenger
+        {
+            get { return _passenger; }
+            set
+            {
+                if (_passenger?.Number == value.Number) return;
+                _passenger = value;
+                OnPropertyChanged(nameof(Passenger));
+            }
+        }
+
         private bool _sync;
 
         public bool Sync
@@ -112,6 +125,11 @@ namespace MileEyes.ViewModels
 
             Route = new ObservableCollection<Position>(Services.Host.TrackerService.CurrentWaypoints.OrderBy(w => w.Step)
                     .Select(w => new Position(w.Latitude, w.Longitude)));
+
+            Passenger = new Passenger()
+            {
+                Name = "Required"
+            };
 
             Vehicle = new Vehicle()
             {

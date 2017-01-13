@@ -66,6 +66,7 @@ namespace MileEyes.Pages
             var engineType = (sender as EngineTypesViewModel).SelectedEngineType.EngineType;
 
             (BindingContext as VehicleViewModel).EngineType = engineType;
+            (BindingContext as VehicleViewModel).Vehicle.EngineType = engineType;
 
             Device.BeginInvokeOnMainThread(async () =>
             {
