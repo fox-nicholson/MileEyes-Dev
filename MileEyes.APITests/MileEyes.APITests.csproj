@@ -55,10 +55,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MileEyes.Abstractions\MileEyes.Abstractions.csproj">
-      <Project>{3defc261-56fe-4bed-b4f3-7b874552d7cf}</Project>
-      <Name>MileEyes.Abstractions</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MileEyes.API\MileEyes.API.csproj">
       <Project>{9E28695A-D84D-4B3E-A92F-417773044F76}</Project>
       <Name>MileEyes.API</Name>

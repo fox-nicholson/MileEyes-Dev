@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace MileEyes.Services.Models
 {
-
     public class WeatherResponse
     {
         public Coord coord { get; set; }

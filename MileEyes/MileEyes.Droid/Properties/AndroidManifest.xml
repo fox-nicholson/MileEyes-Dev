@@ -1,5 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 	<uses-sdk android:minSdkVersion="15" />
-	<application android:label="MileEyes.Droid"></application>
+	<application android:label="MileEyes.Droid">
+    <meta-data android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyArLAcqpQ1v_IxC_o0Qo41SYPUlGxKtMtI" />
+  </application>
 </manifest>

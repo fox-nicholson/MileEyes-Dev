@@ -76,7 +76,8 @@ namespace MileEyes.ViewModels
 
             Device.StartTimer(TimeSpan.FromSeconds(1), RefreshDuration);
             
-            Device.StartTimer(TimeSpan.FromMinutes(5), UpdateLocalityCallback);
+            Device.StartTimer(TimeSpan.FromMinutes(1), UpdateLocalityCallback);
+            UpdateLocalityCallback();
         }
 
         private void TrackerService_HasMoved(object sender, EventArgs e)
@@ -86,7 +87,7 @@ namespace MileEyes.ViewModels
             Refresh();
         }
 
-        public async void Refresh()
+        public void Refresh()
         {
             Refreshing = true;
 

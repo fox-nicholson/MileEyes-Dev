@@ -98,7 +98,7 @@ namespace MileEyes.Services
 
             var geocodeResult = JsonConvert.DeserializeObject<GeocodeResult>(response);
 
-            if (geocodeResult == null) return null;
+            if (geocodeResult?.result == null) return null;
 
             return new Address()
             {

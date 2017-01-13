@@ -39,7 +39,7 @@ namespace MileEyes.ViewModels
             get { return _engineType; }
             set
             {
-                if (_engineType == value) return;
+                if (_engineType?.Id == value.Id) return;
                 _engineType = value;
                 OnPropertyChanged(nameof(EngineType));
             }
