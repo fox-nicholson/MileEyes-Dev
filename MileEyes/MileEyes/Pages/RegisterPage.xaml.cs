@@ -37,12 +37,16 @@ namespace MileEyes.Pages
 
         private void AddressCell_OnTapped(object sender, EventArgs e)
         {
-            var selectAddressPage = new AddressSelectionPage();
+            var selectAddressPage = new RegisterAddressSelectionPage();
             selectAddressPage.AddressSelected += SelectAddressPage_AddressSelected; ;
 
             Device.BeginInvokeOnMainThread(async () =>
             {
-                await Navigation.PushModalAsync(new NavigationPage(selectAddressPage));
+                await Navigation.PushModalAsync(new NavigationPage(selectAddressPage)
+                {
+                    BarBackgroundColor = Color.FromHex("#103D47"),
+                    BarTextColor = Color.White
+                });
             });
         }
 

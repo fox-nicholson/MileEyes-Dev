@@ -10,13 +10,15 @@
   <ContentPage.ToolbarItems>
     <ToolbarItem Text="Register" Command="{Binding RegisterCommand}"/>
   </ContentPage.ToolbarItems>
-  <TableView>
+  <TableView BackgroundColor="{StaticResource mileeyesBlue}">
     <TableRoot>
-      <TableSection>
-        <customControls:CustomEntryCell Label="Email" LabelColor="{StaticResource premiumTextColor}" Placeholder="Required" Text="{Binding Email}"/>
+      <TableSection Title="Personal Details">
         <customControls:CustomEntryCell Label="First Name" LabelColor="{StaticResource premiumTextColor}" Placeholder="Required" Text="{Binding FirstName}"/>
         <customControls:CustomEntryCell Label="Last Name" LabelColor="{StaticResource premiumTextColor}" Placeholder="Required" Text="{Binding LastName}"/>
-        <TextCell Text="Address" Detail="{Binding Address.Label}" Tapped="AddressCell_OnTapped"/>
+        <customControls:RegisterAddressViewCell Tapped="AddressCell_OnTapped"/>
+      </TableSection>
+      <TableSection Title="Account Details">
+        <customControls:CustomEntryCell Label="Email" LabelColor="{StaticResource premiumTextColor}" Placeholder="Required" Text="{Binding Email}"/>
         <customControls:CustomEntryCell Label="Password" IsPassword="True" LabelColor="{StaticResource premiumTextColor}" Placeholder="Required" Text="{Binding Password}"/>
         <customControls:CustomEntryCell Label="Confirm Password" IsPassword="True" LabelColor="{StaticResource premiumTextColor}" Placeholder="Required" Text="{Binding ConfirmPassword}"/>
       </TableSection>

@@ -98,7 +98,6 @@ namespace MileEyes.ViewModels
             get { return _passenger; }
             set
             {
-                if (_passenger?.Number == value.Number) return;
                 _passenger = value;
                 OnPropertyChanged(nameof(Passenger));
             }
@@ -126,22 +125,102 @@ namespace MileEyes.ViewModels
             Route = new ObservableCollection<Position>(Services.Host.TrackerService.CurrentWaypoints.OrderBy(w => w.Step)
                     .Select(w => new Position(w.Latitude, w.Longitude)));
 
-            Passenger = new Passenger()
-            {
-                Name = "Required"
-            };
-
-            Vehicle = new Vehicle()
-            {
-                Registration = "Required"
-            };
-
-            Company = new Company()
-            {
-                Name = "Required"
-            };
+            InitDefaults();
 
             SaveCommand = new Command(Save);
+        }
+
+        private async void InitDefaults()
+        {
+            var defaultVehicles = (await Services.Host.VehicleService.GetVehicles()).Where(v => v.Default);
+            var defaultPassengers = Helpers.Settings.DefaultPassengers;
+            var defaultReasons = (await Services.Host.ReasonService.GetReasons()).Where(r => r.Default);
+            var defaultCompanies = (await Services.Host.CompanyService.GetCompanies()).Where(c => c.Default);
+
+            if (defaultVehicles.Any())
+            {
+                Vehicle = defaultVehicles.FirstOrDefault();
+            }
+            else
+            {
+                Vehicle = new Vehicle()
+                {
+                    Registration = "Required"
+                };
+            }
+
+            if (defaultReasons.Any())
+            {
+                Reason = defaultReasons.FirstOrDefault().Text;
+            }
+            else
+            {
+                Reason = "Required";
+            }
+
+            #region Set Passengers
+            switch (defaultPassengers)
+            {
+                case 0:
+                    Passenger = new Passenger()
+                    {
+                        Name = "Just Me",
+                        Number = 0
+                    };
+                    break;
+                case 1:
+                    new Passenger()
+                    {
+                        Name = "One",
+                        Number = 1
+                    };
+                    break;
+                case 2:
+                    Passenger = new Passenger()
+                    {
+                        Name = "Two",
+                        Number = 2
+                    };
+                    break;
+                case 3:
+                    Passenger = new Passenger()
+                    {
+                        Name = "Three",
+                        Number = 3
+                    };
+                    break;
+                case 4:
+                    Passenger = new Passenger()
+                    {
+                        Name = "Four",
+                        Number = 4
+                    };
+                    break;
+            }
+            #endregion
+
+            if (Authenticated)
+            {
+
+                if (defaultCompanies.Any())
+                {
+                    Company = defaultCompanies.FirstOrDefault();
+                }
+                else
+                {
+                    Company = new Company()
+                    {
+                        Name = "Required"
+                    };
+                }
+            }
+            else
+            {
+                Company = new Company()
+                {
+                    Name = "N/A"
+                };
+            }
         }
 
         public ICommand SaveCommand { get; set; }

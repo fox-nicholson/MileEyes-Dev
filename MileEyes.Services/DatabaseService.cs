@@ -12,11 +12,7 @@ namespace MileEyes.Services
     {
         public static Realm Realm { get; set; } = Realm.GetInstance(new RealmConfiguration()
         {
-            SchemaVersion = 1,
-            MigrationCallback = (migration, oldSchemaVersion) =>
-            {
-
-            }
+            SchemaVersion = 1
         });
     }
 }

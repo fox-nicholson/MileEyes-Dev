@@ -29,7 +29,7 @@ namespace MileEyes.Services.Extensions
                 {
                     if (lastWaypoint != null)
                     {
-                        d += CalculateBetweenLegs(new Coordinates()
+                        var newDistance = d + CalculateBetweenLegs(new Coordinates()
                         {
                             Latitude = lastWaypoint.Latitude,
                             Longitude = lastWaypoint.Longitude
@@ -38,6 +38,19 @@ namespace MileEyes.Services.Extensions
                             Latitude = w.Latitude,
                             Longitude = w.Longitude
                         });
+
+                        if (!double.IsNaN(newDistance))
+                        {
+                            d += CalculateBetweenLegs(new Coordinates()
+                            {
+                                Latitude = lastWaypoint.Latitude,
+                                Longitude = lastWaypoint.Longitude
+                            }, new Coordinates()
+                            {
+                                Latitude = w.Latitude,
+                                Longitude = w.Longitude
+                            });
+                        }
                     }
 
                     lastWaypoint = w;
@@ -51,8 +64,8 @@ namespace MileEyes.Services.Extensions
                 if (string.IsNullOrEmpty(start.PlaceId) && string.IsNullOrEmpty(end.PlaceId))
                 {
                     d = await Host.GeocodingService.GetDistanceFromGoogle(
-                        new[] {start.Latitude, start.Longitude},
-                        new[] {end.Latitude, end.Longitude});
+                        new[] { start.Latitude, start.Longitude },
+                        new[] { end.Latitude, end.Longitude });
                 }
                 else
                 {
@@ -68,6 +81,8 @@ namespace MileEyes.Services.Extensions
 
             return d;
         }
+
+
 
         public static double CalculateBetweenLegs(Coordinates origin, Coordinates destination)
         {
