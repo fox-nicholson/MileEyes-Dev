@@ -34,6 +34,7 @@ namespace MileEyes
                 Services.Host.EngineTypeService.Sync();
                 Services.Host.VehicleService.Sync();
                 Services.Host.CompanyService.Sync();
+                Services.Host.JourneyService.Sync();
             }
             
             return true;

@@ -24,7 +24,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>com.powerhousesoftware.MileEyes</string>
 	<key>CFBundleVersion</key>
-	<string>2.3.3</string>
+	<string>2.3.4</string>
 	<key>CFBundleIconFiles</key>
 	<array>
 		<string>Icon-60@2x.png</string>

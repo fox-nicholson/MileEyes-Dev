@@ -95,6 +95,8 @@ namespace MileEyes.Services
         {
             var vehicles = await GetAllVehicles();
 
+            var temp = vehicles;
+
             foreach (var v in vehicles.Where(v => v.MarkedForDeletion == true))
             {
                 try
@@ -136,33 +138,46 @@ namespace MileEyes.Services
 
                 foreach (var vehicleData in result)
                 {
-                    var existingVehicle = (await GetAllVehicles()).First(v => v.CloudId == vehicleData.Id);
+                    var vehicles = await GetVehicles();
 
-                    if (existingVehicle == null)
+                    var vehiclesEnumerable = vehicles.ToArray();
+
+                    var existingVehicles = vehiclesEnumerable.Where(v => v.CloudId == vehicleData.Id);
+
+                    var existingVehiclesEnumerable = existingVehicles as Vehicle[] ?? existingVehicles.ToArray();
+
+                    if (!existingVehiclesEnumerable.Any())
                     {
                         var vehicle = new Vehicle();
 
                         var engineTypes = await Host.EngineTypeService.GetEngineTypes();
 
                         var engineType = engineTypes.FirstOrDefault(et => et.Id == vehicleData.EngineType.Id);
-                        
+
                         vehicle.CloudId = vehicleData.Id;
                         vehicle.Registration = vehicleData.Registration;
                         vehicle.EngineType = engineType;
 
                         await AddVehicle(vehicle);
-                    }
-                    else
-                    {
-                        using (var transaction = DatabaseService.Realm.BeginWrite())
-                        {
-                            existingVehicle.EngineType =
-                                (await Host.EngineTypeService.GetEngineTypes()).FirstOrDefault(
-                                    et => et.Id == vehicleData.EngineType.Id);
-                            existingVehicle.Registration = vehicleData.Registration;
 
-                            transaction.Commit();
-                        }
+                        return;
+                    }
+
+                    var existingVehicle = await GetVehicle(existingVehiclesEnumerable.FirstOrDefault().Id);
+
+                    using (var transaction = DatabaseService.Realm.BeginWrite())
+                    {
+                        var engineTypes = await Host.EngineTypeService.GetEngineTypes();
+
+                        var engineType = engineTypes.FirstOrDefault(
+                                et => et.Id == vehicleData.EngineType.Id);
+
+                        var a = engineType;
+
+                        existingVehicle.EngineType = engineType;
+                        existingVehicle.Registration = vehicleData.Registration;
+
+                        transaction.Commit();
                     }
                 }
             }
@@ -174,9 +189,11 @@ namespace MileEyes.Services
 
         private async Task PushNew()
         {
-            var vehicles = await GetAllVehicles();
+            var vehicles = await GetVehicles();
 
-            foreach (var v in vehicles.Where(v => v.MarkedForDeletion == false))
+            var vehiclesEnumerable = vehicles.ToArray();
+
+            foreach (var v in vehiclesEnumerable)
             {
                 if (!string.IsNullOrEmpty(v.CloudId)) continue;
 
@@ -186,7 +203,14 @@ namespace MileEyes.Services
 
                     var response = await RestService.Client.PostAsync("/api/Vehicles/", data);
 
-                    if (!response.IsSuccessStatusCode) continue;
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        var errorMessage = await response.Content.ReadAsStringAsync();
+
+                        var em = errorMessage;
+
+                        continue;
+                    }
 
                     var result =
                         JsonConvert.DeserializeObject<VehicleViewModel>(await response.Content.ReadAsStringAsync());
@@ -195,7 +219,9 @@ namespace MileEyes.Services
 
                     using (var transaction = DatabaseService.Realm.BeginWrite())
                     {
-                        v.CloudId = result.Id;
+                        var vehicle = await Host.VehicleService.GetVehicle(v.Id);
+
+                        vehicle.CloudId = result.Id;
 
                         transaction.Commit();
                     }

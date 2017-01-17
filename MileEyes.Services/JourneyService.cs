@@ -14,11 +14,15 @@ namespace MileEyes.Services
 {
     class JourneyService : IJourneyService
     {
+        public event EventHandler JourneySaved = delegate { };
+
         private List<Journey> _journeys = new List<Journey>();
 
         public async Task<IEnumerable<Journey>> GetJourneys()
         {
-            return DatabaseService.Realm.All<Journey>();
+            var journeys = DatabaseService.Realm.All<Journey>();
+
+            return journeys;
         }
 
         public async Task<IEnumerable<Journey>> GetAllJourneys()
@@ -41,7 +45,7 @@ namespace MileEyes.Services
 
                 journey.Id = j.Id;
 
-                journey.CloudId = j.Id;
+                journey.CloudId = j.CloudId;
                 journey.Date = j.Date;
                 journey.Accepted = j.Accepted;
                 journey.Rejected = j.Rejected;
@@ -117,6 +121,8 @@ namespace MileEyes.Services
 
                 transaction.Commit();
 
+                JourneySaved?.Invoke(this, EventArgs.Empty);
+
                 return journey;
             }
         }
@@ -135,7 +141,7 @@ namespace MileEyes.Services
         public async Task Sync()
         {
             await PushNew();
-            await PullUpdate();
+            // await PullUpdate();
         }
         private async Task PullUpdate()
         {
@@ -143,7 +149,14 @@ namespace MileEyes.Services
             {
                 var response = await RestService.Client.GetAsync("/api/Journeys/");
 
-                if (!response.IsSuccessStatusCode) return;
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorMessage = await response.Content.ReadAsStringAsync();
+
+                    var em = errorMessage;
+
+                    return;
+                }
 
                 var result =
                     JsonConvert.DeserializeObject<ICollection<JourneyViewModel>>(await response.Content.ReadAsStringAsync());
@@ -225,11 +238,30 @@ namespace MileEyes.Services
         }
         private async Task PushNew()
         {
-            var vehicles = await GetAllJourneys();
+            var journeys = await GetJourneys();
 
-            foreach (var j in vehicles.Where(j => j.MarkedForDeletion == false))
+            var journeysEnumerable = journeys as Journey[] ?? journeys.ToArray();
+
+            foreach (var j in journeysEnumerable.Where(j => j.MarkedForDeletion == false))
             {
                 if (!string.IsNullOrEmpty(j.CloudId)) continue;
+
+                if (j.Company == null)
+                {
+                    var companies = await Host.CompanyService.GetCompanies();
+
+                    var companiesEnumerable = companies.ToArray();
+
+                    var personalCompanies = companiesEnumerable.Where(c => c.Personal);
+
+                    var personalCompaniesEnumerable = personalCompanies as Company[] ?? personalCompanies.ToArray();
+
+                    if (!personalCompaniesEnumerable.Any()) continue;
+
+                    var personalCompany = personalCompaniesEnumerable.First();
+
+                    j.Company = personalCompany;
+                }
 
                 try
                 {
@@ -237,7 +269,14 @@ namespace MileEyes.Services
 
                     var response = await RestService.Client.PostAsync("/api/Journeys/", data);
 
-                    if (!response.IsSuccessStatusCode) continue;
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        var errorMessage = await response.Content.ReadAsStringAsync();
+
+                        var em = errorMessage;
+
+                        continue;
+                    }
 
                     var result =
                         JsonConvert.DeserializeObject<JourneyViewModel>(await response.Content.ReadAsStringAsync());
@@ -247,7 +286,7 @@ namespace MileEyes.Services
                     using (var transaction = DatabaseService.Realm.BeginWrite())
                     {
                         j.CloudId = result.Id;
-
+                        j.Cost = result.Cost;
                         transaction.Commit();
                     }
                 }

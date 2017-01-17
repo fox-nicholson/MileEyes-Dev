@@ -12,7 +12,7 @@ namespace MileEyes.ViewModels
 {
     class CompaniesViewModel : ViewModel
     {
-        public ObservableCollection<Company> Companies { get; set; } = new ObservableCollection<Company>();
+        public ObservableCollection<CompanyViewModel> Companies { get; set; } = new ObservableCollection<CompanyViewModel>();
 
         private CompanyViewModel _selectedCompany;
 
@@ -21,10 +21,7 @@ namespace MileEyes.ViewModels
             get { return _selectedCompany; }
             set
             {
-                if (_selectedCompany == value) return;
-
                 _selectedCompany = value;
-
                 OnPropertyChanged(nameof(SelectedCompany));
             }
         }
@@ -43,7 +40,7 @@ namespace MileEyes.ViewModels
 
             foreach (var c in await Services.Host.CompanyService.GetCompanies())
             {
-                Companies.Add(c);
+                Companies.Add(new CompanyViewModel(c));
             }
 
             Refreshing = false;

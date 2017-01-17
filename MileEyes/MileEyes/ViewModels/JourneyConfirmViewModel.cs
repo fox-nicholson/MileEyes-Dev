@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using MileEyes.Services.Extensions;
 using MileEyes.Services.Models;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
@@ -266,6 +267,8 @@ namespace MileEyes.ViewModels
             {
                 journey.Waypoints.Add(w);
             }
+
+            journey.Distance = await journey.CalculateDistance();
 
             var result = await Services.Host.JourneyService.SaveJourney(journey);
 

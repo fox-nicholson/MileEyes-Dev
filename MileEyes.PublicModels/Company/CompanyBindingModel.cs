@@ -9,6 +9,7 @@ namespace MileEyes.PublicModels.Company
     public class CompanyBindingModel
     {
         public string Id { get; set; }
+        public string CloudId { get; set; }
         public string Name { get; set; }
         public string PlaceId { get; set; }
         public bool Personal { get; set; }

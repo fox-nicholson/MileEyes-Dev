@@ -20,6 +20,7 @@ using MileEyes.API.Models;
 using MileEyes.API.Models.DatabaseModels;
 using MileEyes.API.Providers;
 using MileEyes.API.Results;
+using MileEyes.API.Services;
 
 namespace MileEyes.API.Controllers
 {
@@ -375,7 +376,30 @@ namespace MileEyes.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var address = db.Addresses.FirstOrDefault(a => a.PlaceId == model.PlaceId) ?? new Address() { Id = Guid.NewGuid(), PlaceId = model.PlaceId };
+            var existingAddress = db.Addresses.FirstOrDefault(a => a.PlaceId == model.PlaceId);
+
+            Address address;
+
+            if (existingAddress == null)
+            {
+                var addressResult = await GeocodingService.GetAddress(model.PlaceId);
+
+                address = new Address()
+                {
+                    Id = Guid.NewGuid(),
+                    PlaceId = addressResult.PlaceId,
+                    Coordinates = new Coordinates()
+                    {
+                        Id = Guid.NewGuid(),
+                        Latitude = addressResult.Latitude,
+                        Longitude = addressResult.Longitude
+                    }
+                };
+            }
+            else
+            {
+                address = existingAddress;
+            }
 
             var user = new ApplicationUser() { UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName};
 

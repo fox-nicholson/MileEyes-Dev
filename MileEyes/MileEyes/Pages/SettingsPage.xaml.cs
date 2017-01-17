@@ -16,6 +16,13 @@ namespace MileEyes.Pages
             InitializeComponent();
         }
 
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            (BindingContext as SettingsViewModel).Refresh();
+        }
+
         private void VehiclesCell_OnTapped(object sender, EventArgs e)
         {
             Device.BeginInvokeOnMainThread(async () =>

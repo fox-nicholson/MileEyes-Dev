@@ -130,6 +130,9 @@
     <Compile Include="Pages\AddressSelectionPage.xaml.cs">
       <DependentUpon>AddressSelectionPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\CloudAddressSelectionPage.xaml.cs">
+      <DependentUpon>CloudAddressSelectionPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\CloudPage.xaml.cs">
       <DependentUpon>CloudPage.xaml</DependentUpon>
     </Compile>
@@ -592,6 +595,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Pages\RegisterAddressSelectionPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\CloudAddressSelectionPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

@@ -21,7 +21,7 @@ namespace MileEyes.API.Controllers
     public class JourneysController : ApiController
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-        
+
         // GET: api/Journeys
         public IQueryable<JourneyViewModel> GetJourneys()
         {
@@ -29,22 +29,11 @@ namespace MileEyes.API.Controllers
 
             var driver = user.Profiles.OfType<Driver>().FirstOrDefault();
 
-            return db.Journeys.Where(j => j.Driver.Id == driver.Id).Select(j => new JourneyViewModel()
+            var result = new List<JourneyViewModel>();
+
+            foreach (var j in driver.Journeys)
             {
-                Accepted = j.Accepted,
-                Company = new CompanyViewModel()
-                {
-                    Id = j.Company.Id.ToString()
-                },
-                Cost = Convert.ToDouble(j.Cost),
-                Date = j.Date,
-                Distance = j.Distance,
-                Id = j.Id.ToString(),
-                Invoiced = j.Invoiced,
-                Passengers = j.Passengers,
-                Reason = j.Reason,
-                Rejected = j.Rejected,
-                Waypoints = j.Waypoints.Select(w => new WaypointViewModel()
+                var waypoints = j.Waypoints.Select(w => new WaypointViewModel()
                 {
                     Latitude = w.Address.Coordinates.Latitude,
                     Longitude = w.Address.Coordinates.Longitude,
@@ -52,8 +41,30 @@ namespace MileEyes.API.Controllers
                     Step = w.Step,
                     Timestamp = w.Timestamp,
                     Id = w.Id.ToString()
-                }).ToList()
-            });
+                }).ToList();
+
+                var company = new CompanyViewModel()
+                {
+                    Id = j.Company.Id.ToString()
+                };
+
+                var journey = new JourneyViewModel()
+                {
+                    Accepted = j.Accepted,
+                    Cost = Convert.ToDouble(j.Cost),
+                    Date = j.Date,
+                    Distance = j.Distance,
+                    Id = j.Id.ToString(),
+                    Invoiced = j.Invoiced,
+                    Passengers = j.Passengers,
+                    Reason = j.Reason,
+                    Rejected = j.Rejected,
+
+                };
+                result.Add(journey);
+            }
+
+            return result.AsQueryable();
         }
 
         // GET: api/Journeys/5
@@ -114,14 +125,14 @@ namespace MileEyes.API.Controllers
             var driver = user.Profiles.OfType<Driver>().FirstOrDefault();
 
             // Get Company
-            var company = await db.Companies.FindAsync(model.Company.Id);
+            var company = db.Companies.Find(Guid.Parse(model.Company.CloudId));
 
             if (company == null) return BadRequest();
 
             // Get Vehicle
-            var vehicle = db.Vehicles.Find(model.Vehicle.Id);
+            var vehicle = db.Vehicles.Find(Guid.Parse(model.Vehicle.CloudId));
 
-            if(vehicle == null) return BadRequest();
+            if (vehicle == null) return BadRequest();
 
             // Create new Journey
             var j = new Journey()
@@ -188,8 +199,32 @@ namespace MileEyes.API.Controllers
                             a =>
                                 Math.Abs(a.Coordinates.Latitude - w.Latitude) < 0.0005 &&
                                 Math.Abs(a.Coordinates.Longitude - w.Longitude) < 0.0005);
+                    //Check if weve already stored the Address
+                    if (existingAddresses.Any())
+                    {
+                        newWaypoint.Address = existingAddresses.FirstOrDefault();
+                    }
+                    // Deal with us not having Address stored
+                    else
+                    {
+                        var addressResult = await GeocodingService.GetAddress(w.Latitude, w.Longitude);
 
+                        // Create a new Address
+                        newWaypoint.Address = new Address()
+                        {
+                            Id = Guid.NewGuid(),
+                            PlaceId = addressResult.PlaceId,
+                            Coordinates = new Coordinates()
+                            {
+                                Id = Guid.NewGuid(),
+                                Latitude = addressResult.Latitude,
+                                Longitude = addressResult.Longitude
+                            }
+                        };
+                    }
                 }
+
+                j.Waypoints.Add(newWaypoint);
             }
 
             // Calculate Cost and VAT

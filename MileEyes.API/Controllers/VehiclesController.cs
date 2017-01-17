@@ -25,15 +25,24 @@ namespace MileEyes.API.Controllers
         // GET: api/Vehicles
         public IQueryable<VehicleViewModel> GetVehicles()
         {
-            return db.Vehicles.Select(v => new VehicleViewModel()
+            var user = db.Users.Find(User.Identity.GetUserId());
+
+            var driver = user.Profiles.OfType<Driver>().FirstOrDefault();
+
+            if (driver != null)
             {
-                Id = v.Id.ToString(),
-                Registration = v.Registration,
-                EngineType = new EngineTypeViewModel()
+                return driver.Vehicles.Select(v => new VehicleViewModel()
                 {
-                    Id = v.EngineType.Id.ToString()
-                }
-            });
+                    Id = v.Id.ToString(),
+                    Registration = v.Registration,
+                    EngineType = new EngineTypeViewModel()
+                    {
+                        Id = v.EngineType.Id.ToString()
+                    }
+                }).AsQueryable();
+            }
+
+            return new List<VehicleViewModel>().AsQueryable();
         }
 
         // GET: api/Vehicles/5

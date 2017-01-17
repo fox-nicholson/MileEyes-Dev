@@ -201,6 +201,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccountingAdapters\FreeagentAdapter.cs" />
+    <Compile Include="AccountingAdapters\IAccountingAdapter.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\EmailConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -260,6 +262,10 @@
     <Compile Include="Migrations\201612141400324_Initial.Designer.cs">
       <DependentUpon>201612141400324_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701161454430_AvatarImage.cs" />
+    <Compile Include="Migrations\201701161454430_AvatarImage.Designer.cs">
+      <DependentUpon>201701161454430_AvatarImage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -294,7 +300,6 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\aspnet-MileEyes.API-20160927092422.mdf" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Areas\HelpPage\TestClient.css" />
     <Content Include="Content\bootstrap-theme.css" />
@@ -434,6 +439,7 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\" />
     <Folder Include="Views\User\" />
   </ItemGroup>
   <ItemGroup>
@@ -445,6 +451,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201612141400324_Initial.resx">
       <DependentUpon>201612141400324_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701161454430_AvatarImage.resx">
+      <DependentUpon>201701161454430_AvatarImage.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

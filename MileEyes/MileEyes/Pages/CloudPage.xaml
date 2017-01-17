@@ -10,12 +10,12 @@
   <ContentPage.ToolbarItems>
     <ToolbarItem Text="Save" Command="{Binding SaveCommand}"/>
   </ContentPage.ToolbarItems>
-  <customControls:CustomTableView>
+  <customControls:CustomTableView Intent="Form" BackgroundColor="{StaticResource primaryBackgroundColor}">
     <TableRoot>
       <TableSection>
-        <EntryCell Label="Email" Placeholder="Required" Text="{Binding Email}"/>
-        <EntryCell Label="First Name" Placeholder="Required" Text="{Binding FirstName}"/>
-        <EntryCell Label="Last Name" Placeholder="Required" Text="{Binding LastName}"/>
+        <customControls:CustomEntryCell LabelColor="{StaticResource premiumTextColor}" Label="Email" Placeholder="Required" Text="{Binding Email}"/>
+        <customControls:CustomEntryCell LabelColor="{StaticResource premiumTextColor}" Label="First Name" Placeholder="Required" Text="{Binding FirstName}"/>
+        <customControls:CustomEntryCell LabelColor="{StaticResource premiumTextColor}" Label="Last Name" Placeholder="Required" Text="{Binding LastName}"/>
         <TextCell Text="Address" Detail="{Binding Address.Label}" Tapped="AddressCell_OnTapped"/>
       </TableSection>
     </TableRoot>

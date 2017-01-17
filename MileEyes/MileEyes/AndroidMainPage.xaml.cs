@@ -19,6 +19,13 @@ namespace MileEyes
 
             // Hook for switching to Track Journey Page in TabbedPage
             JourneysPage.GotoTrackPage += JourneysPage_GotoTrackPage;
+            TrackPage.GotoJourneysPage += TrackPage_GotoJourneysPage;
+        }
+
+        private void TrackPage_GotoJourneysPage(object sender, EventArgs e)
+        {
+            // Switch to the first tab (Which is Journeys)
+            CurrentPage = Children[0];
         }
 
         private void JourneysPage_GotoTrackPage(object sender, EventArgs e)

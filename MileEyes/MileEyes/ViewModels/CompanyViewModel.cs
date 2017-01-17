@@ -77,8 +77,7 @@ namespace MileEyes.ViewModels
                 OnPropertyChanged(nameof(Default));
             }
         }
-
-
+        
         public CompanyViewModel(Company company)
         {
             _company = company;

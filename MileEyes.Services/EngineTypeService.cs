@@ -15,13 +15,18 @@ namespace MileEyes.Services
 
         public async Task<IEnumerable<EngineType>> GetEngineTypes()
         {
-            if (DatabaseService.Realm.All<EngineType>().Any())
+            var engineTypes = DatabaseService.Realm.All<EngineType>();
+
+            if (engineTypes.Any())
             {
-                return DatabaseService.Realm.All<EngineType>();
+                return engineTypes;
             }
 
             await Sync();
-            return DatabaseService.Realm.All<EngineType>();
+
+            engineTypes = DatabaseService.Realm.All<EngineType>();
+
+            return engineTypes;
         }
 
         public async Task Sync()

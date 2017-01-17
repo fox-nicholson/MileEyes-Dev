@@ -21,6 +21,13 @@ namespace MileEyes.Pages
             (BindingContext as JourneyCurrentViewModel).StopRequested += JourneyCurrentPage_StopRequested;
         }
 
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            (BindingContext as JourneyCurrentViewModel).Refresh();
+        }
+
         private async void JourneyCurrentPage_StopRequested(object sender, EventArgs e)
         {
             var response =
@@ -44,9 +51,9 @@ namespace MileEyes.Pages
 
         private void TrackerService_HasMoved(object sender, EventArgs e)
         {
-            if (Services.Host.Backgrounded) return;
+            if (Host.Backgrounded) return;
 
-            var pos = Services.Host.TrackerService.CurrentLocation;
+            var pos = Host.TrackerService.CurrentLocation;
 
             map.MoveToRegion(MapSpan.FromCenterAndRadius(
                 new Position(pos.Latitude,

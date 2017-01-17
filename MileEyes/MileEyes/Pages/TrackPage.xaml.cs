@@ -11,6 +11,8 @@ namespace MileEyes.Pages
 {
     public partial class TrackPage : ContentPage
     {
+        public static event EventHandler GotoJourneysPage = delegate { };
+
         public TrackPage()
         {
             InitializeComponent();
@@ -19,6 +21,13 @@ namespace MileEyes.Pages
             Services.Host.TrackerService.StartFailed += TrackerService_StartFailed;
             Services.Host.TrackerService.Stopped += TrackerService_Stopped;
             Services.Host.TrackerService.Cancelled += TrackerService_Cancelled;
+
+            Services.Host.JourneyService.JourneySaved += JourneyService_JourneySaved;
+        }
+
+        private void JourneyService_JourneySaved(object sender, EventArgs e)
+        {
+            GotoJourneysPage?.Invoke(this, EventArgs.Empty);
         }
 
         protected override void OnAppearing()

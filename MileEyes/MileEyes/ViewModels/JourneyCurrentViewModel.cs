@@ -99,8 +99,7 @@ namespace MileEyes.ViewModels
             }
 
             CurrentDistance = Units.MetersToMiles(Services.Host.TrackerService.CurrentDistance);
-
-
+            
             Refreshing = false;
         }
 
