@@ -42,6 +42,9 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="CustomControls\BlurStackLayout.cs" />
+    <Compile Include="CustomControls\CloudAddressViewCell.xaml.cs">
+      <DependentUpon>CloudAddressViewCell.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CustomControls\CloudSyncViewCell.xaml.cs">
       <DependentUpon>CloudSyncViewCell.xaml</DependentUpon>
     </Compile>
@@ -601,6 +604,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Pages\CloudAddressSelectionPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CustomControls\CloudAddressViewCell.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

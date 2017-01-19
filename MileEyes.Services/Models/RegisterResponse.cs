@@ -14,6 +14,8 @@ namespace MileEyes.Services.Models
 
     public class RegisterModelstate
     {
+        [JsonProperty("")]
+        public string[] _ { get; set; }
         [JsonProperty("model.FirstName")]
         public string[] FirstName { get; set; }
         [JsonProperty("model.LastName")]

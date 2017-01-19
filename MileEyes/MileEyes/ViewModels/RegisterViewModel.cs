@@ -107,33 +107,45 @@ namespace MileEyes.ViewModels
 
         public async void Register()
         {
+            Busy = true;
+
             if (string.IsNullOrEmpty(FirstName) || string.IsNullOrEmpty(LastName))
             {
                 RegisterFailed?.Invoke(this, "First and Last Name are required.");
+
+                Busy = false;
                 return;
             }
 
             if (string.IsNullOrEmpty(Email))
             {
                 RegisterFailed?.Invoke(this, "Email is required.");
+
+                Busy = false;
                 return;
             }
 
             if (string.IsNullOrEmpty(Password))
             {
                 RegisterFailed?.Invoke(this, "Password is required.");
+
+                Busy = false;
                 return;
             }
 
             if (ConfirmPassword != Password)
             {
                 RegisterFailed?.Invoke(this, "Password and Confirm Password must be the same.");
+
+                Busy = false;
                 return;
             }
 
             if (string.IsNullOrEmpty(Address.PlaceId))
             {
                 RegisterFailed?.Invoke(this, "Address is required.");
+
+                Busy = false;
                 return;
             }
 
@@ -148,9 +160,13 @@ namespace MileEyes.ViewModels
                 {
                     RegisterFailed?.Invoke(this,
                         "There was a connection problem, please check that you have an active internet connection on your device.");
+
+                    Busy = false;
                 }
                 else
                 {
+                    var emailTaken = result.ModelState._?.FirstOrDefault();
+
                     var errorMessage = result.ModelState.FirstName?.Aggregate("", (current, s) => current + (s + Environment.NewLine));
 
                     errorMessage = result.ModelState.LastName?.Aggregate(errorMessage, (current, s) => current + (s + Environment.NewLine));
@@ -158,12 +174,22 @@ namespace MileEyes.ViewModels
                     errorMessage = result.ModelState.Email?.Aggregate(errorMessage, (current, s) => current + (s + Environment.NewLine));
 
                     errorMessage = result.ModelState.Password?.Aggregate(errorMessage, (current, s) => current + (s + Environment.NewLine));
+                    
+                    if (!string.IsNullOrEmpty(emailTaken))
+                    {
+                        errorMessage = result.ModelState.PlaceId?.Aggregate(errorMessage,
+                            (current, s) => current + ("Address is required." + Environment.NewLine));
+                        errorMessage += emailTaken + Environment.NewLine;
+                    }
+                    else
+                    {
+                        errorMessage = result.ModelState.PlaceId?.Aggregate(errorMessage,
+                            (current, s) => current + "Address is required.");
+                    }
 
-                    errorMessage = result.ModelState.PlaceId?.Aggregate(errorMessage, (current, s) => current + "Address is required.");
+                    RegisterFailed?.Invoke(this, errorMessage?.Trim());
 
-                    errorMessage?.Trim();
-
-                    RegisterFailed?.Invoke(this, errorMessage);
+                    Busy = false;
                 }
             }
             else
@@ -171,6 +197,8 @@ namespace MileEyes.ViewModels
                 await Services.Host.AuthService.Authenticate(Email, Password);
 
                 RegisterSuccess?.Invoke(this, EventArgs.Empty);
+
+                Busy = false;
             }
         }
     }

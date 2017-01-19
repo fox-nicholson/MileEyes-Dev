@@ -96,7 +96,6 @@ namespace MileEyes.API.Controllers
 
         [Route("Companies/{companyId}/AddDriver")]
 
-
         protected override void Dispose(bool disposing)
         {
             if (disposing)

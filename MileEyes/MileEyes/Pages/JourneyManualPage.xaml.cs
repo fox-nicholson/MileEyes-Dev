@@ -61,13 +61,24 @@ namespace MileEyes.Pages
             var selectOriginPage = new AddressSelectionPage();
             selectOriginPage.AddressSelected += JourneyManualPage_OriginAddressSelected;
 
-            Device.BeginInvokeOnMainThread(async () =>
+            Device.BeginInvokeOnMainThread(() =>
             {
-                await Navigation.PushModalAsync(new CustomNavigationPage(selectOriginPage)
-                {
-                    BarBackgroundColor = Color.FromHex("#103D47"),
-                    BarTextColor = Color.White
-                });
+                Device.OnPlatform(
+                    async () =>
+                    {
+                        await Navigation.PushModalAsync(new CustomNavigationPage(selectOriginPage)
+                        {
+                            BarBackgroundColor = Color.FromHex("#103D47"),
+                            BarTextColor = Color.White
+                        });
+                    }, async () =>
+                    {
+                        await Navigation.PushModalAsync(new CustomNavigationPage(selectOriginPage)
+                        {
+                            BarBackgroundColor = Color.FromHex("#58C0EE"),
+                            BarTextColor = Color.White
+                        });
+                    });
             });
         }
 
@@ -85,13 +96,24 @@ namespace MileEyes.Pages
             var selectDestinationPage = new AddressSelectionPage();
             selectDestinationPage.AddressSelected += JourneyManualPage_DestinationAddressSelected;
 
-            Device.BeginInvokeOnMainThread(async () =>
+            Device.BeginInvokeOnMainThread(() =>
             {
-                await Navigation.PushModalAsync(new CustomNavigationPage(selectDestinationPage)
-                {
-                    BarBackgroundColor = Color.FromHex("#103D47"),
-                    BarTextColor = Color.White
-                });
+                Device.OnPlatform(
+                    async () =>
+                    {
+                        await Navigation.PushModalAsync(new CustomNavigationPage(selectDestinationPage)
+                        {
+                            BarBackgroundColor = Color.FromHex("#103D47"),
+                            BarTextColor = Color.White
+                        });
+                    }, async () =>
+                    {
+                        await Navigation.PushModalAsync(new CustomNavigationPage(selectDestinationPage)
+                        {
+                            BarBackgroundColor = Color.FromHex("#58C0EE"),
+                            BarTextColor = Color.White
+                        });
+                    });
             });
         }
 

@@ -3,7 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:customControls="clr-namespace:MileEyes.CustomControls;assembly=MileEyes"
              xmlns:viewModels="clr-namespace:MileEyes.ViewModels;assembly=MileEyes"
-             x:Class="MileEyes.Pages.ReasonDefaultSelectionPage" BackgroundColor="{StaticResource primaryBackgroundColor}">
+             x:Class="MileEyes.Pages.ReasonDefaultSelectionPage">
+  <ContentPage.BackgroundColor>
+    <OnPlatform x:TypeArguments="Color"
+                iOS="{StaticResource primaryiOSBackgroundColor}"
+                Android="{StaticResource primaryAndroidBackgroundColor}" />
+  </ContentPage.BackgroundColor>
   <ContentPage.BindingContext>
     <viewModels:ReasonsViewModel/>
   </ContentPage.BindingContext>
@@ -14,7 +19,12 @@
 
   <StackLayout>
     <customControls:CustomListView ItemsSource="{Binding Reasons}" SelectedItem="{Binding SelectedReason}"
-              IsRefreshing="{Binding Refreshing}" BackgroundColor="{StaticResource primaryBackgroundColor}">
+              IsRefreshing="{Binding Refreshing}">
+      <customControls:CustomListView.BackgroundColor>
+        <OnPlatform x:TypeArguments="Color"
+                    iOS="{StaticResource primaryiOSBackgroundColor}"
+                    Android="{StaticResource primaryAndroidBackgroundColor}" />
+      </customControls:CustomListView.BackgroundColor>
       <customControls:CustomListView.ItemTemplate>
         <DataTemplate>
           <customControls:ReasonItemViewCell />

@@ -3,7 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:MileEyes.ViewModels;assembly=MileEyes"
              xmlns:customControls="clr-namespace:MileEyes.CustomControls;assembly=MileEyes"
-             x:Class="MileEyes.Pages.CompanySelectionPage" Title="Select Company" BackgroundColor="{StaticResource primaryBackgroundColor}">
+             x:Class="MileEyes.Pages.CompanySelectionPage" Title="Select Company">
+  <ContentPage.BackgroundColor>
+    <OnPlatform x:TypeArguments="Color"
+                iOS="{StaticResource primaryiOSBackgroundColor}"
+                Android="{StaticResource primaryAndroidBackgroundColor}" />
+  </ContentPage.BackgroundColor>
   <ContentPage.BindingContext>
     <viewModels:CompaniesViewModel/>
   </ContentPage.BindingContext>
@@ -11,14 +16,19 @@
   <ContentPage.ToolbarItems>
     <ToolbarItem Text="Done" Command="{Binding SelectCommand}"></ToolbarItem>
   </ContentPage.ToolbarItems>
-  
-    <ListView ItemsSource="{Binding Companies}" SelectedItem="{Binding SelectedCompany}"
-              IsRefreshing="{Binding Refreshing}" BackgroundColor="{StaticResource primaryBackgroundColor}">
-      <ListView.ItemTemplate>
-        <DataTemplate>
-          <customControls:CompanyItemViewCell />
-        </DataTemplate>
-      </ListView.ItemTemplate>
-    </ListView>
-  
+
+  <ListView ItemsSource="{Binding Companies}" SelectedItem="{Binding SelectedCompany}"
+            IsRefreshing="{Binding Refreshing}">
+    <ListView.BackgroundColor>
+      <OnPlatform x:TypeArguments="Color"
+                  iOS="{StaticResource primaryiOSBackgroundColor}"
+                  Android="{StaticResource primaryAndroidBackgroundColor}" />
+    </ListView.BackgroundColor>
+    <ListView.ItemTemplate>
+      <DataTemplate>
+        <customControls:CompanyItemViewCell />
+      </DataTemplate>
+    </ListView.ItemTemplate>
+  </ListView>
+
 </ContentPage>

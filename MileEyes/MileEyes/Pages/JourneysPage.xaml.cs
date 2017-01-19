@@ -78,5 +78,14 @@ namespace MileEyes.Pages
                 await Navigation.PushAsync(new PremiumFeaturesPage());
             });
         }
+
+        private void ListView_OnItemAppearing(object sender, ItemVisibilityEventArgs e)
+        {
+            if (e.Item == null) return;
+            
+            var journey = (e.Item as JourneyViewModel);
+            
+            journey?.InitRoute();
+        }
     }
 }

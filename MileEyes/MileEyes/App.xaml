@@ -6,7 +6,11 @@
     <!-- Application resource dictionary -->
     <ResourceDictionary>
       <Color x:Key="primaryBackgroundColor">#011E22</Color>
-      
+
+      <Color x:Key="primaryiOSBackgroundColor">#011E22</Color>
+
+      <Color x:Key="primaryAndroidBackgroundColor">White</Color>
+
       <Color x:Key="mileeyesBlue">#58C0EE</Color>
 
       <Color x:Key="premiumTextColor">White</Color>

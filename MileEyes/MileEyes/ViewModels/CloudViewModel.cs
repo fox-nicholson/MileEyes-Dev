@@ -69,8 +69,10 @@ namespace MileEyes.ViewModels
             Refresh();
         }
 
-        public async void Refresh()
+        public override async void Refresh()
         {
+            base.Refresh();
+
             var userdetails = await Services.Host.UserService.GetDetails();
 
             if (userdetails.Error) return;

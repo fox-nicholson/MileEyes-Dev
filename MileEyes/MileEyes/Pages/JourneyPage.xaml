@@ -4,7 +4,12 @@
              xmlns:customControls="clr-namespace:MileEyes.CustomControls;assembly=MileEyes"
              xmlns:viewModels="clr-namespace:MileEyes.ViewModels;assembly=MileEyes"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
-             x:Class="MileEyes.Pages.JourneyPage" BackgroundColor="{StaticResource primaryBackgroundColor}">
+             x:Class="MileEyes.Pages.JourneyPage">
+  <ContentPage.BackgroundColor>
+    <OnPlatform x:TypeArguments="Color"
+                iOS="{StaticResource primaryiOSBackgroundColor}"
+                Android="{StaticResource primaryAndroidBackgroundColor}" />
+  </ContentPage.BackgroundColor>
   <ContentPage.BindingContext>
     <viewModels:JourneyViewModel/>
   </ContentPage.BindingContext>
@@ -16,7 +21,12 @@
     <customControls:RouteMap x:Name="map" RouteCoordinates="{Binding Route}" HasScrollEnabled="False" HasZoomEnabled="False" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All"/>
     <!--BackgroundColor="#EE222222"-->
 
-    <AbsoluteLayout AbsoluteLayout.LayoutBounds="1,1,1,0.7" AbsoluteLayout.LayoutFlags="All" x:Name="aInstructions" BackgroundColor="#EE222222">
+    <AbsoluteLayout AbsoluteLayout.LayoutBounds="1,1,1,0.7" AbsoluteLayout.LayoutFlags="All" x:Name="aInstructions">
+      <AbsoluteLayout.BackgroundColor>
+        <OnPlatform x:TypeArguments="Color"
+                    iOS="#EE222222"
+                    Android="White" />
+      </AbsoluteLayout.BackgroundColor>
       <!--<ContentView ios:VisualElement.BlurEffect="Dark" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All"/>-->
       <StackLayout BackgroundColor="Transparent" Orientation="Vertical" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
         <StackLayout.GestureRecognizers>
@@ -38,12 +48,36 @@
             </Grid.ColumnDefinitions>
 
             <StackLayout Grid.Column="0" Grid.Row="1" HorizontalOptions="Start">
-              <Label Text="Miles Tracked" FontSize="Medium" TextColor="#80FFFFFF"/>
-              <Label Text="{Binding Distance, StringFormat='{0:N2} miles'}" FontSize="25" FontAttributes="Bold" TextColor="{StaticResource premiumTextColor}"/>
+              <Label Text="Miles Tracked" FontSize="Medium">
+                <Label.TextColor>
+                  <OnPlatform x:TypeArguments="Color"
+                              iOS="#80FFFFFF"
+                              Android="Gray" />
+                </Label.TextColor>
+              </Label>
+              <Label Text="{Binding Distance, StringFormat='{0:N2} miles'}" FontSize="25" FontAttributes="Bold">
+                <Label.TextColor>
+                  <OnPlatform x:TypeArguments="Color"
+                              iOS="{StaticResource premiumTextColor}"
+                              Android="Black" />
+                </Label.TextColor>
+              </Label>
             </StackLayout>
             <StackLayout Grid.Column="1" Grid.Row="1" HorizontalOptions="End">
-              <Label Text="Expensable Value" IsVisible="{Binding Authenticated}" FontSize="Medium" TextColor="#80FFFFFF"/>
-              <Label Text="{Binding Cost, StringFormat='{0:C}'}" IsVisible="{Binding Authenticated}" TextColor="Lime" FontSize="25" FontAttributes="Bold"/>
+              <Label Text="Expensable Value" IsVisible="{Binding Authenticated}" FontSize="Medium">
+                <Label.TextColor>
+                  <OnPlatform x:TypeArguments="Color"
+                              iOS="#80FFFFFF"
+                              Android="Gray" />
+                </Label.TextColor>
+              </Label>
+              <Label Text="{Binding Cost, StringFormat='{0:C}'}" IsVisible="{Binding Authenticated}" FontSize="25" FontAttributes="Bold">
+                <Label.TextColor>
+                  <OnPlatform x:TypeArguments="Color"
+                              iOS="Lime"
+                              Android="Black" />
+                </Label.TextColor>
+              </Label>
             </StackLayout>
           </Grid>
         </StackLayout>
@@ -59,23 +93,71 @@
             </Grid.ColumnDefinitions>
 
             <StackLayout Grid.Column="0" Grid.Row="0" HorizontalOptions="Fill">
-              <Label Text="Tracking Method" FontSize="Medium" TextColor="#80FFFFFF"/>
+              <Label Text="Tracking Method" FontSize="Medium">
+                <Label.TextColor>
+                  <OnPlatform x:TypeArguments="Color"
+                              iOS="#80FFFFFF"
+                              Android="Gray" />
+                </Label.TextColor>
+              </Label>
               <StackLayout Orientation="Horizontal">
                 <Image Source="manual_record_icon.png" IsVisible="{Binding Manual}"/>
                 <Image Source="gps_icon.png" IsVisible="{Binding Gps}"/>
-                <Label Text="Manual Entry" IsVisible="{Binding Manual}" FontSize="Medium" TextColor="{StaticResource premiumTextColor}"/>
-                <Label Text="GPS Tracked" IsVisible="{Binding Gps}" FontSize="Medium" TextColor="{StaticResource premiumTextColor}"/>
+                <Label Text="Manual Entry" IsVisible="{Binding Manual}" FontSize="Medium">
+                  <Label.TextColor>
+                    <OnPlatform x:TypeArguments="Color"
+                                iOS="{StaticResource premiumTextColor}"
+                                Android="Black" />
+                  </Label.TextColor>
+                </Label>
+                <Label Text="GPS Tracked" IsVisible="{Binding Gps}" FontSize="Medium">
+                  <Label.TextColor>
+                    <OnPlatform x:TypeArguments="Color"
+                                iOS="{StaticResource premiumTextColor}"
+                                Android="Black" />
+                  </Label.TextColor>
+                </Label>
               </StackLayout>
             </StackLayout>
             <StackLayout Grid.Column="1" Grid.Row="0" HorizontalOptions="Fill">
-              <Label Text="Cloud Syncing" HorizontalOptions="End" TextColor="#80FFFFFF"/>
+              <Label Text="Cloud Syncing" HorizontalOptions="End">
+                <Label.TextColor>
+                  <OnPlatform x:TypeArguments="Color"
+                              iOS="#80FFFFFF"
+                              Android="Gray" />
+                </Label.TextColor>
+              </Label>
               <Switch BackgroundColor="Transparent" HorizontalOptions="End" />
             </StackLayout>
             <StackLayout Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" HorizontalOptions="Fill">
-              <Label Text="From" TextColor="#80FFFFFF"/>
-              <Label Text="{Binding OriginAddress.Label}" LineBreakMode="TailTruncation" TextColor="{StaticResource premiumTextColor}"/>
-              <Label Text="To" TextColor="#80FFFFFF"/>
-              <Label Text="{Binding DestinationAddress.Label}" LineBreakMode="TailTruncation" TextColor="{StaticResource premiumTextColor}"/>
+              <Label Text="From">
+                <Label.TextColor>
+                  <OnPlatform x:TypeArguments="Color"
+                              iOS="#80FFFFFF"
+                              Android="Gray" />
+                </Label.TextColor>
+              </Label>
+              <Label Text="{Binding OriginAddress.Label}" LineBreakMode="TailTruncation">
+                <Label.TextColor>
+                  <OnPlatform x:TypeArguments="Color"
+                              iOS="{StaticResource premiumTextColor}"
+                              Android="Black" />
+                </Label.TextColor>
+              </Label>
+              <Label Text="To">
+                <Label.TextColor>
+                  <OnPlatform x:TypeArguments="Color"
+                              iOS="#80FFFFFF"
+                              Android="Gray" />
+                </Label.TextColor>
+              </Label>
+              <Label Text="{Binding DestinationAddress.Label}" LineBreakMode="TailTruncation">
+                <Label.TextColor>
+                  <OnPlatform x:TypeArguments="Color"
+                              iOS="{StaticResource premiumTextColor}"
+                              Android="Black" />
+                </Label.TextColor>
+              </Label>
             </StackLayout>
           </Grid>
         </StackLayout>

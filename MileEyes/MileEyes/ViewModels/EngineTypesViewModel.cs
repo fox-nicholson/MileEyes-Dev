@@ -38,8 +38,10 @@ namespace MileEyes.ViewModels
 
         public ICommand RefreshCommand { get; set; }
 
-        public async void Refresh()
+        public override async void Refresh()
         {
+            base.Refresh();
+
             Refreshing = true;
 
             EngineTypes.Clear();

@@ -38,16 +38,27 @@ namespace MileEyes.Pages
 
         private void Cell_OnTapped(object sender, EventArgs e)
         {
-            Device.BeginInvokeOnMainThread(async () =>
+            Device.BeginInvokeOnMainThread(() =>
             {
                 var engineTypeSelectionPage = new EngineTypeSelectionPage();
                 (engineTypeSelectionPage.BindingContext as EngineTypesViewModel).Selected += VehicleAddPage_Selected;
                 (engineTypeSelectionPage.BindingContext as EngineTypesViewModel).NotSelected += VehicleAddPage_NotSelected;
-                await Navigation.PushModalAsync(new CustomNavigationPage(engineTypeSelectionPage)
-                {
-                    BarBackgroundColor = Color.FromHex("#103D47"),
-                    BarTextColor = Color.White
-                });
+                Device.OnPlatform(
+                    async () =>
+                    {
+                        await Navigation.PushModalAsync(new CustomNavigationPage(engineTypeSelectionPage)
+                        {
+                            BarBackgroundColor = Color.FromHex("#103D47"),
+                            BarTextColor = Color.White
+                        });
+                    }, async () =>
+                    {
+                        await Navigation.PushModalAsync(new CustomNavigationPage(engineTypeSelectionPage)
+                        {
+                            BarBackgroundColor = Color.FromHex("#58C0EE"),
+                            BarTextColor = Color.White
+                        });
+                    });
             });
         }
 

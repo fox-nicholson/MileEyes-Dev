@@ -3,8 +3,13 @@
           x:Class="MileEyes.CustomControls.CompanyItemViewCell">
   <StackLayout Orientation="Horizontal" Padding="15, 0, 15, 0">
     <Image Source="company.png" Margin="0,0,7.5,0"/>
-    <Label Text="{Binding Name}"
-    TextColor="#FFFFFF" VerticalTextAlignment="Center" />
+    <Label Text="{Binding Name}" VerticalTextAlignment="Center">
+      <Label.TextColor>
+        <OnPlatform x:TypeArguments="Color"
+                    iOS="#FFFFFF"
+                    Android="Black" />
+      </Label.TextColor>
+    </Label>
 
     <!--<Label Text="{Binding Vehicle.EngineType.Name}"
     HorizontalOptions="EndAndExpand"

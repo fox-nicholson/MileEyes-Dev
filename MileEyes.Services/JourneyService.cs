@@ -141,7 +141,7 @@ namespace MileEyes.Services
         public async Task Sync()
         {
             await PushNew();
-            // await PullUpdate();
+            await PullUpdate();
         }
         private async Task PullUpdate()
         {
@@ -158,12 +158,14 @@ namespace MileEyes.Services
                     return;
                 }
 
+                var responseText = await response.Content.ReadAsStringAsync();
+
                 var result =
-                    JsonConvert.DeserializeObject<ICollection<JourneyViewModel>>(await response.Content.ReadAsStringAsync());
+                    JsonConvert.DeserializeObject<ICollection<JourneyViewModel>>(responseText);
 
                 foreach (var journeyData in result)
                 {
-                    var existingJourney = (await GetAllJourneys()).First(v => v.CloudId == journeyData.Id);
+                    var existingJourney = (await GetAllJourneys()).FirstOrDefault(v => v.CloudId == journeyData.Id);
 
                     if (existingJourney == null)
                     {
@@ -244,27 +246,26 @@ namespace MileEyes.Services
 
             foreach (var j in journeysEnumerable.Where(j => j.MarkedForDeletion == false))
             {
-                if (!string.IsNullOrEmpty(j.CloudId)) continue;
-
-                if (j.Company == null)
-                {
-                    var companies = await Host.CompanyService.GetCompanies();
-
-                    var companiesEnumerable = companies.ToArray();
-
-                    var personalCompanies = companiesEnumerable.Where(c => c.Personal);
-
-                    var personalCompaniesEnumerable = personalCompanies as Company[] ?? personalCompanies.ToArray();
-
-                    if (!personalCompaniesEnumerable.Any()) continue;
-
-                    var personalCompany = personalCompaniesEnumerable.First();
-
-                    j.Company = personalCompany;
-                }
-
                 try
                 {
+                    if (!string.IsNullOrEmpty(j.CloudId)) continue;
+
+                    if (j.Company == null)
+                    {
+                        var companies = await Host.CompanyService.GetCompanies();
+
+                        var companiesEnumerable = companies.ToArray();
+
+                        var personalCompany = companiesEnumerable.FirstOrDefault(c => c.Personal == true);
+
+                        using (var transaction = DatabaseService.Realm.BeginWrite())
+                        {
+                            j.Company = personalCompany;
+
+                            transaction.Commit();
+                        }
+                    }
+
                     var data = new StringContent(JsonConvert.SerializeObject(j), Encoding.UTF8, "application/json");
 
                     var response = await RestService.Client.PostAsync("/api/Journeys/", data);

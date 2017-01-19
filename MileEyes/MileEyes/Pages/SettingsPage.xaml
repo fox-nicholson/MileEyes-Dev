@@ -5,10 +5,20 @@
              xmlns:customControls="clr-namespace:MileEyes.CustomControls;assembly=MileEyes"
              xmlns:viewModels="clr-namespace:MileEyes.ViewModels;assembly=MileEyes"
              x:Class="MileEyes.Pages.SettingsPage" Title="Settings">
+  <ContentPage.BackgroundColor>
+    <OnPlatform x:TypeArguments="Color"
+                iOS="{StaticResource primaryiOSBackgroundColor}"
+                Android="{StaticResource primaryAndroidBackgroundColor}" />
+  </ContentPage.BackgroundColor>
   <ContentPage.BindingContext>
     <viewModels:SettingsViewModel/>
   </ContentPage.BindingContext>
-  <customControls:CustomTableView Intent="Settings" BackgroundColor="{StaticResource primaryBackgroundColor}">
+  <customControls:CustomTableView Intent="Settings">
+    <customControls:CustomTableView.BackgroundColor>
+      <OnPlatform x:TypeArguments="Color"
+                  iOS="{StaticResource primaryiOSBackgroundColor}"
+                  Android="{StaticResource primaryAndroidBackgroundColor}" />
+    </customControls:CustomTableView.BackgroundColor>
     <TableRoot>
       <TableSection Title="Cloud Services">
         <customControls:MileEyesViewCell Tapped="ConnectCell_OnTapped"/>

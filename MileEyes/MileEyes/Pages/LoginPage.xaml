@@ -10,12 +10,17 @@
   <ContentPage.ToolbarItems>
     <ToolbarItem Text="Login" Command="{Binding LoginCommand}"/>
   </ContentPage.ToolbarItems>
-  <TableView BackgroundColor="{StaticResource mileeyesBlue}">
-    <TableRoot>
-      <TableSection>
-        <customControls:CustomEntryCell Label="Email" LabelColor="{StaticResource premiumTextColor}" Placeholder="Required" Text="{Binding Email}"/>
-        <customControls:CustomEntryCell Label="Password" IsPassword="True" LabelColor="{StaticResource premiumTextColor}" Placeholder="Required" Text="{Binding Password}"/>
-      </TableSection>
-    </TableRoot>
-  </TableView>
+  <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+    <StackLayout IsVisible="{Binding Busy}"  HorizontalOptions="Center" VerticalOptions="Center">
+      <ActivityIndicator IsRunning="{Binding Busy}" Color="White" HorizontalOptions="Center" VerticalOptions="Center" />
+    </StackLayout>
+    <TableView IsVisible="{Binding NotBusy}" BackgroundColor="{StaticResource mileeyesBlue}">
+      <TableRoot>
+        <TableSection>
+          <customControls:CustomEntryCell Label="Email" LabelColor="{StaticResource premiumTextColor}" Placeholder="Required" Text="{Binding Email}"/>
+          <customControls:CustomEntryCell Label="Password" IsPassword="True" LabelColor="{StaticResource premiumTextColor}" Placeholder="Required" Text="{Binding Password}"/>
+        </TableSection>
+      </TableRoot>
+    </TableView>
+  </StackLayout>
 </ContentPage>

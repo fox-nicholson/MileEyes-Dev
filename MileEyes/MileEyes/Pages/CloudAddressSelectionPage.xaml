@@ -4,7 +4,12 @@
              xmlns:viewModels="clr-namespace:MileEyes.ViewModels;assembly=MileEyes"
              xmlns:customControls="clr-namespace:MileEyes.CustomControls;assembly=MileEyes"
              x:Class="MileEyes.Pages.CloudAddressSelectionPage"
-             Title="Select Address" BackgroundColor="{StaticResource primaryBackgroundColor}">
+             Title="Select Address">
+  <ContentPage.BackgroundColor>
+    <OnPlatform x:TypeArguments="Color"
+                iOS="{StaticResource primaryiOSBackgroundColor}"
+                Android="{StaticResource primaryAndroidBackgroundColor}" />
+  </ContentPage.BackgroundColor>
   <ContentPage.BindingContext>
     <viewModels:AddressSelectionViewModel/>
   </ContentPage.BindingContext>
@@ -14,13 +19,31 @@
   </ContentPage.ToolbarItems>
 
   <StackLayout>
-    <SearchBar x:Name="searchBar" BackgroundColor="{StaticResource primaryBackgroundColor}" Text="{Binding SearchTerm}" SearchCommand="{Binding SearchCommand}" />
-    <customControls:CustomListView HasUnevenRows="True" ItemsSource="{Binding Addresses}" BackgroundColor="{StaticResource primaryBackgroundColor}" SelectedItem="{Binding SelectedAddress}" ItemSelected="ListView_OnItemSelected">
+    <SearchBar x:Name="searchBar" Text="{Binding SearchTerm}" SearchCommand="{Binding SearchCommand}" >
+      <SearchBar.BackgroundColor>
+        <OnPlatform x:TypeArguments="Color"
+                    iOS="{StaticResource primaryiOSBackgroundColor}"
+                    Android="{StaticResource primaryAndroidBackgroundColor}" />
+      </SearchBar.BackgroundColor>
+    </SearchBar>
+
+    <customControls:CustomListView HasUnevenRows="True" ItemsSource="{Binding Addresses}" SelectedItem="{Binding SelectedAddress}" ItemSelected="ListView_OnItemSelected">
+      <customControls:CustomListView.BackgroundColor>
+        <OnPlatform x:TypeArguments="Color"
+                    iOS="{StaticResource primaryiOSBackgroundColor}"
+                    Android="{StaticResource primaryAndroidBackgroundColor}" />
+      </customControls:CustomListView.BackgroundColor>
       <customControls:CustomListView.ItemTemplate>
         <DataTemplate>
           <ViewCell>
             <StackLayout Padding="10">
-              <Label Text="{Binding Label}" TextColor="{StaticResource premiumTextColor}"/>
+              <Label Text="{Binding Label}" >
+                <Label.TextColor>
+                  <OnPlatform x:TypeArguments="Color"
+                              iOS="{StaticResource premiumTextColor}"
+                              Android="Black" />
+                </Label.TextColor>
+              </Label>
             </StackLayout>
           </ViewCell>
         </DataTemplate>

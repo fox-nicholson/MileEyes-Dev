@@ -23,7 +23,7 @@ namespace MileEyes.Services
 
                 vehicle.Id = Guid.NewGuid().ToString();
                 vehicle.CloudId = v.CloudId;
-                vehicle.Registration = v.Registration;
+                vehicle.Registration = v.Registration.ToUpper();
                 vehicle.EngineType = engineType;
 
                 transaction.Commit();
@@ -53,19 +53,28 @@ namespace MileEyes.Services
             {
                 var vehicle = await GetVehicle(id);
 
-                if (!string.IsNullOrEmpty(vehicle.CloudId))
-                {
-                    vehicle.MarkedForDeletion = true;
+                var journeys = (await Host.JourneyService.GetJourneys()).ToArray();
+                var vehiclesJourneys = journeys.Where(j => j.Vehicle.Id == vehicle.Id);
 
+                if (!vehiclesJourneys.Any())
+                {
+                    if (!string.IsNullOrEmpty(vehicle.CloudId))
+                    {
+                        vehicle.MarkedForDeletion = true;
+                    }
+                    else
+                    {
+                        DatabaseService.Realm.Remove(vehicle);
+                    }
+
+                    transaction.Commit();
+
+                    return vehicle;
                 }
                 else
                 {
-                    DatabaseService.Realm.Remove(vehicle);
+                    return null;
                 }
-
-                transaction.Commit();
-
-                return vehicle;
             }
         }
 

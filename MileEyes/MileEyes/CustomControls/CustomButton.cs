@@ -9,6 +9,19 @@ namespace MileEyes.CustomControls
 {
     public class CustomButton : Button
     {
+        public static readonly BindableProperty IsRedProperty = BindableProperty.Create(
+            propertyName: "IsRed",
+            returnType: typeof(bool),
+            declaringType: typeof(CustomButton),
+            defaultValue: false,
+            defaultBindingMode: BindingMode.TwoWay);
+
+        public bool IsRed
+        {
+            get { return (bool)GetValue(IsRedProperty); }
+            set { SetValue(IsRedProperty, value); }
+        }
+
         public static readonly BindableProperty PulseProperty = BindableProperty.Create(
             propertyName: "Pulse",
             returnType: typeof(bool),

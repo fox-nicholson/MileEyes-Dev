@@ -40,13 +40,24 @@ namespace MileEyes.Pages
             var selectAddressPage = new RegisterAddressSelectionPage();
             selectAddressPage.AddressSelected += SelectAddressPage_AddressSelected; ;
 
-            Device.BeginInvokeOnMainThread(async () =>
+            Device.BeginInvokeOnMainThread(() =>
             {
-                await Navigation.PushModalAsync(new NavigationPage(selectAddressPage)
-                {
-                    BarBackgroundColor = Color.FromHex("#103D47"),
-                    BarTextColor = Color.White
-                });
+                Device.OnPlatform(
+                    async () =>
+                    {
+                        await Navigation.PushModalAsync(new NavigationPage(selectAddressPage)
+                        {
+                            BarBackgroundColor = Color.FromHex("#103D47"),
+                            BarTextColor = Color.White
+                        });
+                    }, async () =>
+                    {
+                        await Navigation.PushModalAsync(new NavigationPage(selectAddressPage)
+                        {
+                            BarBackgroundColor = Color.FromHex("#58C0EE"),
+                            BarTextColor = Color.White
+                        });
+                    });
             });
         }
 

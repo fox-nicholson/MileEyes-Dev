@@ -440,6 +440,7 @@ namespace MileEyes.API.Controllers
                 LowRate = 0.25M,
                 Address = address,
                 AutoAcceptDistance = 160934,
+                Personal = true,
                 Vat = false
             };
 

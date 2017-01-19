@@ -51,9 +51,13 @@ namespace MileEyes.ViewModels
 
         public async void Login()
         {
+            Busy = true;
+
             if (string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Password))
             {
                 LoginFailed?.Invoke(this, "Email and Password are required.");
+
+                Busy = false;
 
                 return;
             }
@@ -64,10 +68,14 @@ namespace MileEyes.ViewModels
             {
                 LoginSuccess?.Invoke(this, EventArgs.Empty);
 
+                Busy = false;
+
                 return;
             }
 
             LoginFailed?.Invoke(this, result.error_description);
+
+            Busy = false;
         }
     }
 }

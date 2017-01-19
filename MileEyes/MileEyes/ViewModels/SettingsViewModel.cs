@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MileEyes.Services;
 using MileEyes.Services.Models;
 
 namespace MileEyes.ViewModels
@@ -80,6 +81,20 @@ namespace MileEyes.ViewModels
             }
         }
 
+        private string _mileEyesConnectDetail;
+
+        public string MileEyesConnectDetail
+        {
+            get { return _mileEyesConnectDetail; }
+            set
+            {
+                if (_mileEyesConnectDetail == value) return;
+                _mileEyesConnectDetail = value;
+                OnPropertyChanged(nameof(MileEyesConnectDetail));
+            }
+        }
+
+
         public bool MultipleVehicles => VehicleCount > 1;
         public bool MultipleReasons => ReasonCount > 1;
         public bool SingleReason => ReasonCount == 1;
@@ -90,8 +105,20 @@ namespace MileEyes.ViewModels
             Refresh();
         }
 
-        public async void Refresh()
+        public override async void Refresh()
         {
+            base.Refresh();
+
+            if (Authenticated)
+            {
+                var userDetails = await Host.UserService.GetDetails();
+                MileEyesConnectDetail = userDetails.Result.Email;
+            }
+            else
+            {
+                MileEyesConnectDetail = "Connect";
+            }
+
             InvoicedDefault = Helpers.Settings.InvoicedDefault;
             VehicleCount = (await Services.Host.VehicleService.GetVehicles()).Count();
             ReasonCount = (await Services.Host.ReasonService.GetReasons()).Count();

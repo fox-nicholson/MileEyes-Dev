@@ -3,20 +3,49 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:customControls="clr-namespace:MileEyes.CustomControls;assembly=MileEyes"
              xmlns:viewModels="clr-namespace:MileEyes.ViewModels;assembly=MileEyes"
-             x:Class="MileEyes.Pages.CloudPage" BackgroundColor="{StaticResource primaryBackgroundColor}">
+             x:Class="MileEyes.Pages.CloudPage">
+  <ContentPage.BackgroundColor>
+    <OnPlatform x:TypeArguments="Color"
+                iOS="{StaticResource primaryiOSBackgroundColor}"
+                Android="{StaticResource primaryAndroidBackgroundColor}" />
+  </ContentPage.BackgroundColor>
+  
   <ContentPage.BindingContext>
     <viewModels:CloudViewModel/>
   </ContentPage.BindingContext>
   <ContentPage.ToolbarItems>
     <ToolbarItem Text="Save" Command="{Binding SaveCommand}"/>
   </ContentPage.ToolbarItems>
-  <customControls:CustomTableView Intent="Form" BackgroundColor="{StaticResource primaryBackgroundColor}">
+  <customControls:CustomTableView Intent="Form">
+    <customControls:CustomTableView.BackgroundColor>
+      <OnPlatform x:TypeArguments="Color"
+                  iOS="{StaticResource primaryiOSBackgroundColor}"
+                  Android="{StaticResource primaryAndroidBackgroundColor}" />
+    </customControls:CustomTableView.BackgroundColor>
     <TableRoot>
       <TableSection>
-        <customControls:CustomEntryCell LabelColor="{StaticResource premiumTextColor}" Label="Email" Placeholder="Required" Text="{Binding Email}"/>
-        <customControls:CustomEntryCell LabelColor="{StaticResource premiumTextColor}" Label="First Name" Placeholder="Required" Text="{Binding FirstName}"/>
-        <customControls:CustomEntryCell LabelColor="{StaticResource premiumTextColor}" Label="Last Name" Placeholder="Required" Text="{Binding LastName}"/>
-        <TextCell Text="Address" Detail="{Binding Address.Label}" Tapped="AddressCell_OnTapped"/>
+        <customControls:CustomEntryCell Label="Email" Placeholder="Required" Text="{Binding Email}">
+          <customControls:CustomEntryCell.LabelColor>
+            <OnPlatform x:TypeArguments="Color"
+                        iOS="{StaticResource premiumTextColor}"
+                        Android="Black" />
+          </customControls:CustomEntryCell.LabelColor>
+        </customControls:CustomEntryCell>
+        <customControls:CustomEntryCell Label="First Name" Placeholder="Required" Text="{Binding FirstName}">
+          <customControls:CustomEntryCell.LabelColor>
+            <OnPlatform x:TypeArguments="Color"
+                        iOS="{StaticResource premiumTextColor}"
+                        Android="Black" />
+          </customControls:CustomEntryCell.LabelColor>
+        </customControls:CustomEntryCell>
+        <customControls:CustomEntryCell Label="Last Name" Placeholder="Required" Text="{Binding LastName}">
+          <customControls:CustomEntryCell.LabelColor>
+            <OnPlatform x:TypeArguments="Color"
+                        iOS="{StaticResource premiumTextColor}"
+                        Android="Black" />
+          </customControls:CustomEntryCell.LabelColor>
+        </customControls:CustomEntryCell>
+        <customControls:CloudAddressViewCell Tapped="AddressCell_OnTapped"/>
       </TableSection>
     </TableRoot>
   </customControls:CustomTableView>

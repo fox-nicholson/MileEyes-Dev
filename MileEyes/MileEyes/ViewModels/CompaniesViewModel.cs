@@ -32,8 +32,10 @@ namespace MileEyes.ViewModels
             Refresh();
         }
 
-        public async void Refresh()
+        public override async void Refresh()
         {
+            base.Refresh();
+
             Refreshing = true;
 
             Companies.Clear();

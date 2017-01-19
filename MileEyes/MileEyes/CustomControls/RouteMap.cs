@@ -27,12 +27,12 @@ namespace MileEyes.CustomControls
             set { SetValue(RouteCoordinatesProperty, value); }
         }
 
-        public event EventHandler ClearRouteRequested = delegate { };
+        //public event EventHandler ClearRouteRequested = delegate { };
 
-        public void ClearRoute()
-        {
-            ClearRouteRequested?.Invoke(this, null);
-        }
+        //public void ClearRoute()
+        //{
+        //    ClearRouteRequested?.Invoke(this, null);
+        //}
 
         private static void OnItemSourcePropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {

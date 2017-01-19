@@ -120,6 +120,12 @@ namespace MileEyes.Services
                     JsonConvert.DeserializeObject<RegisterResponse>(resultString);
                 result.Error = true;
 
+                if (result.ModelState._ == null) return result;
+
+                var temp = result.ModelState._[1];
+
+                result.ModelState._ = new[] {temp};
+
                 return result;
             }
             catch (Exception ex)

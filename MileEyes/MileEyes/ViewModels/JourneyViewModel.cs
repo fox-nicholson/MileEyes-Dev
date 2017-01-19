@@ -170,6 +170,19 @@ namespace MileEyes.ViewModels
 
         public ObservableCollection<Waypoint> Waypoints { get; set; } = new ObservableCollection<Waypoint>();
 
+        private bool _loaded;
+
+        public bool Loaded
+        {
+            get { return _loaded; }
+            set
+            {
+                if (_loaded == value) return;
+                _loaded = value;
+                OnPropertyChanged(nameof(Loaded));
+            }
+        }
+        
         public JourneyViewModel()
         {
 
@@ -177,18 +190,9 @@ namespace MileEyes.ViewModels
 
         public JourneyViewModel(Journey j)
         {
-            Init(j);
-        }
-
-        private async void Init(Journey j)
-        {
-            ShareCommand = new Command(Share);
-
-            Date = j.Date;
-            
-            Distance = Units.MetersToMiles(await j.CalculateDistance());
-
+            Distance = Units.MetersToMiles(j.Distance);
             Cost = Convert.ToDecimal(j.Cost);
+            Date = j.Date;
 
             Waypoints.Clear();
 
@@ -219,12 +223,10 @@ namespace MileEyes.ViewModels
             if (Waypoints.Count() > 2)
             {
                 Gps = true;
-                OnPropertyChanged(nameof(Gps));
             }
             else
             {
                 Manual = true;
-                OnPropertyChanged(nameof(Manual));
             }
 
             Invoiced = j.Invoiced;
@@ -232,8 +234,10 @@ namespace MileEyes.ViewModels
             Vehicle = j.Vehicle;
             Company = j.Company;
             Reason = j.Reason;
-        }
 
+            ShareCommand = new Command(Share);
+        }
+        
         public async void InitRoute()
         {
             if (Waypoints.Count() > 2)
@@ -249,15 +253,18 @@ namespace MileEyes.ViewModels
             {
                 var leg = await Services.Host.GeocodingService.GetDirectionsFromGoogle(new[] { OriginAddress.Latitude, OriginAddress.Longitude },
                     new[] { DestinationAddress.Latitude, DestinationAddress.Longitude });
-
-
+                
                 Route.Clear();
-
-                foreach (var step in leg.steps)
+                if (leg != null)
                 {
-                    Route.Add(new Position(step.end_location.lat, step.end_location.lng));
+                    foreach (var step in leg.steps)
+                    {
+                        Route.Add(new Position(step.end_location.lat, step.end_location.lng));
+                    }
                 }
             }
+
+            Loaded = true;
         }
 
         public ICommand ShareCommand { get; set; }

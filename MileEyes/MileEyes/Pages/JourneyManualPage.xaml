@@ -3,7 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:MileEyes.ViewModels;assembly=MileEyes"
              xmlns:customControls="clr-namespace:MileEyes.CustomControls;assembly=MileEyes"
-             x:Class="MileEyes.Pages.JourneyManualPage" Title="Manual Journey" BackgroundColor="{StaticResource primaryBackgroundColor}">
+             x:Class="MileEyes.Pages.JourneyManualPage" Title="Manual Journey">
+  <ContentPage.BackgroundColor>
+    <OnPlatform x:TypeArguments="Color"
+                iOS="{StaticResource primaryiOSBackgroundColor}"
+                Android="{StaticResource primaryAndroidBackgroundColor}" />
+  </ContentPage.BackgroundColor>
   <ContentPage.BindingContext>
     <viewModels:JourneyManualViewModel/>
   </ContentPage.BindingContext>
@@ -12,27 +17,32 @@
     <ToolbarItem Text="Cancel" Command="{Binding CancelCommand}" Priority="1" />
     <ToolbarItem Text="Save" Command="{Binding SaveCommand}" />
   </ContentPage.ToolbarItems>
-    <StackLayout VerticalOptions="FillAndExpand">
-      <customControls:CustomDatePicker Date="{Binding Date}" HorizontalOptions="Center" TextColor="Gray" />
-      <customControls:CustomTableView Intent="Settings"  BackgroundColor="{StaticResource primaryBackgroundColor}">
-        <TableRoot>
-          <TableSection Title="Journey Details">
-            <customControls:OriginAddressViewCell Tapped="OriginCell_OnTapped" />
-            <customControls:DestinationAddressViewCell Tapped="DestinationCell_OnTapped" />
-          </TableSection>
+  <StackLayout VerticalOptions="FillAndExpand">
+    <customControls:CustomDatePicker Date="{Binding Date}" HorizontalOptions="Center" TextColor="Gray" />
+    <customControls:CustomTableView Intent="Settings">
+      <customControls:CustomTableView.BackgroundColor>
+        <OnPlatform x:TypeArguments="Color"
+                    iOS="{StaticResource primaryiOSBackgroundColor}"
+                    Android="{StaticResource primaryAndroidBackgroundColor}" />
+      </customControls:CustomTableView.BackgroundColor>
+      <TableRoot>
+        <TableSection Title="Journey Details">
+          <customControls:OriginAddressViewCell Tapped="OriginCell_OnTapped" />
+          <customControls:DestinationAddressViewCell Tapped="DestinationCell_OnTapped" />
+        </TableSection>
 
-          <TableSection Title="Expense Details">
-            <customControls:InvoicedViewCell />
-            <customControls:VehicleViewCell Tapped="VehicleCell_OnTapped" />
-            <customControls:CompanyViewCell IsEnabled="{Binding Authenticated}" Tapped="CompanyCell_OnTapped" />
-            <customControls:PassengersViewCell Tapped="PassengersCell_OnTapped" />
-            <customControls:ReasonViewCell Tapped="ReasonCell_OnTapped" />
-          </TableSection>
+        <TableSection Title="Expense Details">
+          <customControls:InvoicedViewCell />
+          <customControls:VehicleViewCell Tapped="VehicleCell_OnTapped" />
+          <customControls:CompanyViewCell IsEnabled="{Binding Authenticated}" Tapped="CompanyCell_OnTapped" />
+          <customControls:PassengersViewCell Tapped="PassengersCell_OnTapped" />
+          <customControls:ReasonViewCell Tapped="ReasonCell_OnTapped" />
+        </TableSection>
 
-          <TableSection Title="Premium Features">
-            <customControls:CloudSyncViewCell />
-          </TableSection>
-        </TableRoot>
-      </customControls:CustomTableView>
-    </StackLayout>
+        <TableSection Title="Premium Features">
+          <customControls:CloudSyncViewCell />
+        </TableSection>
+      </TableRoot>
+    </customControls:CustomTableView>
+  </StackLayout>
 </ContentPage>

@@ -87,8 +87,10 @@ namespace MileEyes.ViewModels
             Refresh();
         }
 
-        public void Refresh()
+        public override async void Refresh()
         {
+            base.Refresh();
+
             Refreshing = true;
 
             Route.Clear();

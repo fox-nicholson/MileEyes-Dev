@@ -46,8 +46,10 @@ namespace MileEyes.ViewModels
 
         public event EventHandler NoReasons = delegate { };
 
-        public async void Refresh()
+        public override async void Refresh()
         {
+            base.Refresh();
+
             Refreshing = true;
 
             var reasons = await Services.Host.ReasonService.GetReasons();

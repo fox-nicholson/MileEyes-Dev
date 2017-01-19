@@ -50,11 +50,22 @@ namespace MileEyes.Pages
             Device.BeginInvokeOnMainThread(async () =>
             {
                 await Navigation.PopModalAsync();
-                await Navigation.PushModalAsync(new CustomNavigationPage(new JourneyConfirmPage())
-                {
-                    BarBackgroundColor = Color.FromHex("#103D47"),
-                    BarTextColor = Color.White
-                });
+                Device.OnPlatform(
+                    async () =>
+                    {
+                        await Navigation.PushModalAsync(new CustomNavigationPage(new JourneyConfirmPage())
+                        {
+                            BarBackgroundColor = Color.FromHex("#103D47"),
+                            BarTextColor = Color.White
+                        });
+                    }, async () =>
+                    {
+                        await Navigation.PushModalAsync(new CustomNavigationPage(new JourneyConfirmPage())
+                        {
+                            BarBackgroundColor = Color.FromHex("#58C0EE"),
+                            BarTextColor = Color.White
+                        });
+                    });
             });
         }
 
@@ -68,25 +79,47 @@ namespace MileEyes.Pages
 
         private void TrackerService_Started(object sender, EventArgs e)
         {
-            Device.BeginInvokeOnMainThread(async () =>
+            Device.BeginInvokeOnMainThread(() =>
             {
-                await Navigation.PushModalAsync(new CustomNavigationPage(new JourneyCurrentPage())
-                {
-                    BarBackgroundColor = Color.FromHex("#103D47"),
-                    BarTextColor = Color.White
-                });
+                Device.OnPlatform(
+                    async () =>
+                    {
+                        await Navigation.PushModalAsync(new CustomNavigationPage(new JourneyCurrentPage())
+                        {
+                            BarBackgroundColor = Color.FromHex("#103D47"),
+                            BarTextColor = Color.White
+                        });
+                    }, async () =>
+                    {
+                        await Navigation.PushModalAsync(new CustomNavigationPage(new JourneyCurrentPage())
+                        {
+                            BarBackgroundColor = Color.FromHex("#58C0EE"),
+                            BarTextColor = Color.White
+                        });
+                    });
             });
         }
 
         private void ManualJourneyButton_OnClicked(object sender, EventArgs e)
         {
-            Device.BeginInvokeOnMainThread(async () =>
+            Device.BeginInvokeOnMainThread(() =>
             {
-                await Navigation.PushModalAsync(new CustomNavigationPage(new JourneyManualPage())
-                {
-                    BarBackgroundColor = Color.FromHex("#103D47"),
-                    BarTextColor = Color.White
-                });
+                Device.OnPlatform(
+                    async () =>
+                    {
+                        await Navigation.PushModalAsync(new CustomNavigationPage(new JourneyManualPage())
+                        {
+                            BarBackgroundColor = Color.FromHex("#103D47"),
+                            BarTextColor = Color.White
+                        });
+                    }, async () =>
+                    {
+                        await Navigation.PushModalAsync(new CustomNavigationPage(new JourneyManualPage())
+                        {
+                            BarBackgroundColor = Color.FromHex("#58C0EE"),
+                            BarTextColor = Color.White
+                        });
+                    });
             });
         }
     }

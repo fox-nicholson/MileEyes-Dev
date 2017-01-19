@@ -3,7 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:MileEyes.ViewModels;assembly=MileEyes"
              xmlns:customControls="clr-namespace:MileEyes.CustomControls;assembly=MileEyes"
-             x:Class="MileEyes.Pages.JourneyConfirmPage" Title="Confirm Journey" BackgroundColor="{StaticResource primaryBackgroundColor}">
+             x:Class="MileEyes.Pages.JourneyConfirmPage" Title="Confirm Journey">
+  <ContentPage.BackgroundColor>
+    <OnPlatform x:TypeArguments="Color"
+                iOS="{StaticResource primaryiOSBackgroundColor}"
+                Android="{StaticResource primaryAndroidBackgroundColor}" />
+  </ContentPage.BackgroundColor>
   <ContentPage.BindingContext>
     <viewModels:JourneyConfirmViewModel/>
   </ContentPage.BindingContext>
@@ -12,19 +17,24 @@
     <ToolbarItem Text="Cancel" Clicked="CancelMenuItem_OnClicked" Priority="0"/>
     <ToolbarItem Text="Save" Command="{Binding SaveCommand}" Priority="1"/>
   </ContentPage.ToolbarItems>
-    <customControls:CustomTableView Intent="Settings"  BackgroundColor="{StaticResource primaryBackgroundColor}">
-      <TableRoot>
-        <TableSection Title="Expense Details">
-          <customControls:InvoicedViewCell />
-          <customControls:VehicleViewCell Tapped="VehicleCell_OnTapped" />
-          <customControls:CompanyViewCell IsEnabled="{Binding Authenticated}" Tapped="CompanyCell_OnTapped" />
-          <customControls:PassengersViewCell Tapped="PassengersCell_OnTapped" />
-          <customControls:ReasonViewCell Tapped="ReasonCell_OnTapped" />
-        </TableSection>
+  <customControls:CustomTableView Intent="Settings">
+    <customControls:CustomTableView.BackgroundColor>
+      <OnPlatform x:TypeArguments="Color"
+                  iOS="{StaticResource primaryiOSBackgroundColor}"
+                  Android="{StaticResource primaryAndroidBackgroundColor}" />
+    </customControls:CustomTableView.BackgroundColor>
+    <TableRoot>
+      <TableSection Title="Expense Details">
+        <customControls:InvoicedViewCell />
+        <customControls:VehicleViewCell Tapped="VehicleCell_OnTapped" />
+        <customControls:CompanyViewCell IsEnabled="{Binding Authenticated}" Tapped="CompanyCell_OnTapped" />
+        <customControls:PassengersViewCell Tapped="PassengersCell_OnTapped" />
+        <customControls:ReasonViewCell Tapped="ReasonCell_OnTapped" />
+      </TableSection>
 
-        <TableSection Title="Premium Features">
-          <customControls:CloudSyncViewCell />
-        </TableSection>
-      </TableRoot>
-    </customControls:CustomTableView>
+      <TableSection Title="Premium Features">
+        <customControls:CloudSyncViewCell />
+      </TableSection>
+    </TableRoot>
+  </customControls:CustomTableView>
 </ContentPage>

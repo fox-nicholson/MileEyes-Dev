@@ -45,7 +45,7 @@ namespace MileEyes.iOS.Renderers
 
             formsMap = (RouteMap)e.NewElement;
 
-            formsMap.ClearRouteRequested += FormsMap_ClearRouteRequested;
+            //formsMap.ClearRouteRequested += FormsMap_ClearRouteRequested;
         }
 
         private void FormsMap_ClearRouteRequested(object sender, EventArgs e)
@@ -68,10 +68,7 @@ namespace MileEyes.iOS.Renderers
         {
             map.OverlayRenderer = GetOverlayRenderer;
 
-            if (routeOverlay != null)
-            {
-                routeOverlay = null;
-            }
+            routeOverlay = null;
 
             var coords = new CLLocationCoordinate2D[formsMap.RouteCoordinates.Count];
 

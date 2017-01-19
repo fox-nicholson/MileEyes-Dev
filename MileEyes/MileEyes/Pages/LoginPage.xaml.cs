@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using MileEyes.ViewModels;
 using Xamarin.Forms;
 
 namespace MileEyes.Pages
@@ -13,6 +13,16 @@ namespace MileEyes.Pages
         public LoginPage()
         {
             InitializeComponent();
+
+            (BindingContext as LoginViewModel).LoginFailed += LoginPage_LoginFailed;
+        }
+
+        private void LoginPage_LoginFailed(object sender, string e)
+        {
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                await DisplayAlert("Login Failed", e, "Ok");
+            });
         }
     }
 }

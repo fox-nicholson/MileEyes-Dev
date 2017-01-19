@@ -118,15 +118,17 @@ namespace MileEyes.Pages
         {
             var j = BindingContext as JourneyViewModel;
 
-            var origin = j.OriginAddress;
-            var dest = j.DestinationAddress;
+            if (j != null)
+            {
+                var midpoint =
+                    Services.Helpers.TrigHelpers.MidPoint(new[] {j.OriginAddress.Latitude, j.OriginAddress.Longitude},
+                        new[] {j.DestinationAddress.Latitude, j.DestinationAddress.Longitude});
 
-            var midpoint = Services.Helpers.TrigHelpers.MidPoint(new[] { origin.Latitude, origin.Longitude },
-                                new[] { dest.Latitude, dest.Longitude });
+                map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(midpoint[0], midpoint[1]),
+                    Distance.FromMiles(j.Distance*0.6)));
 
-            map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(midpoint[0], midpoint[1]), Distance.FromMiles(j.Distance * 0.6)));
-
-            (BindingContext as JourneyViewModel).InitRoute();
+                j.InitRoute();
+            }
         }
     }
 }

@@ -14,6 +14,7 @@ using MileEyes.API.Models.DatabaseModels;
 using MileEyes.API.Services;
 using MileEyes.PublicModels.Company;
 using MileEyes.PublicModels.Journey;
+using MileEyes.PublicModels.Vehicles;
 
 namespace MileEyes.API.Controllers
 {
@@ -48,6 +49,11 @@ namespace MileEyes.API.Controllers
                     Id = j.Company.Id.ToString()
                 };
 
+                var vehicle = new VehicleViewModel()
+                {
+                    Id = j.Vehicle.Id.ToString()
+                };
+
                 var journey = new JourneyViewModel()
                 {
                     Accepted = j.Accepted,
@@ -59,7 +65,9 @@ namespace MileEyes.API.Controllers
                     Passengers = j.Passengers,
                     Reason = j.Reason,
                     Rejected = j.Rejected,
-
+                    Company = company,
+                    Waypoints = waypoints,
+                    Vehicle = vehicle
                 };
                 result.Add(journey);
             }

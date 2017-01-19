@@ -2,8 +2,13 @@
 <ViewCell xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="MileEyes.CustomControls.DefaultVehicleViewCell">
   <StackLayout Orientation="Horizontal" Padding="15, 0, 15, 0">
     <Image Source="vehicle.png" Margin="0,0,7.5,0"/>
-    <Label Text="Default Vehicle"
-    TextColor="#FFFFFF" VerticalTextAlignment="Center" />
+    <Label Text="Default Vehicle" VerticalTextAlignment="Center">
+      <Label.TextColor>
+        <OnPlatform x:TypeArguments="Color"
+                    iOS="#FFFFFF"
+                    Android="Black" />
+      </Label.TextColor>
+    </Label>
     
     <Label Text="{Binding DefaultVehicle.Registration}"
     HorizontalOptions="EndAndExpand"

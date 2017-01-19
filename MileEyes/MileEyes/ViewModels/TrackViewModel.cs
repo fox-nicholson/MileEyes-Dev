@@ -55,7 +55,7 @@ namespace MileEyes.ViewModels
             GpsPingCallback();
         }
 
-        public void Refresh()
+        public override async void Refresh()
         {
             GPSAvailable = Plugin.Geolocator.CrossGeolocator.Current.IsGeolocationAvailable && Plugin.Geolocator.CrossGeolocator.Current.IsGeolocationEnabled;
         }
@@ -77,7 +77,7 @@ namespace MileEyes.ViewModels
                 var real = Plugin.Geolocator.CrossGeolocator.Current.IsGeolocationAvailable;
                 var real2 = Plugin.Geolocator.CrossGeolocator.Current.IsGeolocationEnabled;
 
-                var position = await Plugin.Geolocator.CrossGeolocator.Current.GetPositionAsync(5000);
+                var position = await Plugin.Geolocator.CrossGeolocator.Current.GetPositionAsync();
 
                 var loc = await Services.Host.GeocodingService.GetWeather(position.Latitude, position.Longitude);
 

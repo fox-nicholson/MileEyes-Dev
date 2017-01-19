@@ -43,6 +43,8 @@ namespace MileEyes.ViewModels
 
         public async void Refresh()
         {
+            base.Refresh();
+
             Refreshing = true;
 
             Vehicles.Clear();
@@ -78,7 +80,7 @@ namespace MileEyes.ViewModels
 
             if (vehicle == null)
             {
-                VehicleNotRemoved?.Invoke(this, v.Registration + " was not removed.");
+                VehicleNotRemoved?.Invoke(this, v.Registration + " was not removed." + Environment.NewLine + "This is most likely because the vehicle was used for a journey.");
             }
             else
             {
