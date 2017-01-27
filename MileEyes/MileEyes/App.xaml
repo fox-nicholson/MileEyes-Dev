@@ -3,7 +3,6 @@
              xmlns:forms="http://xamarin.com/schemas/2014/forms"
              xmlns:mileEyes="clr-namespace:MileEyes;assembly=MileEyes">
   <Application.Resources>
-    <!-- Application resource dictionary -->
     <ResourceDictionary>
       <Color x:Key="primaryBackgroundColor">#011E22</Color>
 
