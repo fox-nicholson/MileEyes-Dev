@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
 using MileEyes.CustomControls;
@@ -16,6 +17,7 @@ namespace MileEyes.Droid.Renderers
     {
         GoogleMap map;
         ObservableCollection<Position> routeCoordinates;
+        private Polyline polyline;
 
         protected override void OnElementChanged(ElementChangedEventArgs<Map> e)
         {
@@ -35,6 +37,31 @@ namespace MileEyes.Droid.Renderers
             }
         }
 
+        protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            base.OnElementPropertyChanged(sender, e);
+
+            if (polyline != null)
+            {
+                UpdateRoute();
+            }
+        }
+
+        public void UpdateRoute()
+        {
+            polyline.Remove();
+
+            var polylineOptions = new PolylineOptions();
+            polylineOptions.InvokeColor(0x66FF0000);
+
+            foreach (var position in routeCoordinates)
+            {
+                polylineOptions.Add(new LatLng(position.Latitude, position.Longitude));
+            }
+
+            polyline = map.AddPolyline(polylineOptions);
+        }
+
         public void OnMapReady(GoogleMap googleMap)
         {
             map = googleMap;
@@ -47,7 +74,7 @@ namespace MileEyes.Droid.Renderers
                 polylineOptions.Add(new LatLng(position.Latitude, position.Longitude));
             }
 
-            map.AddPolyline(polylineOptions);
+            polyline = map.AddPolyline(polylineOptions);
         }
     }
 }

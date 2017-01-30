@@ -10,6 +10,11 @@ namespace MileEyes.API.Extensions
 {
     public static class JourneyExtensions
     {
+        /// <summary>
+        /// Calculates the distance travelled on the journey
+        /// </summary>
+        /// <param name="journey">The Journey itself</param>
+        /// <returns></returns>
         public static async Task<double> Distance(this Journey journey)
         {
             return await CalculateJourneyDistance(journey.Waypoints);
@@ -53,6 +58,12 @@ namespace MileEyes.API.Extensions
             return distance;
         }
 
+        /// <summary>
+        /// Calculates the distance between 2 GPS Coordinates
+        /// </summary>
+        /// <param name="origin">Start Location</param>
+        /// <param name="destination">End Location</param>
+        /// <returns></returns>
         public static double CalculateBetweenLegs(Coordinates origin, Coordinates destination)
         {
             var distance = origin.DistanceTo(destination, UnitOfLength.Miles);
@@ -62,6 +73,7 @@ namespace MileEyes.API.Extensions
 
         public static decimal CalculateFuelVat(this Journey journey)
         {
+            // Fuel VAT is the distance multiplied by the result of the calculation fuelrate multiplied by 0.20
             return Convert.ToDecimal(Units.MetersToMiles(journey.Distance)) * (journey.Vehicle.EngineType.FuelRate * 0.20M);
         }
 
@@ -72,29 +84,38 @@ namespace MileEyes.API.Extensions
 
             var currentMiles = journey.Driver.Journeys.Sum(j => j.Distance);
 
+            // What is the number of miles after adding this journey distance onto the existing distance
             var newMiles = currentMiles + journey.Distance;
+            // Rate cut off distance
             var ceiling = Units.MilesToMeters(10000);
 
+            // Does the current miles travelled go over the cut off
             if (currentMiles > ceiling)
             {
+                // Set over miles to the amount it went over
                 overMiles = journey.Distance;
             }
             else
             {
+                // Is the New miles over the cutoff
                 if (newMiles > ceiling)
                 {
                     underMiles = ceiling - currentMiles;
                     overMiles = newMiles - ceiling;
                 }
+                // Its under
                 else
                 {
                     underMiles = journey.Distance;
                 }
             }
 
+            // Calculate the under cut off cost
             var underCost = CalculateCost(underMiles, journey.Company.HighRate);
+            // Calculate the over cut off cost
             var overCost =  CalculateCost(overMiles, journey.Company.LowRate);
 
+            // Return the combined sum
             return underCost + overCost;
         }
 

@@ -13,8 +13,16 @@ namespace MileEyes.Pages
         public LoginPage()
         {
             InitializeComponent();
-
+            (BindingContext as LoginViewModel).LoginSuccess += LoginPage_LoginSuccess;
             (BindingContext as LoginViewModel).LoginFailed += LoginPage_LoginFailed;
+        }
+
+        private void LoginPage_LoginSuccess(object sender, EventArgs e)
+        {
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                await Navigation.PopToRootAsync();
+            });
         }
 
         private void LoginPage_LoginFailed(object sender, string e)

@@ -72,6 +72,11 @@
                           iOS="Transparent"
                           Android="{StaticResource mileeyesBlue}" />
             </Button.BackgroundColor>
+            <Button.BorderColor>
+              <OnPlatform x:TypeArguments="Color"
+                          iOS="Lime"
+                          Android="{StaticResource mileeyesBlue}" />
+            </Button.BorderColor>
           </Button>
         </StackLayout>
       </Grid>

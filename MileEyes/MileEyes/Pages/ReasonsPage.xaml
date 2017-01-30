@@ -25,13 +25,19 @@
                     iOS="{StaticResource primaryiOSBackgroundColor}"
                     Android="{StaticResource primaryAndroidBackgroundColor}" />
       </customControls:CustomListView.BackgroundColor>
+      
       <customControls:CustomListView.ItemTemplate>
         <DataTemplate>
-          <customControls:ReasonItemViewCell ShowDisclosure="False">
-            <customControls:ReasonItemViewCell.ContextActions>
+          <customControls:CustomImageCell Text="{Binding Text}" ShowDisclosure="False">
+            <customControls:CustomImageCell.ContextActions>
               <MenuItem Text="Remove" IsDestructive="True" Clicked="ReasonDeleteMenuItem_OnClicked" CommandParameter="{Binding .}" />
-            </customControls:ReasonItemViewCell.ContextActions>
-          </customControls:ReasonItemViewCell>
+            </customControls:CustomImageCell.ContextActions>
+            <customControls:CustomImageCell.TextColor>
+              <OnPlatform x:TypeArguments="Color"
+                          iOS="#FFFFFF"
+                          Android="Black" />
+            </customControls:CustomImageCell.TextColor>
+          </customControls:CustomImageCell>
         </DataTemplate>
       </customControls:CustomListView.ItemTemplate>
     </customControls:CustomListView>

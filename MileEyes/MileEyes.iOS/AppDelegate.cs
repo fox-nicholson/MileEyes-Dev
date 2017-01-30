@@ -25,6 +25,7 @@ namespace MileEyes.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
+            global::Xamarin.FormsMaps.Init();
             LoadApplication(new App());
 
             MessagingCenter.Subscribe<SharedJourney>(this, "Share", Share, null);

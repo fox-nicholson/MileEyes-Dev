@@ -18,7 +18,14 @@ namespace MileEyes.Services
         public void Logout()
         {
             Authenticated = false;
-            DatabaseService.Realm.RemoveAll<AuthToken>();
+
+            using (var transaction = DatabaseService.Realm.BeginWrite())
+            {
+                DatabaseService.Realm.RemoveAll<AuthToken>();
+
+                transaction.Commit();
+            }
+
             RestService.Client.DefaultRequestHeaders.Authorization = null;
         }
 
@@ -41,11 +48,11 @@ namespace MileEyes.Services
 
         public async Task<AuthResponse> Authenticate(string email, string password)
         {
-            var data = new FormUrlEncodedContent(new []
+            var data = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("grant_type", "password"),
                 new KeyValuePair<string, string>("username", email),
-                new KeyValuePair<string, string>("password", password),  
+                new KeyValuePair<string, string>("password", password),
             });
 
             try
@@ -60,14 +67,17 @@ namespace MileEyes.Services
                 }
 
                 var tokenResult = JsonConvert.DeserializeObject<AuthResponse>(await response.Content.ReadAsStringAsync());
-
-
+                
+                // Write the access token to the database for use in future
                 using (var transaction = DatabaseService.Realm.BeginWrite())
                 {
+                    // Remove any tokens that already exist
                     DatabaseService.Realm.RemoveAll<AuthToken>();
 
+                    // Create new Realm database object
                     var authToken = DatabaseService.Realm.CreateObject<AuthToken>();
 
+                    // Setup the access tokens properties
                     authToken.access_token = tokenResult.access_token;
                     authToken.expires = tokenResult.expires;
                     authToken.expires_in = tokenResult.expires_in;
@@ -75,17 +85,24 @@ namespace MileEyes.Services
                     authToken.issued = tokenResult.issued;
                     authToken.userName = tokenResult.userName;
 
+                    // Commit the transaction
                     transaction.Commit();
                 }
 
+                // Set the request headers bearer token to the access token.
                 RestService.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResult.access_token);
 
+                // Obvious
                 Authenticated = true;
+
+                // Set the token to successful
                 tokenResult.Success = true;
 
+
+                // Return the token
                 return tokenResult;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new AuthResponse()
                 {
@@ -124,7 +141,7 @@ namespace MileEyes.Services
 
                 var temp = result.ModelState._[1];
 
-                result.ModelState._ = new[] {temp};
+                result.ModelState._ = new[] { temp };
 
                 return result;
             }

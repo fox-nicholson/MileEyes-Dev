@@ -266,6 +266,14 @@
     <Compile Include="Migrations\201701161454430_AvatarImage.Designer.cs">
       <DependentUpon>201701161454430_AvatarImage.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701271122046_ModelCheck.cs" />
+    <Compile Include="Migrations\201701271122046_ModelCheck.Designer.cs">
+      <DependentUpon>201701271122046_ModelCheck.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701271458269_AddedElevationToCoordinate.cs" />
+    <Compile Include="Migrations\201701271458269_AddedElevationToCoordinate.Designer.cs">
+      <DependentUpon>201701271458269_AddedElevationToCoordinate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -280,6 +288,7 @@
     <Compile Include="Models\DatabaseModels\Driver.cs" />
     <Compile Include="Models\DatabaseModels\DriverInvite.cs" />
     <Compile Include="Models\DatabaseModels\EngineType.cs" />
+    <Compile Include="Models\DatabaseModels\FreeAgentToken.cs" />
     <Compile Include="Models\DatabaseModels\FuelType.cs" />
     <Compile Include="Models\DatabaseModels\Invite.cs" />
     <Compile Include="Models\DatabaseModels\Journey.cs" />
@@ -454,6 +463,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701161454430_AvatarImage.resx">
       <DependentUpon>201701161454430_AvatarImage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701271122046_ModelCheck.resx">
+      <DependentUpon>201701271122046_ModelCheck.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701271458269_AddedElevationToCoordinate.resx">
+      <DependentUpon>201701271458269_AddedElevationToCoordinate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -1,165 +1,61 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ViewCell IsEnabled="{Binding Loaded}" xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="MileEyes.CustomControls.CustomJourneyCell">
-  <StackLayout Orientation="Horizontal" Padding="10, 7.5, 0, 7.5" HorizontalOptions="FillAndExpand">
+<ViewCell xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="MileEyes.CustomControls.CustomJourneyCell">
+  <StackLayout Orientation="Horizontal" Padding="10, 7.5, 0, 7.5" HorizontalOptions="Fill">
     <StackLayout Orientation="Vertical" Padding="0, 0, 0, 0" VerticalOptions="Center">
       <StackLayout Orientation="Vertical" Padding="0, 0, 5, 0" Spacing="15">
-        <Image Source="gps_icon.png" IsVisible="{Binding Gps}" />
-        <Image Source="manual_record_icon.png" IsVisible="{Binding Manual}" />
-        <Image Source="Accepted_Flag.png" IsVisible="{Binding Accepted}" />
+        <Image Source="gps_icon.png" IsVisible="{Binding Gps}"/>
+        <Image Source="manual_record_icon.png" IsVisible="{Binding Manual}"/>
+        <Image Source="Accepted_Flag.png" IsVisible="{Binding Accepted}"/>
       </StackLayout>
     </StackLayout>
-    <StackLayout Orientation="Vertical" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
-      <!--StackLayout Orientation="Horizontal" Padding="0, 0, 0, 0">
-                <Label Text="{Binding Distance, StringFormat='{0:N2} Miles'}" FontAttributes="Bold"
-                       VerticalTextAlignment="Center" HorizontalOptions="Start">
-                    <Label.TextColor>
-                        <OnPlatform x:TypeArguments="Color"
-                                    iOS="#FFFFFF"
-                                    Android="Black" />
-                    </Label.TextColor>
-                </Label>
-                <Label Text="-" FontAttributes="Bold"
-                       VerticalTextAlignment="Center" IsVisible="{Binding Authenticated}" HorizontalOptions="Start">
-                    <Label.TextColor>
-                        <OnPlatform x:TypeArguments="Color"
-                                    iOS="#FFFFFF"
-                                    Android="Gray" />
-                    </Label.TextColor>
-                </Label>
-                <Label Text="{Binding Cost, StringFormat='£{0:N2}'}" FontAttributes="Bold"
-                       VerticalTextAlignment="Center" IsVisible="{Binding Authenticated}"
-                       HorizontalOptions="StartAndExpand">
-                    <Label.TextColor>
-                        <OnPlatform x:TypeArguments="Color"
-                                    iOS="#FFFFFF"
-                                    Android="Gray" />
-                    </Label.TextColor>
-                </Label>
-                <Label Text="{Binding Date, StringFormat='{0:dd/MM/yy}'}" FontFamily="SF Compact Text"
-                       HorizontalOptions="EndAndExpand" VerticalTextAlignment="Center">
-                    <Label.TextColor>
-                        <OnPlatform x:TypeArguments="Color"
-                                    iOS="#55FFFFFF"
-                                    Android="Gray" />
-                    </Label.TextColor>
-                </Label>
-
-            </StackLayout-->
-      <Grid RowSpacing="0" HorizontalOptions="CenterAndExpand" WidthRequest="1080">
+    <StackLayout Orientation="Vertical" VerticalOptions="Center">
+      <StackLayout Orientation="Horizontal" Padding="0, 0, 0, 0">
+        <Label Text="{Binding Distance, StringFormat='{0:N2} Miles'}" FontAttributes="Bold"
+				TextColor="#FFFFFF" VerticalTextAlignment="Center" />
+        <Label Text="-" FontAttributes="Bold"
+				TextColor="#FFFFFF" VerticalTextAlignment="Center"  IsVisible="{Binding Authenticated}"/>
+        <Label Text="{Binding Cost, StringFormat='£{0:N2}'}" FontAttributes="Bold"
+				TextColor="#FFFFFF" VerticalTextAlignment="Center"  IsVisible="{Binding Authenticated}"/>
+        <Label Text="{Binding Date, StringFormat='{0:dd/MM/yy}'}" FontFamily="SF Compact Text"
+				HorizontalOptions="EndAndExpand"
+				TextColor="#55FFFFFF"  VerticalTextAlignment="Center" />
+      </StackLayout>
+      <Grid RowSpacing="0">
         <Grid.RowDefinitions>
-          <RowDefinition Height="*" />
           <RowDefinition Height="*" />
           <RowDefinition Height="*" />
           <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="2.5*" />
-          <ColumnDefinition Width="2.5*" />
-          <ColumnDefinition Width="2.5*" />
-          <ColumnDefinition Width="2.5*" />
+          <ColumnDefinition Width="1*" />
+          <ColumnDefinition Width="4.5*" />
         </Grid.ColumnDefinitions>
-
-        <StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand" Padding="0,0,0,0" Grid.Row="0"
-                     Grid.Column="0" Grid.ColumnSpan="3">
-          <Label Text="{Binding Distance, StringFormat='{0:N2} Miles'}" FontAttributes="Bold"
-                 VerticalTextAlignment="Center" HorizontalOptions="Start">
-            <Label.TextColor>
-              <OnPlatform x:TypeArguments="Color"
-                          iOS="#FFFFFF"
-                          Android="Black" />
-            </Label.TextColor>
-          </Label>
-          <Label Text="-" FontAttributes="Bold"
-                 VerticalTextAlignment="Center" IsVisible="{Binding Authenticated}" HorizontalOptions="Start">
-            <Label.TextColor>
-              <OnPlatform x:TypeArguments="Color"
-                          iOS="#FFFFFF"
-                          Android="Gray" />
-            </Label.TextColor>
-          </Label>
-          <Label Text="{Binding Cost, StringFormat='£{0:N2}'}" FontAttributes="Bold"
-                 VerticalTextAlignment="Center" IsVisible="{Binding Authenticated}"
-                 HorizontalOptions="Start">
-            <Label.TextColor>
-              <OnPlatform x:TypeArguments="Color"
-                          iOS="#FFFFFF"
-                          Android="Gray" />
-            </Label.TextColor>
-          </Label>
-        </StackLayout>
-
-        <Label Text="{Binding Date, StringFormat='{0:dd/MM/yy}'}" FontFamily="SF Compact Text"
-               VerticalTextAlignment="Center" HorizontalOptions="EndAndExpand" HorizontalTextAlignment="End"
-               Grid.Row="0" Grid.Column="3">
-          <Label.TextColor>
-            <OnPlatform x:TypeArguments="Color"
-                        iOS="#55FFFFFF"
-                        Android="Gray" />
-          </Label.TextColor>
-        </Label>
-
-        <Label Text="From" FontAttributes="Bold" VerticalTextAlignment="Center" Grid.Row="1" Grid.Column="0">
-          <Label.TextColor>
-            <OnPlatform x:TypeArguments="Color"
-                        iOS="#55FFFFFF"
-                        Android="Gray" />
-          </Label.TextColor>
-        </Label>
+        <Label Text="From" FontAttributes="Bold"
+				TextColor="#55FFFFFF" VerticalTextAlignment="Center" Grid.Row="0" Grid.Column="0" />
         <Label Text="{Binding OriginAddress.Label}"
-               HorizontalOptions="FillAndExpand" LineBreakMode="TailTruncation" WidthRequest="1080"
-               VerticalTextAlignment="Center" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3">
-          <Label.TextColor>
-            <OnPlatform x:TypeArguments="Color"
-                        iOS="#55FFFFFF"
-                        Android="Gray" />
-          </Label.TextColor>
-        </Label>
+				HorizontalOptions="FillAndExpand" LineBreakMode="TailTruncation"
+				TextColor="#55FFFFFF"  VerticalTextAlignment="Center" Grid.Row="0" Grid.Column="1" />
 
-        <Label Text="To" FontAttributes="Bold" VerticalTextAlignment="Center" Grid.Row="2" Grid.Column="0">
-          <Label.TextColor>
-            <OnPlatform x:TypeArguments="Color"
-                        iOS="#55FFFFFF"
-                        Android="Gray" />
-          </Label.TextColor>
-        </Label>
+        <Label Text="To" FontAttributes="Bold"
+				TextColor="#55FFFFFF" VerticalTextAlignment="Center" Grid.Row="1" Grid.Column="0" />
         <Label Text="{Binding DestinationAddress.Label}"
-               HorizontalOptions="FillAndExpand" LineBreakMode="TailTruncation" WidthRequest="1080"
-               VerticalTextAlignment="Center" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3">
-          <Label.TextColor>
-            <OnPlatform x:TypeArguments="Color"
-                        iOS="#55FFFFFF"
-                        Android="Gray" />
-          </Label.TextColor>
-        </Label>
+				HorizontalOptions="FillAndExpand" LineBreakMode="TailTruncation"
+				TextColor="#55FFFFFF"  VerticalTextAlignment="Center" Grid.Row="1" Grid.Column="1" />
 
-        <Label Text="Note" FontAttributes="Bold" VerticalTextAlignment="Center" Grid.Row="3" Grid.Column="0"
-               WidthRequest="1080">
-          <Label.TextColor>
-            <OnPlatform x:TypeArguments="Color"
-                        iOS="#55FFFFFF"
-                        Android="Gray" />
-          </Label.TextColor>
-        </Label>
+        <Label Text="Note" FontAttributes="Bold"
+				TextColor="#55FFFFFF" VerticalTextAlignment="Center" Grid.Row="2" Grid.Column="0"/>
         <Label Text="{Binding Reason}"
-               HorizontalOptions="FillAndExpand" LineBreakMode="TailTruncation"
-               VerticalTextAlignment="Center" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3">
-          <Label.TextColor>
-            <OnPlatform x:TypeArguments="Color"
-                        iOS="#55FFFFFF"
-                        Android="Gray" />
-          </Label.TextColor>
-        </Label>
+				HorizontalOptions="FillAndExpand" LineBreakMode="TailTruncation"
+				TextColor="#55FFFFFF"  VerticalTextAlignment="Center" Grid.Row="2" Grid.Column="1" />
       </Grid>
     </StackLayout>
-    <StackLayout Orientation="Vertical" Padding="5, 4, 10, 0" VerticalOptions="FillAndExpand"
-                 HorizontalOptions="FillAndExpand">
+    <StackLayout Orientation="Vertical" Padding="5, 4, 10, 0" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
       <StackLayout Orientation="Vertical">
-        <Image Source="Disclosure_Icon.png" />
+        <Image Source="Disclosure_Icon.png"/>
       </StackLayout>
     </StackLayout>
   </StackLayout>
 </ViewCell>
-
 
 <!--
 <StackLayout Orientation="Horizontal" Padding="10, 7.5, 0, 7.5" HorizontalOptions="Fill">

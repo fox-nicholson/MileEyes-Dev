@@ -161,6 +161,22 @@ namespace MileEyes.ViewModels
 
         public bool NoCost => !_hasCost;
 
+        private bool _showDetails;
+
+        public bool ShowDetails
+        {
+            get { return _showDetails; }
+            set
+            {
+                if (_showDetails == value) return;
+                _showDetails = value;
+                OnPropertyChanged(nameof(ShowDetails));
+                OnPropertyChanged(nameof(ShowMap));
+            }
+        }
+
+        public bool ShowMap => !_showDetails;
+
         public bool Accepted { get; set; } = false;
 
         public bool Manual { get; set; }
@@ -240,6 +256,7 @@ namespace MileEyes.ViewModels
         
         public async void InitRoute()
         {
+            ShowDetails = true;
             if (Waypoints.Count() > 2)
             {
                 Route.Clear();
@@ -269,8 +286,17 @@ namespace MileEyes.ViewModels
 
         public ICommand ShareCommand { get; set; }
 
-        public async void Share()
+        public void Share()
         {
+            var from = OriginAddress.Label;
+            var to = DestinationAddress.Label;
+            var reason = Reason;
+            var date = Date;
+            var distance = Distance;
+            var invoiced = Invoiced;
+            var passengers = Passengers;
+            var vehicle = Vehicle;
+
             var sharedJourney = new SharedJourney()
             {
                 From = OriginAddress.Label,

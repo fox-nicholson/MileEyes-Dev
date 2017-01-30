@@ -1,14 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-
-  <!-- Drop Shadow Stack -->
   <item>
     <shape xmlns:android="http://schemas.android.com/apk/res/android"
         android:shape="oval">
-
       <solid android:color="#0200FF00" />
-
-
     </shape>
   </item>
   <item>
@@ -19,10 +14,7 @@
           android:left="1dp"
           android:right="1dp"
           android:top="1dp" />
-
       <solid android:color="#0400FF00" />
-
-
     </shape>
   </item>
   <item>
@@ -33,10 +25,7 @@
           android:left="2dp"
           android:right="2dp"
           android:top="2dp" />
-
       <solid android:color="#0600FF00" />
-
-
     </shape>
   </item>
   <item>
@@ -47,10 +36,7 @@
           android:left="3dp"
           android:right="3dp"
           android:top="3dp" />
-
       <solid android:color="#0800FF00" />
-
-
     </shape>
   </item>
   <item>
@@ -61,13 +47,9 @@
           android:left="4dp"
           android:right="4dp"
           android:top="4dp" />
-
       <solid android:color="#1000FF00" />
-
-
     </shape>
   </item>
-
   <item>
     <shape
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -76,7 +58,6 @@
           android:width="100dp"
           android:height="100dp" />
       <stroke android:width="3dp" android:color="#110000ff"/>
-
     </shape>
   </item>
   <item android:top="4dp" android:left="4dp" android:right="4dp" android:bottom="4dp">
@@ -89,7 +70,6 @@
       <gradient  android:layout_gravity="right" android:type="radial" android:gradientRadius="280"
           android:centerX="50%" android:centerY="50%"
           android:startColor="#55FF55" android:endColor="#FFFFFF" />
-
     </shape>
   </item>
   <item android:top="5dp" android:left="5dp" android:right="5dp" android:bottom="5dp">
@@ -102,7 +82,6 @@
       <gradient  android:layout_gravity="right" android:type="radial" android:gradientRadius="100%"
           android:centerX="50%" android:centerY="50%"
           android:startColor="#33FF00" android:endColor="#33EE00" />
-
     </shape>
   </item>
 </layer-list>

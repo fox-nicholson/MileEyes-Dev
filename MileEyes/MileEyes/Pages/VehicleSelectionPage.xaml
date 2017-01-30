@@ -26,12 +26,18 @@
     </ListView.BackgroundColor>
     <ListView.ItemTemplate>
       <DataTemplate>
-        <customControls:VehicleItemViewCell/>
-        <!--<TextCell Text="{Binding Registration}" Detail="{Binding EngineType.Name}">
-            <TextCell.ContextActions>
-              <MenuItem Text="Remove" IsDestructive="True" Clicked="RemoveMenuItem_OnClicked" CommandParameter="{Binding .}" />
-            </TextCell.ContextActions>
-          </TextCell>-->
+        <customControls:CustomImageCell ImageSource="vehicle.png" ShowDisclosure="False" Text="{Binding Registration}" Detail="{Binding EngineType.Name}">
+          <customControls:CustomImageCell.TextColor>
+            <OnPlatform x:TypeArguments="Color"
+                        iOS="#FFFFFF"
+                        Android="Black" />
+          </customControls:CustomImageCell.TextColor>
+          <customControls:CustomImageCell.DetailColor>
+            <OnPlatform x:TypeArguments="Color"
+                        iOS="#80FFFFFF"
+                        Android="#80000000" />
+          </customControls:CustomImageCell.DetailColor>
+        </customControls:CustomImageCell>
       </DataTemplate>
     </ListView.ItemTemplate>
   </ListView>

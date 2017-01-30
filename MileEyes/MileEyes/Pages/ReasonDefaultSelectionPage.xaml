@@ -27,7 +27,11 @@
       </customControls:CustomListView.BackgroundColor>
       <customControls:CustomListView.ItemTemplate>
         <DataTemplate>
-          <customControls:ReasonItemViewCell />
+          <customControls:CustomImageCell ImageSource="journey_reason.png" Text="{Binding Text}">
+            <customControls:CustomImageCell.TextColor>
+              <OnPlatform x:TypeArguments="Color" iOS="White" Android="Black"/>
+            </customControls:CustomImageCell.TextColor>
+          </customControls:CustomImageCell>
         </DataTemplate>
       </customControls:CustomListView.ItemTemplate>
     </customControls:CustomListView>

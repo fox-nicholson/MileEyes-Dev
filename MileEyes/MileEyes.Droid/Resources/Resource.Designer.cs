@@ -633,6 +633,15 @@ namespace MileEyes.Droid
 			// aapt resource value: 0x7f010110
 			public const int layout_scrollInterpolator = 2130772240;
 			
+			// aapt resource value: 0x7f010154
+			public const int lineColor = 2130772308;
+			
+			// aapt resource value: 0x7f010156
+			public const int lineHeightSelected = 2130772310;
+			
+			// aapt resource value: 0x7f010155
+			public const int lineHeightUnselected = 2130772309;
+			
 			// aapt resource value: 0x7f0100b2
 			public const int listChoiceBackgroundIndicator = 2130772146;
 			
@@ -839,6 +848,9 @@ namespace MileEyes.Droid
 			
 			// aapt resource value: 0x7f0100ce
 			public const int seekBarStyle = 2130772174;
+			
+			// aapt resource value: 0x7f010153
+			public const int segmentedControlOptionStyle = 2130772307;
 			
 			// aapt resource value: 0x7f010095
 			public const int selectableItemBackground = 2130772117;
@@ -1160,32 +1172,32 @@ namespace MileEyes.Droid
 		public partial class Color
 		{
 			
-			// aapt resource value: 0x7f080059
-			public const int abc_background_cache_hint_selector_material_dark = 2131230809;
+			// aapt resource value: 0x7f08005d
+			public const int abc_background_cache_hint_selector_material_dark = 2131230813;
 			
-			// aapt resource value: 0x7f08005a
-			public const int abc_background_cache_hint_selector_material_light = 2131230810;
+			// aapt resource value: 0x7f08005e
+			public const int abc_background_cache_hint_selector_material_light = 2131230814;
 			
-			// aapt resource value: 0x7f08005b
-			public const int abc_color_highlight_material = 2131230811;
+			// aapt resource value: 0x7f08005f
+			public const int abc_color_highlight_material = 2131230815;
 			
 			// aapt resource value: 0x7f080015
 			public const int abc_input_method_navigation_guard = 2131230741;
 			
-			// aapt resource value: 0x7f08005c
-			public const int abc_primary_text_disable_only_material_dark = 2131230812;
-			
-			// aapt resource value: 0x7f08005d
-			public const int abc_primary_text_disable_only_material_light = 2131230813;
-			
-			// aapt resource value: 0x7f08005e
-			public const int abc_primary_text_material_dark = 2131230814;
-			
-			// aapt resource value: 0x7f08005f
-			public const int abc_primary_text_material_light = 2131230815;
-			
 			// aapt resource value: 0x7f080060
-			public const int abc_search_url_text = 2131230816;
+			public const int abc_primary_text_disable_only_material_dark = 2131230816;
+			
+			// aapt resource value: 0x7f080061
+			public const int abc_primary_text_disable_only_material_light = 2131230817;
+			
+			// aapt resource value: 0x7f080062
+			public const int abc_primary_text_material_dark = 2131230818;
+			
+			// aapt resource value: 0x7f080063
+			public const int abc_primary_text_material_light = 2131230819;
+			
+			// aapt resource value: 0x7f080064
+			public const int abc_search_url_text = 2131230820;
 			
 			// aapt resource value: 0x7f080016
 			public const int abc_search_url_text_normal = 2131230742;
@@ -1196,11 +1208,11 @@ namespace MileEyes.Droid
 			// aapt resource value: 0x7f080018
 			public const int abc_search_url_text_selected = 2131230744;
 			
-			// aapt resource value: 0x7f080061
-			public const int abc_secondary_text_material_dark = 2131230817;
+			// aapt resource value: 0x7f080065
+			public const int abc_secondary_text_material_dark = 2131230821;
 			
-			// aapt resource value: 0x7f080062
-			public const int abc_secondary_text_material_light = 2131230818;
+			// aapt resource value: 0x7f080066
+			public const int abc_secondary_text_material_light = 2131230822;
 			
 			// aapt resource value: 0x7f080019
 			public const int accent_material_dark = 2131230745;
@@ -1259,8 +1271,8 @@ namespace MileEyes.Droid
 			// aapt resource value: 0x7f080008
 			public const int common_action_bar_splitter = 2131230728;
 			
-			// aapt resource value: 0x7f080063
-			public const int common_google_signin_btn_text_dark = 2131230819;
+			// aapt resource value: 0x7f080067
+			public const int common_google_signin_btn_text_dark = 2131230823;
 			
 			// aapt resource value: 0x7f080009
 			public const int common_google_signin_btn_text_dark_default = 2131230729;
@@ -1274,8 +1286,8 @@ namespace MileEyes.Droid
 			// aapt resource value: 0x7f08000a
 			public const int common_google_signin_btn_text_dark_pressed = 2131230730;
 			
-			// aapt resource value: 0x7f080064
-			public const int common_google_signin_btn_text_light = 2131230820;
+			// aapt resource value: 0x7f080068
+			public const int common_google_signin_btn_text_light = 2131230824;
 			
 			// aapt resource value: 0x7f08000d
 			public const int common_google_signin_btn_text_light_default = 2131230733;
@@ -1289,8 +1301,8 @@ namespace MileEyes.Droid
 			// aapt resource value: 0x7f08000e
 			public const int common_google_signin_btn_text_light_pressed = 2131230734;
 			
-			// aapt resource value: 0x7f080065
-			public const int common_plus_signin_btn_text_dark = 2131230821;
+			// aapt resource value: 0x7f080069
+			public const int common_plus_signin_btn_text_dark = 2131230825;
 			
 			// aapt resource value: 0x7f080000
 			public const int common_plus_signin_btn_text_dark_default = 2131230720;
@@ -1304,8 +1316,8 @@ namespace MileEyes.Droid
 			// aapt resource value: 0x7f080001
 			public const int common_plus_signin_btn_text_dark_pressed = 2131230721;
 			
-			// aapt resource value: 0x7f080066
-			public const int common_plus_signin_btn_text_light = 2131230822;
+			// aapt resource value: 0x7f08006a
+			public const int common_plus_signin_btn_text_light = 2131230826;
 			
 			// aapt resource value: 0x7f080004
 			public const int common_plus_signin_btn_text_light_default = 2131230724;
@@ -1367,6 +1379,9 @@ namespace MileEyes.Droid
 			// aapt resource value: 0x7f08002c
 			public const int foreground_material_light = 2131230764;
 			
+			// aapt resource value: 0x7f08005b
+			public const int highlight = 2131230811;
+			
 			// aapt resource value: 0x7f08002d
 			public const int highlighted_text_material_dark = 2131230765;
 			
@@ -1378,6 +1393,9 @@ namespace MileEyes.Droid
 			
 			// aapt resource value: 0x7f080030
 			public const int hint_foreground_material_light = 2131230768;
+			
+			// aapt resource value: 0x7f08005a
+			public const int light = 2131230810;
 			
 			// aapt resource value: 0x7f080031
 			public const int material_blue_grey_800 = 2131230769;
@@ -1414,6 +1432,9 @@ namespace MileEyes.Droid
 			
 			// aapt resource value: 0x7f08003c
 			public const int material_grey_900 = 2131230780;
+			
+			// aapt resource value: 0x7f080059
+			public const int normal = 2131230809;
 			
 			// aapt resource value: 0x7f08003d
 			public const int primary_dark_material_dark = 2131230781;
@@ -1457,17 +1478,23 @@ namespace MileEyes.Droid
 			// aapt resource value: 0x7f08004a
 			public const int secondary_text_disabled_material_light = 2131230794;
 			
+			// aapt resource value: 0x7f08006b
+			public const int segmented_control_text = 2131230827;
+			
+			// aapt resource value: 0x7f08005c
+			public const int selected = 2131230812;
+			
 			// aapt resource value: 0x7f08004b
 			public const int switch_thumb_disabled_material_dark = 2131230795;
 			
 			// aapt resource value: 0x7f08004c
 			public const int switch_thumb_disabled_material_light = 2131230796;
 			
-			// aapt resource value: 0x7f080067
-			public const int switch_thumb_material_dark = 2131230823;
+			// aapt resource value: 0x7f08006c
+			public const int switch_thumb_material_dark = 2131230828;
 			
-			// aapt resource value: 0x7f080068
-			public const int switch_thumb_material_light = 2131230824;
+			// aapt resource value: 0x7f08006d
+			public const int switch_thumb_material_light = 2131230829;
 			
 			// aapt resource value: 0x7f08004d
 			public const int switch_thumb_normal_material_dark = 2131230797;
@@ -1835,6 +1862,12 @@ namespace MileEyes.Droid
 			
 			// aapt resource value: 0x7f090056
 			public const int notification_subtext_size = 2131296342;
+			
+			// aapt resource value: 0x7f090074
+			public const int segmented_control_default_height = 2131296372;
+			
+			// aapt resource value: 0x7f090075
+			public const int segmented_control_text_size = 2131296373;
 			
 			static Dimension()
 			{
@@ -2473,17 +2506,29 @@ namespace MileEyes.Droid
 			// aapt resource value: 0x7f0200cf
 			public const int mr_ic_play_light = 2130837711;
 			
-			// aapt resource value: 0x7f0200d3
-			public const int notification_template_icon_bg = 2130837715;
+			// aapt resource value: 0x7f0200d7
+			public const int notification_template_icon_bg = 2130837719;
 			
 			// aapt resource value: 0x7f0200d0
 			public const int poweredbygoogle = 2130837712;
 			
 			// aapt resource value: 0x7f0200d1
-			public const int settings_nofill = 2130837713;
+			public const int segmented_control_background = 2130837713;
 			
 			// aapt resource value: 0x7f0200d2
-			public const int track_nofill = 2130837714;
+			public const int segmented_control_first_background = 2130837714;
+			
+			// aapt resource value: 0x7f0200d3
+			public const int segmented_control_last_background = 2130837715;
+			
+			// aapt resource value: 0x7f0200d4
+			public const int settings_nofill = 2130837716;
+			
+			// aapt resource value: 0x7f0200d5
+			public const int track_nofill = 2130837717;
+			
+			// aapt resource value: 0x7f0200d6
+			public const int whitepoweredbygoogle = 2130837718;
 			
 			static Drawable()
 			{
@@ -3225,22 +3270,25 @@ namespace MileEyes.Droid
 			public const int notification_template_part_time = 2130903090;
 			
 			// aapt resource value: 0x7f030033
-			public const int select_dialog_item_material = 2130903091;
+			public const int SegmentedControl = 2130903091;
 			
 			// aapt resource value: 0x7f030034
-			public const int select_dialog_multichoice_material = 2130903092;
+			public const int select_dialog_item_material = 2130903092;
 			
 			// aapt resource value: 0x7f030035
-			public const int select_dialog_singlechoice_material = 2130903093;
+			public const int select_dialog_multichoice_material = 2130903093;
 			
 			// aapt resource value: 0x7f030036
-			public const int support_simple_spinner_dropdown_item = 2130903094;
+			public const int select_dialog_singlechoice_material = 2130903094;
 			
 			// aapt resource value: 0x7f030037
-			public const int Tabbar = 2130903095;
+			public const int support_simple_spinner_dropdown_item = 2130903095;
 			
 			// aapt resource value: 0x7f030038
-			public const int Toolbar = 2130903096;
+			public const int Tabbar = 2130903096;
+			
+			// aapt resource value: 0x7f030039
+			public const int Toolbar = 2130903097;
 			
 			static Layout()
 			{
@@ -3311,6 +3359,9 @@ namespace MileEyes.Droid
 			
 			// aapt resource value: 0x7f060040
 			public const int abc_toolbar_collapse_description = 2131099712;
+			
+			// aapt resource value: 0x7f060046
+			public const int app_name = 2131099718;
 			
 			// aapt resource value: 0x7f060042
 			public const int appbar_scrolling_view_behavior = 2131099714;
@@ -3413,6 +3464,9 @@ namespace MileEyes.Droid
 			
 			// aapt resource value: 0x7f06001e
 			public const int common_signin_button_text_long = 2131099678;
+			
+			// aapt resource value: 0x7f060045
+			public const int hello = 2131099717;
 			
 			// aapt resource value: 0x7f06001f
 			public const int mr_button_content_description = 2131099679;
@@ -3934,6 +3988,9 @@ namespace MileEyes.Droid
 			// aapt resource value: 0x7f0b001a
 			public const int CardView_Light = 2131427354;
 			
+			// aapt resource value: 0x7f0b0176
+			public const int CustomTheme = 2131427702;
+			
 			// aapt resource value: 0x7f0b0172
 			public const int MainTheme = 2131427698;
 			
@@ -4011,6 +4068,9 @@ namespace MileEyes.Droid
 			
 			// aapt resource value: 0x7f0b0050
 			public const int RtlUnderlay_Widget_AppCompat_ActionButton_Overflow = 2131427408;
+			
+			// aapt resource value: 0x7f0b0175
+			public const int SegmentedControlOption = 2131427701;
 			
 			// aapt resource value: 0x7f0b00d1
 			public const int TextAppearance_AppCompat = 2131427537;
@@ -6022,6 +6082,24 @@ namespace MileEyes.Droid
 			
 			// aapt resource value: 12
 			public const int SearchView_voiceIcon = 12;
+			
+			public static int[] SegmentedControlOption = new int[] {
+					2130772307,
+					2130772308,
+					2130772309,
+					2130772310};
+			
+			// aapt resource value: 1
+			public const int SegmentedControlOption_lineColor = 1;
+			
+			// aapt resource value: 3
+			public const int SegmentedControlOption_lineHeightSelected = 3;
+			
+			// aapt resource value: 2
+			public const int SegmentedControlOption_lineHeightUnselected = 2;
+			
+			// aapt resource value: 0
+			public const int SegmentedControlOption_segmentedControlOptionStyle = 0;
 			
 			public static int[] SignInButton = new int[] {
 					2130771988,

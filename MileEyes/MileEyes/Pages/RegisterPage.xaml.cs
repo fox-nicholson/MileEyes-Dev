@@ -22,8 +22,7 @@ namespace MileEyes.Pages
         {
             Device.BeginInvokeOnMainThread(async () =>
             {
-                await Navigation.PopModalAsync();
-                await Navigation.PopModalAsync();
+                await Navigation.PopToRootAsync();
             });
         }
 

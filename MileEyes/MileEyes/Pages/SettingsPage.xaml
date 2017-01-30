@@ -21,20 +21,108 @@
     </customControls:CustomTableView.BackgroundColor>
     <TableRoot>
       <TableSection Title="Cloud Services">
-        <customControls:MileEyesViewCell Tapped="ConnectCell_OnTapped"/>
+        <customControls:CustomImageCell ImageSource="premium.png" Text="MileEyes Account" Detail="{Binding MileEyesConnectDetail}" Tapped="ConnectCell_OnTapped">
+          <customControls:CustomImageCell.TextColor>
+            <OnPlatform x:TypeArguments="Color"
+                        iOS="#FFFFFF"
+                        Android="Black" />
+          </customControls:CustomImageCell.TextColor>
+          <customControls:CustomImageCell.DetailColor>
+            <OnPlatform x:TypeArguments="Color"
+                        iOS="#80FFFFFF"
+                        Android="#80000000" />
+          </customControls:CustomImageCell.DetailColor>
+        </customControls:CustomImageCell>
       </TableSection>
 
-      <TableSection Title="My Vehicles">
-        <customControls:VehiclesViewCell Tapped="VehiclesCell_OnTapped" />
-        <customControls:ReasonsViewCell Tapped="ReasonsCell_OnTapped"/>
+      <TableSection Title="My Data">
+        <customControls:CustomImageCell ImageSource="vehicles.png" Text="Vehicles" Detail="{Binding VehiclesCountString}" Tapped="VehiclesCell_OnTapped" >
+          <customControls:CustomImageCell.TextColor>
+            <OnPlatform x:TypeArguments="Color"
+                        iOS="#FFFFFF"
+                        Android="Black" />
+          </customControls:CustomImageCell.TextColor>
+          <customControls:CustomImageCell.DetailColor>
+            <OnPlatform x:TypeArguments="Color"
+                        iOS="#80FFFFFF"
+                        Android="#80000000" />
+          </customControls:CustomImageCell.DetailColor>
+        </customControls:CustomImageCell>
+        
+        <customControls:CustomImageCell ImageSource="journey_reason.png" Text="Reasons" Detail="{Binding ReasonsCountString}" Tapped="ReasonsCell_OnTapped">
+          <customControls:CustomImageCell.TextColor>
+            <OnPlatform x:TypeArguments="Color"
+                        iOS="#FFFFFF"
+                        Android="Black" />
+          </customControls:CustomImageCell.TextColor>
+          <customControls:CustomImageCell.DetailColor>
+            <OnPlatform x:TypeArguments="Color"
+                        iOS="#80FFFFFF"
+                        Android="#80000000" />
+          </customControls:CustomImageCell.DetailColor>
+        </customControls:CustomImageCell>
       </TableSection>
 
       <TableSection Title="Default Journey Details">
-        <customControls:DefaultInvoicedViewCell />
-        <customControls:DefaultCompanyViewCell IsEnabled="{Binding Authenticated}" Tapped="DefaultCompanyCell_OnTapped"/>
-        <customControls:DefaultVehicleViewCell Tapped="DefaultVehicleCell_OnTapped"/>
-        <customControls:DefaultPassengersViewCell Tapped="DefaultPassengersCell_OnTapped"/>
-        <customControls:DefaultReasonViewCell Tapped="DefaultReasonCell_OnTapped"/>
+        <customControls:CustomSwitchCell ImageSource="bill_to_client.png" Text="Bill to Client Default" On="{Binding InvoicedDefault}">
+          <customControls:CustomSwitchCell.TextColor>
+            <OnPlatform x:TypeArguments="Color"
+                        iOS="#FFFFFF"
+                        Android="Black" />
+          </customControls:CustomSwitchCell.TextColor>
+        </customControls:CustomSwitchCell>
+        
+        <customControls:CustomImageCell ImageSource="vehicle.png" Text="Default Vehicle" Detail="{Binding DefaultVehicle.Registration}" Tapped="DefaultVehicleCell_OnTapped">
+          <customControls:CustomImageCell.TextColor>
+            <OnPlatform x:TypeArguments="Color"
+                        iOS="#FFFFFF"
+                        Android="Black" />
+          </customControls:CustomImageCell.TextColor>
+          <customControls:CustomImageCell.DetailColor>
+            <OnPlatform x:TypeArguments="Color"
+                        iOS="#80FFFFFF"
+                        Android="#80000000" />
+          </customControls:CustomImageCell.DetailColor>
+        </customControls:CustomImageCell>
+
+        <customControls:CustomImageCell ImageSource="company.png" Text="Default Company" Detail="{Binding DefaultCompany.Name}" Tapped="DefaultCompanyCell_OnTapped" IsEnabled="{Binding Authenticated}">
+          <customControls:CustomImageCell.TextColor>
+            <OnPlatform x:TypeArguments="Color"
+                        iOS="#FFFFFF"
+                        Android="Black" />
+          </customControls:CustomImageCell.TextColor>
+          <customControls:CustomImageCell.DetailColor>
+            <OnPlatform x:TypeArguments="Color"
+                        iOS="#80FFFFFF"
+                        Android="#80000000" />
+          </customControls:CustomImageCell.DetailColor>
+        </customControls:CustomImageCell>
+
+        <customControls:CustomImageCell ImageSource="vehicle.png" Text="Default Passengers" Detail="{Binding DefaultPassenger.Name}" Tapped="DefaultPassengersCell_OnTapped">
+          <customControls:CustomImageCell.TextColor>
+            <OnPlatform x:TypeArguments="Color"
+                        iOS="#FFFFFF"
+                        Android="Black" />
+          </customControls:CustomImageCell.TextColor>
+          <customControls:CustomImageCell.DetailColor>
+            <OnPlatform x:TypeArguments="Color"
+                        iOS="#80FFFFFF"
+                        Android="#80000000" />
+          </customControls:CustomImageCell.DetailColor>
+        </customControls:CustomImageCell>
+        
+        <customControls:CustomImageCell ImageSource="journey_reason.png" Text="Default Reason" Detail="{Binding DefaultReason.Text}" Tapped="DefaultReasonCell_OnTapped">
+          <customControls:CustomImageCell.TextColor>
+            <OnPlatform x:TypeArguments="Color"
+                        iOS="#FFFFFF"
+                        Android="Black" />
+          </customControls:CustomImageCell.TextColor>
+          <customControls:CustomImageCell.DetailColor>
+            <OnPlatform x:TypeArguments="Color"
+                        iOS="#80FFFFFF"
+                        Android="#80000000" />
+          </customControls:CustomImageCell.DetailColor>
+        </customControls:CustomImageCell>
       </TableSection>
     </TableRoot>
   </customControls:CustomTableView>

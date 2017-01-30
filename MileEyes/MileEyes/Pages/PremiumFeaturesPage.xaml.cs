@@ -19,17 +19,7 @@ namespace MileEyes.Pages
         {
             Device.BeginInvokeOnMainThread(async () =>
             {
-                var loginPage = new LoginPage();
-                (loginPage.BindingContext as LoginViewModel).LoginSuccess += PremiumFeaturesPage_LoginSuccess;
-                await Navigation.PushAsync(loginPage);
-            });
-        }
-
-        private void PremiumFeaturesPage_LoginSuccess(object sender, EventArgs e)
-        {
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                await Navigation.PopToRootAsync();
+                await Navigation.PushAsync(new LoginPage());
             });
         }
 
@@ -37,25 +27,7 @@ namespace MileEyes.Pages
         {
             Device.BeginInvokeOnMainThread(async () =>
             {
-                var registerPage = new RegisterPage();
-                (registerPage.BindingContext as RegisterViewModel).RegisterSuccess += PremiumFeaturesPage_RegisterSuccess;
-                await Navigation.PushAsync(registerPage);
-            });
-        }
-
-        private void PremiumFeaturesPage_RegisterSuccess(object sender, EventArgs e)
-        {
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                await Navigation.PopToRootAsync();
-            });
-        }
-
-        private void CancelMenuItem_OnClicked(object sender, EventArgs e)
-        {
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                await Navigation.PopModalAsync();
+                await Navigation.PushAsync(new RegisterPage());
             });
         }
     }

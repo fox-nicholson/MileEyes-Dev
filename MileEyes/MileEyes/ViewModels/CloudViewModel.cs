@@ -61,11 +61,12 @@ namespace MileEyes.ViewModels
         }
 
         public ICommand SaveCommand { get; set; }
+        public ICommand LogoutCommand { get; set; }
 
         public CloudViewModel()
         {
             SaveCommand = new Command(Save);
-
+            LogoutCommand = new Command(Logout);
             Refresh();
         }
 
@@ -114,6 +115,15 @@ namespace MileEyes.ViewModels
             }
 
             SaveComplete?.Invoke(this, EventArgs.Empty);
+        }
+
+        public event EventHandler LoggedOut = delegate { };
+
+        public void Logout()
+        {
+            Services.Host.AuthService.Logout();
+
+            LoggedOut?.Invoke(this, EventArgs.Empty);
         }
     }
 }

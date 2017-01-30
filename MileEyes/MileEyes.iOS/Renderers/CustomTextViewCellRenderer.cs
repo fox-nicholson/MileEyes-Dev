@@ -7,7 +7,6 @@ using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
-[assembly: ExportRenderer(typeof(MileEyesViewCell), typeof(CustomTextViewCellRenderer))]
 
 [assembly: ExportRenderer(typeof(DefaultCompanyViewCell), typeof(CustomTextViewCellRenderer))]
 [assembly: ExportRenderer(typeof(CompanyViewCell), typeof(CustomTextViewCellRenderer))]
@@ -32,7 +31,7 @@ using Xamarin.Forms.Platform.iOS;
 [assembly: ExportRenderer(typeof(DestinationAddressViewCell), typeof(CustomTextViewCellRenderer))]
 [assembly: ExportRenderer(typeof(OriginAddressViewCell), typeof(CustomTextViewCellRenderer))]
 [assembly: ExportRenderer(typeof(RegisterAddressViewCell), typeof(CustomTextViewCellRenderer))]
-[assembly:ExportRenderer(typeof(CloudAddressViewCell), typeof(CustomTextViewCellRenderer))]
+[assembly: ExportRenderer(typeof(CloudAddressViewCell), typeof(CustomTextViewCellRenderer))]
 namespace MileEyes.iOS.Renderers
 {
     class CustomTextViewCellRenderer : ViewCellRenderer

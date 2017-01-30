@@ -51,7 +51,14 @@ namespace MileEyes.iOS.Renderers
 
         private void Control_ValueChanged(object sender, EventArgs e)
         {
-            dp.Date = Control.Date.ToDateTime().AddHours(1);
+            if (Control.Date.ToDateTime().AddHours(1).Date > dp.MaximumDate)
+            {
+                uiDatePicker.Date = dp.MaximumDate.ToNSDate();
+            }
+            else
+            {
+                dp.Date = Control.Date.ToDateTime().AddHours(1);
+            }
         }
     }
 }

@@ -4,19 +4,19 @@
              xmlns:local="clr-namespace:MileEyes"
              xmlns:pages="clr-namespace:MileEyes.Pages;assembly=MileEyes"
              x:Class="MileEyes.AndroidMainPage" BackgroundColor="#58C0EE" BarBackgroundColor="#58C0EE">
-  <NavigationPage Title="My Journeys" BarBackgroundColor="#58C0EE" BarTextColor="White" >
+  <NavigationPage Title="My Journeys" BarBackgroundColor="#53B5F0" BarTextColor="White" >
     <x:Arguments>
       <pages:JourneysPage/>
     </x:Arguments>
   </NavigationPage>
 
-  <NavigationPage Title="Track Journey" BarBackgroundColor="#58C0EE" BarTextColor="White">
+  <NavigationPage Title="Track Journey" BarBackgroundColor="#53B5F0" BarTextColor="White">
     <x:Arguments>
       <pages:TrackPage/>
     </x:Arguments>
   </NavigationPage>
 
-  <NavigationPage Title="My Settings" BarBackgroundColor="#58C0EE" BarTextColor="White">
+  <NavigationPage Title="My Settings" BarBackgroundColor="#53B5F0" BarTextColor="White">
     <x:Arguments>
       <pages:SettingsPage/>
     </x:Arguments>

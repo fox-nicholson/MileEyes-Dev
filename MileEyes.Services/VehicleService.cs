@@ -71,10 +71,8 @@ namespace MileEyes.Services
 
                     return vehicle;
                 }
-                else
-                {
-                    return null;
-                }
+
+                return null;
             }
         }
 

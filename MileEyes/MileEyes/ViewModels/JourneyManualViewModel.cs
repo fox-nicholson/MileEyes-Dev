@@ -25,6 +25,19 @@ namespace MileEyes.ViewModels
             }
         }
 
+        private DateTime _maxDate;
+
+        public DateTime MaxDate
+        {
+            get { return _maxDate; }
+            set
+            {
+                if (_maxDate == value) return;
+                _maxDate = value;
+                OnPropertyChanged(nameof(MaxDate));
+            }
+        }
+
         private Address _originAddress;
 
         public Address OriginAddress
@@ -144,6 +157,7 @@ namespace MileEyes.ViewModels
         public JourneyManualViewModel()
         {
             Date = DateTime.UtcNow;
+            MaxDate = DateTime.Now;
             
             OriginAddress = new Address()
             {

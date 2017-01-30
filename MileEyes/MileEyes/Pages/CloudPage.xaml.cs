@@ -13,6 +13,16 @@ namespace MileEyes.Pages
         public CloudPage()
         {
             InitializeComponent();
+
+            (BindingContext as CloudViewModel).LoggedOut += CloudPage_LoggedOut;
+        }
+
+        private void CloudPage_LoggedOut(object sender, EventArgs e)
+        {
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                await Navigation.PopToRootAsync();
+            });
         }
 
         private void AddressCell_OnTapped(object sender, EventArgs e)

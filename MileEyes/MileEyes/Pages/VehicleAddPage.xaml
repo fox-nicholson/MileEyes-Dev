@@ -14,7 +14,7 @@
   </ContentPage.BindingContext>
 
   <ContentPage.ToolbarItems>
-    <ToolbarItem Text="Save" Command="{Binding SaveCommand}"/>
+    <ToolbarItem Text="Save" Command="{Binding SaveCommand}" />
   </ContentPage.ToolbarItems>
 
   <customControls:CustomTableView Intent="Form">
@@ -35,7 +35,18 @@
       </TableSection>
 
       <TableSection Title="Vehicle Details">
-        <customControls:EngineTypeCell Tapped="Cell_OnTapped"/>
+        <customControls:CustomImageCell ImageSource="engine_type.png" Text="Engine Type" Detail="{Binding EngineType.Name}" Tapped="Cell_OnTapped">
+          <customControls:CustomImageCell.TextColor>
+            <OnPlatform x:TypeArguments="Color"
+                        iOS="#FFFFFF"
+                        Android="Black" />
+          </customControls:CustomImageCell.TextColor>
+          <customControls:CustomImageCell.DetailColor>
+            <OnPlatform x:TypeArguments="Color"
+                        iOS="#80FFFFFF"
+                        Android="#80000000" />
+          </customControls:CustomImageCell.DetailColor>
+        </customControls:CustomImageCell>
       </TableSection>
     </TableRoot>
   </customControls:CustomTableView>

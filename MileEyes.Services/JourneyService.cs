@@ -163,46 +163,55 @@ namespace MileEyes.Services
                 var result =
                     JsonConvert.DeserializeObject<ICollection<JourneyViewModel>>(responseText);
 
+                var vehicles = await Host.VehicleService.GetVehicles();
+                var companies = await Host.CompanyService.GetCompanies();
+
                 foreach (var journeyData in result)
                 {
                     var existingJourney = (await GetAllJourneys()).FirstOrDefault(v => v.CloudId == journeyData.Id);
+                    
+                    var vehicle = vehicles.FirstOrDefault(v => v.CloudId == journeyData.Vehicle.Id);
+                    var company = companies.FirstOrDefault(c => c.CloudId == journeyData.Company.Id);
 
                     if (existingJourney == null)
                     {
-                        var vehicles = await Host.VehicleService.GetVehicles();
-                        var companies = await Host.CompanyService.GetCompanies();
-
-                        var vehicle = vehicles.FirstOrDefault(v => v.CloudId == journeyData.Vehicle.Id);
-                        var company = companies.FirstOrDefault(c => c.CloudId == journeyData.Company.Id);
-
-                        var journey = new Journey
+                        using (var transaction = DatabaseService.Realm.BeginWrite())
                         {
-                            CloudId = journeyData.Id,
-                            Date = journeyData.Date,
-                            Accepted = journeyData.Accepted,
-                            Rejected = journeyData.Rejected,
-                            Cost = journeyData.Cost,
-                            Distance = journeyData.Distance,
-                            Reason = journeyData.Reason,
-                            Invoiced = journeyData.Invoiced,
-                            Passengers = journeyData.Passengers,
-                            Vehicle = vehicle,
-                            Company = company
-                        };
+                            var journey = DatabaseService.Realm.CreateObject<Journey>();
+                            journey.CloudId = journeyData.Id;
+                            journey.Date = journeyData.Date;
+                            journey.Accepted = journeyData.Accepted;
+                            journey.Rejected = journeyData.Rejected;
+                            journey.Cost = journeyData.Cost;
+                            journey.Distance = journeyData.Distance;
+                            journey.Reason = journeyData.Reason;
+                            journey.Invoiced = journeyData.Invoiced;
+                            journey.Passengers = journeyData.Passengers;
+                            journey.Vehicle = vehicle;
+                            journey.Company = company;
 
-                        foreach (var waypoint in journeyData.Waypoints)
-                        {
-                            journey.Waypoints.Add(new Waypoint()
+                            foreach (var waypoint in journeyData.Waypoints)
                             {
-                                Latitude = waypoint.Latitude,
-                                Longitude = waypoint.Longitude,
-                                Step = waypoint.Step,
-                                Timestamp = waypoint.Timestamp,
-                                PlaceId = waypoint.PlaceId
-                            });
-                        }
+                                var newWaypoint = DatabaseService.Realm.CreateObject<Waypoint>();
+                                newWaypoint.Latitude = waypoint.Latitude;
+                                newWaypoint.Longitude = waypoint.Longitude;
+                                newWaypoint.Step = waypoint.Step;
+                                newWaypoint.Timestamp = waypoint.Timestamp;
+                                newWaypoint.PlaceId = waypoint.PlaceId;
 
-                        await SaveJourney(journey);
+                                journey.Waypoints.Add(newWaypoint);
+                            }
+
+                            var first = journey.Waypoints.OrderBy(w => w.Step).FirstOrDefault();
+
+                            first.Label = (await Host.GeocodingService.GetAddress(first.PlaceId)).Label;
+
+                            var last = journey.Waypoints.OrderBy(w => w.Step).LastOrDefault();
+
+                            last.Label = (await Host.GeocodingService.GetAddress(last.PlaceId)).Label;
+
+                            transaction.Commit();
+                        }
                     }
                     else
                     {
@@ -216,17 +225,7 @@ namespace MileEyes.Services
                             existingJourney.Reason = journeyData.Reason;
                             existingJourney.Invoiced = journeyData.Invoiced;
                             existingJourney.Passengers = journeyData.Passengers;
-
-                            var vehicle = await Host.VehicleService.GetVehicle(journeyData.Vehicle.Id);
-
-                            existingJourney.Vehicle = vehicle;
-
-                            if (journeyData.Company != null)
-                            {
-                                var company = (await Host.CompanyService.GetCompanies()).FirstOrDefault();
-
-                                existingJourney.Company = company;
-                            }
+                            existingJourney.Company = company;
 
                             transaction.Commit();
                         }

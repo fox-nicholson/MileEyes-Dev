@@ -39,6 +39,7 @@
     <Compile Include="AccountViewModels.cs" />
     <Compile Include="Company\CompanyBindingModel.cs" />
     <Compile Include="Company\CompanyViewModel.cs" />
+    <Compile Include="Driver\DriverBindingModel.cs" />
     <Compile Include="Driver\DriverViewModel.cs" />
     <Compile Include="EngineTypes\EngineTypeBindingModel.cs" />
     <Compile Include="EngineTypes\EngineTypeViewModel.cs" />

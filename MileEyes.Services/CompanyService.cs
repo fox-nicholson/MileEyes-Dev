@@ -43,7 +43,7 @@ namespace MileEyes.Services
                         Personal = c.Personal
                     });
 
-                var existing = await Host.CompanyService.GetCompanies();
+                var existing = await GetCompanies();
 
                 var existingEnumerable = existing as Company[] ?? existing.ToArray();
 

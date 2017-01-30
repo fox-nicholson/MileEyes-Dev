@@ -45,7 +45,15 @@
                         Android="Black" />
           </customControls:CustomEntryCell.LabelColor>
         </customControls:CustomEntryCell>
+        
         <customControls:CloudAddressViewCell Tapped="AddressCell_OnTapped"/>
+      </TableSection>
+      <TableSection>
+        <ViewCell>
+          <StackLayout HorizontalOptions="Center">
+            <Button Text="Logout" FontSize="Large" TextColor="Red" HorizontalOptions="Center" Command="{Binding LogoutCommand}"/>
+          </StackLayout>
+        </ViewCell>
       </TableSection>
     </TableRoot>
   </customControls:CustomTableView>

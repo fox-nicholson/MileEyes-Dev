@@ -62,16 +62,16 @@ namespace MileEyes.Pages
         private void CompanyCell_OnTapped(object sender, EventArgs e)
         {
             var selectCompanyPage = new CompanySelectionPage();
-            (selectCompanyPage.BindingContext as CompanySelectionViewModel).Selected += JourneyManualPage_CompanySelected;
+            (selectCompanyPage.BindingContext as CompaniesViewModel).Selected += JourneyManualPage_CompanySelected;
             Device.BeginInvokeOnMainThread(async () =>
             {
                 await Navigation.PushAsync(selectCompanyPage);
             });
         }
 
-        private void JourneyManualPage_CompanySelected(object sender, Company e)
+        private void JourneyManualPage_CompanySelected(object sender, CompanyViewModel e)
         {
-            (BindingContext as JourneyConfirmViewModel).Company = e;
+            (BindingContext as JourneyConfirmViewModel).Company = e.Company;
             Device.BeginInvokeOnMainThread(async () =>
             {
                 await Navigation.PopAsync();

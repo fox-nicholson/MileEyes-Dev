@@ -3,18 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using Xamarin.Forms;
 
 namespace MileEyes.CustomControls
 {
-    public partial class MileEyesViewCell : ViewCell, ICustomViewCell
+    public class CustomImageCell : ImageCell, ICustomViewCell
     {
-
         public static readonly BindableProperty ShowDisclosureProperty = BindableProperty.Create(
             propertyName: "ShowDisclosure",
             returnType: typeof(bool),
-            declaringType: typeof(CustomButton),
+            declaringType: typeof(CustomImageCell),
             defaultValue: true,
             defaultBindingMode: BindingMode.TwoWay);
 
@@ -22,10 +20,6 @@ namespace MileEyes.CustomControls
         {
             get { return (bool)GetValue(ShowDisclosureProperty); }
             set { SetValue(ShowDisclosureProperty, value); }
-        }
-        public MileEyesViewCell()
-        {
-            InitializeComponent();
         }
     }
 }

@@ -25,39 +25,8 @@ namespace MileEyes.ViewModels
                 OnPropertyChanged(nameof(InvoicedDefault));
             }
         }
-
-        private int _vehicleCount;
-
-        public int VehicleCount
-        {
-            get { return _vehicleCount; }
-            set
-            {
-                if (_vehicleCount == value) return;
-                _vehicleCount = value;
-                OnPropertyChanged(nameof(VehicleCount));
-                OnPropertyChanged(nameof(MultipleVehicles));
-                OnPropertyChanged(nameof(SingleVehicle));
-            }
-        }
-
-        private int _reasonCount;
-
-        public int ReasonCount
-        {
-            get { return _reasonCount; }
-            set
-            {
-                if (_reasonCount == value) return;
-                _reasonCount = value;
-                OnPropertyChanged(nameof(ReasonCount));
-                OnPropertyChanged(nameof(MultipleReasons));
-                OnPropertyChanged(nameof(SingleReason));
-            }
-        }
-
+        
         private Vehicle _defaultVehicle;
-
         public Vehicle DefaultVehicle
         {
             get { return _defaultVehicle; }
@@ -81,6 +50,31 @@ namespace MileEyes.ViewModels
             }
         }
 
+        private Reason _defaultReason;
+        public Reason DefaultReason
+        {
+            get { return _defaultReason; }
+            set
+            {
+                if (_defaultReason == value) return;
+                _defaultReason = value;
+                OnPropertyChanged(nameof(DefaultReason));
+            }
+        }
+
+        private Company _defaultCompany;
+
+        public Company DefaultCompany
+        {
+            get { return _defaultCompany; }
+            set
+            {
+                if (_defaultCompany == value) return;
+                _defaultCompany = value;
+                OnPropertyChanged(nameof(DefaultCompany));
+            }
+        }
+        
         private string _mileEyesConnectDetail;
 
         public string MileEyesConnectDetail
@@ -94,12 +88,45 @@ namespace MileEyes.ViewModels
             }
         }
 
+        private string _vehiclesCountString;
 
-        public bool MultipleVehicles => VehicleCount > 1;
-        public bool MultipleReasons => ReasonCount > 1;
-        public bool SingleReason => ReasonCount == 1;
-        public bool SingleVehicle => VehicleCount == 1;
+        public string VehiclesCountString
+        {
+            get { return _vehiclesCountString; }
+            set
+            {
+                if (_vehiclesCountString == value) return;
+                _vehiclesCountString = value;
+                OnPropertyChanged(nameof(VehiclesCountString));
+            }
+        }
 
+        private string _reasonsCountString;
+
+        public string ReasonsCountString
+        {
+            get { return _reasonsCountString; }
+            set
+            {
+                if (_reasonsCountString == value) return;
+                _reasonsCountString = value;
+                OnPropertyChanged(nameof(ReasonsCountString));
+            }
+        }
+
+        private string _companyCountString;
+
+        public string CompanyCountString
+        {
+            get { return _companyCountString; }
+            set
+            {
+                if(_companyCountString == value) return;
+                _companyCountString = value;
+                OnPropertyChanged(nameof(CompanyCountString));
+            }
+        }
+        
         public SettingsViewModel()
         {
             Refresh();
@@ -112,7 +139,12 @@ namespace MileEyes.ViewModels
             if (Authenticated)
             {
                 var userDetails = await Host.UserService.GetDetails();
-                MileEyesConnectDetail = userDetails.Result.Email;
+
+                var temp = userDetails;
+                if (!string.IsNullOrEmpty(userDetails?.Result.Email))
+                {
+                    MileEyesConnectDetail = userDetails.Result.Email;
+                }
             }
             else
             {
@@ -120,8 +152,48 @@ namespace MileEyes.ViewModels
             }
 
             InvoicedDefault = Helpers.Settings.InvoicedDefault;
-            VehicleCount = (await Services.Host.VehicleService.GetVehicles()).Count();
-            ReasonCount = (await Services.Host.ReasonService.GetReasons()).Count();
+
+            var vcount = (await Host.VehicleService.GetVehicles()).Count();
+            switch (vcount)
+            {
+                case 0:
+                    VehiclesCountString = "No vehicles saved";
+                    break;
+                case 1:
+                    VehiclesCountString = vcount + " vehicle saved";
+                    break;
+                default:
+                    VehiclesCountString = vcount + " vehicles saved";
+                    break;
+            }
+
+            var rcount = (await Host.ReasonService.GetReasons()).Count();
+            switch (rcount)
+            {
+                case 0:
+                    ReasonsCountString = "No reasons saved";
+                    break;
+                case 1:
+                    ReasonsCountString = vcount + " reason saved";
+                    break;
+                default:
+                    ReasonsCountString = vcount + " reasons saved";
+                    break;
+            }
+
+            var ccount = (await Host.CompanyService.GetCompanies()).Count();
+            switch (ccount)
+            {
+                case 0:
+                    CompanyCountString = "No companies available";
+                    break;
+                case 1:
+                    CompanyCountString = vcount + " company available";
+                    break;
+                default:
+                    CompanyCountString = vcount + " companies available";
+                    break;
+            }
 
             if (Helpers.Settings.DefaultPassengers > 0)
             {
@@ -142,6 +214,20 @@ namespace MileEyes.ViewModels
                 (await Services.Host.VehicleService.GetVehicles()).FirstOrDefault(v => v.Default == true);
 
             DefaultVehicle = defaultVehicle;
+
+            var defaultReason =
+                (await Services.Host.ReasonService.GetReasons()).FirstOrDefault(v => v.Default == true);
+
+            DefaultReason = defaultReason;
+
+            if (Authenticated)
+            {
+                var defaultCompany =
+                        (await Services.Host.CompanyService.GetCompanies()).FirstOrDefault(v => v.Default == true);
+
+                DefaultCompany = defaultCompany; 
+            }
         }
     }
 }
+

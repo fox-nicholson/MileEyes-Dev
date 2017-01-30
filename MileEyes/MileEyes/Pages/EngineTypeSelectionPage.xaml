@@ -26,7 +26,18 @@
     </ListView.BackgroundColor>
     <ListView.ItemTemplate>
       <DataTemplate>
-        <customControls:EngineTypeItemViewCell />
+        <customControls:CustomImageCell ImageSource="engine_type.png" Text="{Binding Name}">
+          <customControls:CustomImageCell.TextColor>
+            <OnPlatform x:TypeArguments="Color"
+                        iOS="#FFFFFF"
+                        Android="Black" />
+          </customControls:CustomImageCell.TextColor>
+          <customControls:CustomImageCell.DetailColor>
+            <OnPlatform x:TypeArguments="Color"
+                        iOS="#80FFFFFF"
+                        Android="#80000000" />
+          </customControls:CustomImageCell.DetailColor>
+        </customControls:CustomImageCell>
       </DataTemplate>
     </ListView.ItemTemplate>
   </ListView>

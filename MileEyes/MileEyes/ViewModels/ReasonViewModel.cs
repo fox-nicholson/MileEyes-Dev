@@ -95,7 +95,14 @@ namespace MileEyes.ViewModels
 
             SaveComplete?.Invoke(this, EventArgs.Empty);
 
+            Device.StartTimer(TimeSpan.FromSeconds(1), Wait);
+        }
+
+        private bool Wait()
+        {
             Busy = false;
+
+            return false;
         }
     }
 }

@@ -14,10 +14,15 @@
     <StackLayout IsVisible="{Binding Busy}"  HorizontalOptions="Center" VerticalOptions="Center">
       <ActivityIndicator IsRunning="{Binding Busy}" Color="White" HorizontalOptions="Center" VerticalOptions="Center" />
     </StackLayout>
-    <TableView IsVisible="{Binding NotBusy}" BackgroundColor="{StaticResource mileeyesBlue}">
+    <TableView IsVisible="{Binding NotBusy}">
+      <TableView.BackgroundColor>
+        <OnPlatform x:TypeArguments="Color"
+                    iOS="{StaticResource mileeyesBlue}"
+                    Android="#52a9f2" />
+      </TableView.BackgroundColor>
       <TableRoot>
         <TableSection>
-          <customControls:CustomEntryCell Label="Email" LabelColor="{StaticResource premiumTextColor}" Placeholder="Required" Text="{Binding Email}"/>
+          <customControls:CustomEntryCell Keyboard="Email" Label="Email" LabelColor="{StaticResource premiumTextColor}" Placeholder="Required" Text="{Binding Email}"/>
           <customControls:CustomEntryCell Label="Password" IsPassword="True" LabelColor="{StaticResource premiumTextColor}" Placeholder="Required" Text="{Binding Password}"/>
         </TableSection>
       </TableRoot>

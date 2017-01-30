@@ -87,12 +87,12 @@ namespace MileEyes.ViewModels
 
         public RegisterViewModel()
         {
-            FirstName = "Test";
-            LastName = "Owner";
-            Email = "test@123.com";
+            //FirstName = "Test";
+            //LastName = "Owner";
+            //Email = "test@123.com";
 
-            Password = "Ab.123";
-            ConfirmPassword = "Ab.123";
+            //Password = "Ab.123";
+            //ConfirmPassword = "Ab.123";
 
             Address = new Address()
             {

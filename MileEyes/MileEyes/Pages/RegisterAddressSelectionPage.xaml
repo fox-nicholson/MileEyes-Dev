@@ -14,8 +14,17 @@
   </ContentPage.ToolbarItems>
 
   <StackLayout>
-    <SearchBar x:Name="searchBar" BackgroundColor="{StaticResource mileeyesBlue}" Text="{Binding SearchTerm}" SearchCommand="{Binding SearchCommand}" />
-    <customControls:CustomListView HasUnevenRows="True" ItemsSource="{Binding Addresses}" BackgroundColor="{StaticResource mileeyesBlue}" SelectedItem="{Binding SelectedAddress}" ItemSelected="ListView_OnItemSelected">
+    <SearchBar x:Name="searchBar" Text="{Binding SearchTerm}" SearchCommand="{Binding SearchCommand}">
+      <OnPlatform x:TypeArguments="Color"
+                  iOS="{StaticResource mileeyesBlue}"
+                  Android="#52a9f2" />
+    </SearchBar>
+    <customControls:CustomListView HasUnevenRows="True" ItemsSource="{Binding Addresses}" SelectedItem="{Binding SelectedAddress}" ItemSelected="ListView_OnItemSelected">
+      <customControls:CustomListView.BackgroundColor>
+        <OnPlatform x:TypeArguments="Color"
+                    iOS="{StaticResource mileeyesBlue}"
+                    Android="#52a9f2" />
+      </customControls:CustomListView.BackgroundColor>
       <customControls:CustomListView.ItemTemplate>
         <DataTemplate>
           <ViewCell>
@@ -27,7 +36,13 @@
       </customControls:CustomListView.ItemTemplate>
       <customControls:CustomListView.Footer>
         <StackLayout HorizontalOptions="CenterAndExpand" Padding="10">
-          <Image Source="poweredbygoogle.png" HorizontalOptions="Center"/>
+          <Image HorizontalOptions="Center">
+            <Image.Source>
+              <OnPlatform x:TypeArguments="ImageSource"
+                          iOS="poweredbygoogle.png"
+                          Android="whitepoweredbygoogle.png" />
+            </Image.Source>
+          </Image>
         </StackLayout>
       </customControls:CustomListView.Footer>
     </customControls:CustomListView>

@@ -18,7 +18,7 @@ namespace MileEyes.Pages
             (BindingContext as VehiclesViewModel).VehicleRemoved += VehiclesPage_VehicleRemoved;
             (BindingContext as VehiclesViewModel).VehicleNotRemoved += VehiclesPage_VehicleNotRemoved;
         }
-        
+
         protected override void OnAppearing()
         {
             base.OnAppearing();
@@ -59,7 +59,10 @@ namespace MileEyes.Pages
         {
             if (e.SelectedItem == null) return;
 
-            (sender as CustomListView).SelectedItem = null;
+            Device.OnPlatform(iOS: () =>
+            {
+                (sender as CustomListView).SelectedItem = null;
+            });
         }
     }
 }

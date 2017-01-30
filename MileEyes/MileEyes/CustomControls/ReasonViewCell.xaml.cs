@@ -24,6 +24,28 @@ namespace MileEyes.CustomControls
             set { SetValue(ShowDisclosureProperty, value); }
         }
 
+        public static readonly BindableProperty ImageSourceProperty = BindableProperty.Create(
+               propertyName: "ImageSource",
+               returnType: typeof(ImageSource),
+               declaringType: typeof(ReasonViewCell),
+               defaultValue: null,
+               defaultBindingMode: BindingMode.TwoWay);
+        public ImageSource ImageSource
+        {
+            get { return (ImageSource)GetValue(ImageSourceProperty); }
+            set { SetValue(ImageSourceProperty, value); }
+        }
+        public static readonly BindableProperty TextColorProperty = BindableProperty.Create(
+               propertyName: "ImageSource",
+               returnType: typeof(Color),
+               declaringType: typeof(ReasonViewCell),
+               defaultValue: Color.Default,
+               defaultBindingMode: BindingMode.TwoWay);
+        public Color TextColor
+        {
+            get { return (Color)GetValue(TextColorProperty); }
+            set { SetValue(TextColorProperty, value); }
+        }
         public ReasonViewCell()
         {
             InitializeComponent();
