@@ -57,6 +57,8 @@ namespace MileEyes.Services
 
                 var vehicle = await Host.VehicleService.GetVehicle(j.Vehicle.Id);
 
+                // Possibly check for null on Vehicle, if its null return, but see what its like for now, if you keep getting null vehicles when syncing then deal with it here
+
                 journey.Vehicle = vehicle;
 
                 if (j.Company != null)
