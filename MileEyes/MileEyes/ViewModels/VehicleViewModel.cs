@@ -109,6 +109,8 @@ namespace MileEyes.ViewModels
 
         public async void Save()
         {
+            if (Busy) return;
+
             Busy = true;
 
             if (!string.IsNullOrEmpty(Id))

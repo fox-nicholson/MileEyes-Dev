@@ -89,21 +89,28 @@ namespace MileEyes.ViewModels
 
         public async void Save()
         {
+            if (Busy) return;
+
+            Busy = true;
+
             if (string.IsNullOrEmpty(FirstName) || string.IsNullOrEmpty(FirstName))
             {
                 SaveFailed?.Invoke(this, "First and Last Name are required.");
+                Busy = false;
                 return;
             }
 
             if (string.IsNullOrEmpty(Email))
             {
                 SaveFailed?.Invoke(this, "Email is required.");
+                Busy = false;
                 return;
             }
 
             if (string.IsNullOrEmpty(Address.PlaceId))
             {
                 SaveFailed?.Invoke(this, "Address is required.");
+                Busy = false;
                 return;
             }
 
@@ -112,18 +119,26 @@ namespace MileEyes.ViewModels
             if (result.Error)
             {
                 SaveFailed?.Invoke(this, result.Message);
+                Busy = false;
             }
 
             SaveComplete?.Invoke(this, EventArgs.Empty);
+            Busy = false;
         }
 
         public event EventHandler LoggedOut = delegate { };
 
         public void Logout()
         {
+            if (Busy) return;
+
+            Busy = true;
+
             Services.Host.AuthService.Logout();
+            Busy = false;
 
             LoggedOut?.Invoke(this, EventArgs.Empty);
+            Busy = false;
         }
     }
 }

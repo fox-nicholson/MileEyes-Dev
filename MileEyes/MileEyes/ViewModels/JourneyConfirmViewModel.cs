@@ -232,15 +232,21 @@ namespace MileEyes.ViewModels
 
         public async void Save()
         {
+            if (Busy) return;
+
+            Busy = true;
+
             if (string.IsNullOrEmpty(Vehicle.Id))
             {
                 SaveFailed?.Invoke(this, "Vehicle is required");
+                Busy = false;
                 return;
             }
 
             if (Reason == "Required")
             {
                 SaveFailed?.Invoke(this, "Reason is required.");
+                Busy = false;
                 return;
             }
 
@@ -249,6 +255,7 @@ namespace MileEyes.ViewModels
                 if (string.IsNullOrEmpty(Company.Id))
                 {
                     SaveFailed?.Invoke(this, "Company is required.");
+                    Busy = false;
                     return;
                 }
             }
@@ -273,6 +280,7 @@ namespace MileEyes.ViewModels
             var result = await Services.Host.JourneyService.SaveJourney(journey);
 
             Saved?.Invoke(this, EventArgs.Empty);
+            Busy = false;
         }
     }
 }

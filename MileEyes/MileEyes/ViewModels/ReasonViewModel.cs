@@ -73,11 +73,14 @@ namespace MileEyes.ViewModels
 
         public async void Save()
         {
+            if (Busy) return;
+            
             Busy = true;
 
             if (string.IsNullOrEmpty(Text))
             {
                 SaveFailed?.Invoke(this, "Reason is required.");
+                Busy = false;
                 return;
             }
 
@@ -89,11 +92,12 @@ namespace MileEyes.ViewModels
             if (string.IsNullOrEmpty(reason.Id))
             {
                 SaveFailed?.Invoke(this, "Reason was not saved.");
-
+                Busy = false;
                 return;
             }
 
             SaveComplete?.Invoke(this, EventArgs.Empty);
+            Busy = false;
 
             Device.StartTimer(TimeSpan.FromSeconds(1), Wait);
         }

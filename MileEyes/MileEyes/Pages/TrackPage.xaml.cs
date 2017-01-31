@@ -102,6 +102,10 @@ namespace MileEyes.Pages
 
         private void ManualJourneyButton_OnClicked(object sender, EventArgs e)
         {
+            if ((BindingContext as TrackViewModel).Busy) return;
+
+            (BindingContext as TrackViewModel).Busy = true;
+
             Device.BeginInvokeOnMainThread(() =>
             {
                 Device.OnPlatform(
@@ -121,6 +125,14 @@ namespace MileEyes.Pages
                         });
                     });
             });
+
+            Device.StartTimer(TimeSpan.FromSeconds(1), Wait);
+        }
+
+        private bool Wait()
+        {
+            (BindingContext as TrackViewModel).Busy = false;
+            return false;
         }
     }
 }
