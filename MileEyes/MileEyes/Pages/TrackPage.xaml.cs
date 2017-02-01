@@ -39,10 +39,7 @@ namespace MileEyes.Pages
 
         private void TrackerService_Cancelled(object sender, EventArgs e)
         {
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                await Navigation.PopModalAsync();
-            });
+            Device.BeginInvokeOnMainThread(async () => { await Navigation.PopModalAsync(); });
         }
 
         private void TrackerService_Stopped(object sender, Services.Models.Journey e)
@@ -71,10 +68,7 @@ namespace MileEyes.Pages
 
         private void TrackerService_StartFailed(object sender, string e)
         {
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                await DisplayAlert("Tracking Problem", e, "Ok");
-            });
+            Device.BeginInvokeOnMainThread(async () => { await DisplayAlert("Tracking Problem", e, "Ok"); });
         }
 
         private void TrackerService_Started(object sender, EventArgs e)

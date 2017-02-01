@@ -15,7 +15,6 @@ namespace MileEyes.Pages
         {
             InitializeComponent();
             
-
             BindingContext = j;
 
             InitRoute();
@@ -28,13 +27,16 @@ namespace MileEyes.Pages
 
         protected override void OnAppearing()
         {
-            base.OnAppearing();
             SegmentedControl.SelectedValue = "Details";
+            base.OnAppearing();
+            
         }
 
         private void InitRoute()
         {
             var j = BindingContext as JourneyViewModel;
+
+            SegmentedControl.SelectedValue = "Details";
 
             if (j != null)
             {
@@ -43,7 +45,7 @@ namespace MileEyes.Pages
                         new[] {j.DestinationAddress.Latitude, j.DestinationAddress.Longitude});
 
                 map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(midpoint[0], midpoint[1]),
-                    Distance.FromMiles(j.Distance*0.6)));
+                    Distance.FromMiles(j.Distance * 0.6)));
 
                 j.InitRoute();
             }
@@ -51,10 +53,7 @@ namespace MileEyes.Pages
 
         private void Switch_OnToggled(object sender, ToggledEventArgs e)
         {
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                await Navigation.PushAsync(new PremiumFeaturesPage());
-            });
+            Device.BeginInvokeOnMainThread(async () => { await Navigation.PushAsync(new PremiumFeaturesPage()); });
         }
 
         private void SegmentedControl_OnValueChanged(object sender, EventArgs e)
@@ -66,6 +65,9 @@ namespace MileEyes.Pages
                     break;
                 case "MAP":
                     (BindingContext as JourneyViewModel).ShowDetails = false;
+                    break;
+                case "":
+                    (BindingContext as JourneyViewModel).ShowDetails = true;
                     break;
             }
         }

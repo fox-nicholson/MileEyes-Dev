@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MileEyes.Services.Models;
 using MileEyes.ViewModels;
 using Xamarin.Forms;
 
@@ -19,30 +16,35 @@ namespace MileEyes.Pages
 
         private void CloudPage_LoggedOut(object sender, EventArgs e)
         {
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                await Navigation.PopToRootAsync();
-            });
+            Device.BeginInvokeOnMainThread(async () => { await Navigation.PopToRootAsync(); });
         }
 
         private void AddressCell_OnTapped(object sender, EventArgs e)
         {
-            var selectAddressPage = new CloudAddressSelectionPage();
-            selectAddressPage.AddressSelected += SelectAddressPage_AddressSelected; ;
+            if ((BindingContext as CloudViewModel).Busy) return;
 
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                await Navigation.PushModalAsync(new NavigationPage(selectAddressPage));
-            });
+            (BindingContext as CloudViewModel).Busy = true;
+
+            var selectAddressPage = new CloudAddressSelectionPage();
+            selectAddressPage.AddressSelected += SelectAddressPage_AddressSelected;
+            ;
+
+            Device.BeginInvokeOnMainThread(
+                async () => { await Navigation.PushModalAsync(new NavigationPage(selectAddressPage)); });
+
+            Device.StartTimer(TimeSpan.FromSeconds(1), Wait);
         }
 
-        private void SelectAddressPage_AddressSelected(object sender, Services.Models.Address e)
+        private void SelectAddressPage_AddressSelected(object sender, Address e)
         {
             (BindingContext as CloudViewModel).Address = e;
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                await Navigation.PopModalAsync();
-            });
+            Device.BeginInvokeOnMainThread(async () => { await Navigation.PopModalAsync(); });
+        }
+
+        public bool Wait()
+        {
+            (BindingContext as CloudViewModel).Busy = false;
+            return false;
         }
     }
 }

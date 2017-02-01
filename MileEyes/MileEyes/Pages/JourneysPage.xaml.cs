@@ -9,6 +9,8 @@ namespace MileEyes.Pages
     /// </summary>
     public partial class JourneysPage : ContentPage
     {
+        private bool _busy;
+
         public JourneysPage()
         {
             InitializeComponent();
@@ -38,9 +40,9 @@ namespace MileEyes.Pages
         private void ListView_OnItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
             //Check the Busy state to prevent Multi-Tap
-            if ((BindingContext as JourneysViewModel).Busy) return;
+            if (_busy) return;
 
-            (BindingContext as JourneysViewModel).Busy = true;
+            _busy = true;
             // Deal with empty selection (this occurs on deselection.
             if (e.SelectedItem == null) return;
 
@@ -63,9 +65,9 @@ namespace MileEyes.Pages
         /// <param name="sender">The button which kicked off the event</param>
         private void Button_OnClicked(object sender, EventArgs e)
         {
-            if ((BindingContext as JourneysViewModel).Busy) return;
+            if (_busy) return;
 
-            (BindingContext as JourneysViewModel).Busy = true;
+            _busy = true;
 
             // Invoke the static event to switch the Tab
             GotoTrackPage?.Invoke(this, EventArgs.Empty);
@@ -80,9 +82,9 @@ namespace MileEyes.Pages
         /// <param name="e"></param>
         private void ConnectButton_OnClicked(object sender, EventArgs e)
         {
-            if ((BindingContext as JourneysViewModel).Busy) return;
+            if (_busy) return;
 
-            (BindingContext as JourneysViewModel).Busy = true;
+            _busy = true;
 
             // Push Premium Features page onto the Navigation Stack
             Device.BeginInvokeOnMainThread(async () => { await Navigation.PushAsync(new PremiumFeaturesPage()); });
@@ -102,7 +104,7 @@ namespace MileEyes.Pages
         //Wait() forces device to wait 1 second before a Button/Item can be tapped again
         private bool Wait()
         {
-            (BindingContext as JourneysViewModel).Busy = false;
+            _busy = false;
             return false;
         }
     }

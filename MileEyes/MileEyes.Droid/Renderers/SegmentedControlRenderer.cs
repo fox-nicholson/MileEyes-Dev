@@ -1,13 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
 using Android.Content;
 using Android.Graphics;
-using Android.OS;
-using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
@@ -17,19 +9,16 @@ using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 
 [assembly: ExportRenderer(typeof(SegmentedControl), typeof(SegmentedControlRenderer))]
+
 namespace MileEyes.Droid.Renderers
 {
     public class SegmentedControlRenderer : ViewRenderer<SegmentedControl, RadioGroup>
     {
-        public SegmentedControlRenderer()
-        {
-        }
-
         protected override void OnElementChanged(ElementChangedEventArgs<SegmentedControl> e)
         {
             base.OnElementChanged(e);
 
-            var layoutInflater = (LayoutInflater)Context.GetSystemService(Context.LayoutInflaterService);
+            var layoutInflater = (LayoutInflater) Context.GetSystemService(Context.LayoutInflaterService);
 
             var g = new RadioGroup(Context);
             g.Orientation = Orientation.Horizontal;
@@ -37,7 +26,7 @@ namespace MileEyes.Droid.Renderers
             for (var i = 0; i < e.NewElement.Children.Count; i++)
             {
                 var o = e.NewElement.Children[i];
-                var v = (SegmentedControlButton)layoutInflater.Inflate(Resource.Layout.SegmentedControl, null);
+                var v = (SegmentedControlButton) layoutInflater.Inflate(Resource.Layout.SegmentedControl, null);
                 v.Text = o.Text;
                 if (i == 0)
                     v.SetBackgroundResource(Resource.Drawable.segmented_control_first_background);
@@ -45,24 +34,23 @@ namespace MileEyes.Droid.Renderers
                     v.SetBackgroundResource(Resource.Drawable.segmented_control_last_background);
                 g.AddView(v);
             }
-
-            g.Check(0);
+            var child = g.GetChildAt(0);
+            
+            g.Check(child.Id);
 
             g.CheckedChange += (sender, eventArgs) =>
             {
-                var rg = (RadioGroup)sender;
+                var rg = (RadioGroup) sender;
                 if (rg.CheckedRadioButtonId != -1)
                 {
-                    var id = rg.CheckedRadioButtonId;
-                    var radioButton = rg.FindViewById(id);
-                    var radioId = rg.IndexOfChild(radioButton);
-                    var btn = (SegmentedControlButton)rg.GetChildAt(radioId);
-                    var selection = btn.Text;
-                    e.NewElement.SelectedValue = selection;
+                var id = rg.CheckedRadioButtonId;
+                var radioButton = rg.FindViewById(id);
+                var radioId = rg.IndexOfChild(radioButton);
+                var btn = (SegmentedControlButton) rg.GetChildAt(radioId);
+                var selection = btn.Text;
+                e.NewElement.SelectedValue = selection;
                 }
             };
-
-
             SetNativeControl(g);
         }
     }
@@ -78,24 +66,28 @@ namespace MileEyes.Droid.Renderers
         {
         }
 
-        public SegmentedControlButton(Context context, IAttributeSet attributes) : this(context, attributes, Resource.Attribute.segmentedControlOptionStyle)
+        public SegmentedControlButton(Context context, IAttributeSet attributes)
+            : this(context, attributes, Resource.Attribute.segmentedControlOptionStyle)
         {
         }
 
-        public SegmentedControlButton(Context context, IAttributeSet attributes, int defStyle) : base(context, attributes, defStyle)
+        public SegmentedControlButton(Context context, IAttributeSet attributes, int defStyle)
+            : base(context, attributes, defStyle)
         {
             Initialize(attributes, defStyle);
         }
 
         private void Initialize(IAttributeSet attributes, int defStyle)
         {
-            var a = this.Context.ObtainStyledAttributes(attributes, Resource.Styleable.SegmentedControlOption, defStyle, Resource.Style.SegmentedControlOption);
+            var a = Context.ObtainStyledAttributes(attributes, Resource.Styleable.SegmentedControlOption, defStyle,
+                Resource.Style.SegmentedControlOption);
 
             var lineColor = a.GetColor(Resource.Styleable.SegmentedControlOption_lineColor, 0);
             linePaint = new Paint();
             linePaint.Color = lineColor;
 
-            lineHeightUnselected = a.GetDimensionPixelSize(Resource.Styleable.SegmentedControlOption_lineHeightUnselected, 0);
+            lineHeightUnselected =
+                a.GetDimensionPixelSize(Resource.Styleable.SegmentedControlOption_lineHeightUnselected, 0);
             lineHeightSelected = a.GetDimensionPixelSize(Resource.Styleable.SegmentedControlOption_lineHeightSelected, 0);
 
             a.Recycle();

@@ -31,7 +31,7 @@
                         Android="Black" />
           </customControls:CustomEntryCell.LabelColor>
         </customControls:CustomEntryCell>
-        <customControls:CustomEntryCell Label="First Name" Placeholder="Required" Text="{Binding FirstName}">
+        <customControls:CustomEntryCell Label="First Name" Placeholder="Required" Text="{Binding FirstName}" >
           <customControls:CustomEntryCell.LabelColor>
             <OnPlatform x:TypeArguments="Color"
                         iOS="{StaticResource premiumTextColor}"
@@ -51,7 +51,7 @@
       <TableSection>
         <ViewCell>
           <StackLayout HorizontalOptions="Center">
-            <Button Text="Logout" FontSize="Large" TextColor="Red" HorizontalOptions="Center" Command="{Binding LogoutCommand}"/>
+            <Button Text="Logout" FontSize="Large" TextColor="Red" HorizontalOptions="Center" VerticalOptions="Center" Command="{Binding LogoutCommand}"/>
           </StackLayout>
         </ViewCell>
       </TableSection>

@@ -283,28 +283,28 @@ namespace MileEyes.ViewModels
             if (string.IsNullOrEmpty(OriginAddress.PlaceId))
             {
                 SaveFailed?.Invoke(this, "Origin is required.");
-                Busy = false;
+                Device.StartTimer(TimeSpan.FromSeconds(1), Wait);
                 return;
             }
 
             if (string.IsNullOrEmpty(DestinationAddress.PlaceId))
             {
                 SaveFailed?.Invoke(this, "Destination is required.");
-                Busy = false;
+                Device.StartTimer(TimeSpan.FromSeconds(1), Wait);
                 return;
             }
 
             if (string.IsNullOrEmpty(Vehicle.Id))
             {
                 SaveFailed?.Invoke(this, "Vehicle is required");
-                Busy = false;
+                Device.StartTimer(TimeSpan.FromSeconds(1), Wait);
                 return;
             }
 
             if (Reason == "Required")
             {
                 SaveFailed?.Invoke(this, "Reason is required.");
-                Busy = false;
+                Device.StartTimer(TimeSpan.FromSeconds(1), Wait);
                 return;
             }
 
@@ -313,7 +313,7 @@ namespace MileEyes.ViewModels
                 if (string.IsNullOrEmpty(Company.Id))
                 {
                     SaveFailed?.Invoke(this, "Company is required.");
-                    Busy = false;
+                    Device.StartTimer(TimeSpan.FromSeconds(1), Wait);
                     return;
                 }
             }
@@ -353,7 +353,7 @@ namespace MileEyes.ViewModels
             var result = await Services.Host.JourneyService.SaveJourney(journey);
 
             Saved?.Invoke(this, EventArgs.Empty);
-            Busy = false;
+            Device.StartTimer(TimeSpan.FromSeconds(1), Wait);
         }
 
         public event EventHandler Cancelled = delegate { };
@@ -365,7 +365,13 @@ namespace MileEyes.ViewModels
             Busy = true;
 
             Cancelled?.Invoke(this, EventArgs.Empty);
+            Device.StartTimer(TimeSpan.FromSeconds(1), Wait);
+        }
+
+        public bool Wait()
+        {
             Busy = false;
+            return false;
         }
     }
 }
