@@ -139,7 +139,7 @@ namespace MileEyes.Services
 
                 if (result.ModelState._ == null) return result;
 
-                var temp = result.ModelState._[1];
+                var temp = result.ModelState._[0];
 
                 result.ModelState._ = new[] { temp };
 

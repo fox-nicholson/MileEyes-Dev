@@ -17,7 +17,7 @@
 	<uses-permission android:name="android.permission.READ_INPUT_STATE" />
 	<uses-permission android:name="android.permission.SET_ORIENTATION" />
 	<uses-permission android:name="android.permission.STATUS_BAR" />
-	<application android:label="MileEyes" android:icon="@drawable/mileeyes_icon">
+	<application android:label="MileEyes" android:icon="@drawable/icon">
 		<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyArLAcqpQ1v_IxC_o0Qo41SYPUlGxKtMtI" />
 	</application>
 </manifest>

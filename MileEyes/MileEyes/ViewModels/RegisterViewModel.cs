@@ -18,14 +18,16 @@ namespace MileEyes.ViewModels
             get { return _firstName; }
             set
             {
-                if(_firstName == value)return;
+                if (_firstName == value) return;
                 _firstName = value;
                 OnPropertyChanged(nameof(FirstName));
             }
         }
 
         private string _lastName;
-        public string LastName {
+
+        public string LastName
+        {
             get { return _lastName; }
             set
             {
@@ -36,6 +38,7 @@ namespace MileEyes.ViewModels
         }
 
         private string _email;
+
         public string Email
         {
             get { return _email; }
@@ -48,6 +51,7 @@ namespace MileEyes.ViewModels
         }
 
         private string _password;
+
         public string Password
         {
             get { return _password; }
@@ -60,6 +64,7 @@ namespace MileEyes.ViewModels
         }
 
         private string _confirmPassword;
+
         public string ConfirmPassword
         {
             get { return _confirmPassword; }
@@ -72,6 +77,7 @@ namespace MileEyes.ViewModels
         }
 
         private Address _address;
+
         public Address Address
         {
             get { return _address; }
@@ -167,14 +173,18 @@ namespace MileEyes.ViewModels
                 {
                     var emailTaken = result.ModelState._?.FirstOrDefault();
 
-                    var errorMessage = result.ModelState.FirstName?.Aggregate("", (current, s) => current + (s + Environment.NewLine));
+                    var errorMessage = result.ModelState.FirstName?.Aggregate("",
+                        (current, s) => current + (s + Environment.NewLine));
 
-                    errorMessage = result.ModelState.LastName?.Aggregate(errorMessage, (current, s) => current + (s + Environment.NewLine));
+                    errorMessage = result.ModelState.LastName?.Aggregate(errorMessage,
+                        (current, s) => current + (s + Environment.NewLine));
 
-                    errorMessage = result.ModelState.Email?.Aggregate(errorMessage, (current, s) => current + (s + Environment.NewLine));
+                    errorMessage = result.ModelState.Email?.Aggregate(errorMessage,
+                        (current, s) => current + (s + Environment.NewLine));
 
-                    errorMessage = result.ModelState.Password?.Aggregate(errorMessage, (current, s) => current + (s + Environment.NewLine));
-                    
+                    errorMessage = result.ModelState.Password?.Aggregate(errorMessage,
+                        (current, s) => current + (s + Environment.NewLine));
+
                     if (!string.IsNullOrEmpty(emailTaken))
                     {
                         errorMessage = result.ModelState.PlaceId?.Aggregate(errorMessage,
@@ -186,6 +196,12 @@ namespace MileEyes.ViewModels
                         errorMessage = result.ModelState.PlaceId?.Aggregate(errorMessage,
                             (current, s) => current + "Address is required.");
                     }
+
+                    errorMessage = result.ModelState.Password?.Aggregate(errorMessage,
+                        (current, s) => current + (s + Environment.NewLine));
+
+                    errorMessage = result.ModelState._?.Aggregate(errorMessage,
+                        (current, s) => current + (s + Environment.NewLine));
 
                     RegisterFailed?.Invoke(this, errorMessage?.Trim());
 
