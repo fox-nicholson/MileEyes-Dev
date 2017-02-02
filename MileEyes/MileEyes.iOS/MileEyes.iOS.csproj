@@ -82,9 +82,10 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <CodesignProvision>Automatic:AppStore</CodesignProvision>
     <CodesignKey>iPhone Distribution</CodesignKey>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <BuildIpa>True</BuildIpa>
+    <IpaIncludeArtwork>True</IpaIncludeArtwork>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Helpers\Settings.cs" />
