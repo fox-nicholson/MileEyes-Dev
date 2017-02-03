@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -22,8 +16,8 @@ namespace MileEyes.API.Controllers
     [Authorize]
     public class CompaniesController : ApiController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
-        
+        private readonly ApplicationDbContext db = new ApplicationDbContext();
+
         // GET: api/Companies
         public IQueryable<CompanyViewModel> GetCompanies()
         {
@@ -31,11 +25,11 @@ namespace MileEyes.API.Controllers
 
             var driver = user.Profiles.OfType<Driver>().FirstOrDefault();
 
-            return driver.Companies.Select(c => new CompanyViewModel()
+            return driver.Companies.Select(c => new CompanyViewModel
             {
                 Id = c.Id.ToString(),
                 Name = c.Name,
-                Personal = c.Personal,
+                Personal = c.Personal
             }).AsQueryable();
         }
 
@@ -63,11 +57,11 @@ namespace MileEyes.API.Controllers
                 var addressResult = await GeocodingService.GetAddress(model.PlaceId);
 
                 // Create the new Address in database
-                address = new Address()
+                address = new Address
                 {
                     Id = Guid.NewGuid(),
                     PlaceId = addressResult.PlaceId,
-                    Coordinates = new Coordinates()
+                    Coordinates = new Coordinates
                     {
                         Id = Guid.NewGuid(),
                         Latitude = addressResult.Latitude,
@@ -82,7 +76,7 @@ namespace MileEyes.API.Controllers
             }
 
             // Setup the new company
-            var newCompany = new Company()
+            var newCompany = new Company
             {
                 Id = Guid.NewGuid(),
                 Name = model.Name,
@@ -106,7 +100,7 @@ namespace MileEyes.API.Controllers
             await db.SaveChangesAsync();
 
             // Return the new company's details
-            return Ok(new CompanyViewModel()
+            return Ok(new CompanyViewModel
             {
                 Id = newCompany.Id.ToString(),
                 Name = model.Name,
@@ -120,19 +114,17 @@ namespace MileEyes.API.Controllers
         [ResponseType(typeof(CompanyViewModel))]
         public async Task<IHttpActionResult> GetCompany(Guid id)
         {
-            Company company = await db.Companies.FindAsync(id);
+            var company = await db.Companies.FindAsync(id);
             if (company == null)
-            {
                 return NotFound();
-            }
 
-            return Ok(new CompanyViewModel()
+            return Ok(new CompanyViewModel
             {
                 Id = company.Id.ToString(),
                 Name = company.Name,
                 LowRate = company.LowRate,
                 HighRate = company.HighRate,
-                Personal = company.Personal,
+                Personal = company.Personal
             });
         }
 
@@ -143,16 +135,16 @@ namespace MileEyes.API.Controllers
 
             var driver = user.Profiles.OfType<Driver>().FirstOrDefault();
 
-            return db.Journeys.Where(j => j.Company.Id == companyId).Select(j => new JourneyViewModel()
+            return db.Journeys.Where(j => j.Company.Id == companyId).Select(j => new JourneyViewModel
             {
                 Accepted = j.Accepted,
-                Company = new CompanyViewModel()
+                Company = new CompanyViewModel
                 {
                     Id = j.Company.Id.ToString()
                 },
                 Cost = Convert.ToDouble(j.Cost),
                 Date = j.Date,
-                Driver = new DriverViewModel()
+                Driver = new DriverViewModel
                 {
                     Id = j.Driver.Id.ToString(),
                     FirstName = j.Driver.User.FirstName,
@@ -164,7 +156,7 @@ namespace MileEyes.API.Controllers
                 Passengers = j.Passengers,
                 Reason = j.Reason,
                 Rejected = j.Rejected,
-                Waypoints = j.Waypoints.Select(w => new WaypointViewModel()
+                Waypoints = j.Waypoints.Select(w => new WaypointViewModel
                 {
                     Latitude = w.Address.Coordinates.Latitude,
                     Longitude = w.Address.Coordinates.Longitude,
@@ -241,7 +233,8 @@ namespace MileEyes.API.Controllers
         }
 
         [Route("Companies/{companyId}/Journeys/{journeyId}/PushToAccountancy/{accountingPackage}")]
-        public async Task<IHttpActionResult> PushCompanyJourneyToAccouncy(Guid companyId, Guid journeyId, string accountancyPackage)
+        public async Task<IHttpActionResult> PushCompanyJourneyToAccouncy(Guid companyId, Guid journeyId,
+            string accountancyPackage)
         {
             // Get the current User
             var user = db.Users.Find(User.Identity.GetUserId());
@@ -304,7 +297,7 @@ namespace MileEyes.API.Controllers
             await db.SaveChangesAsync();
 
             // Return the driver so that client/browser can show success
-            return Ok(new DriverViewModel()
+            return Ok(new DriverViewModel
             {
                 Id = newDriver.Id.ToString()
             });
@@ -345,7 +338,7 @@ namespace MileEyes.API.Controllers
             await db.SaveChangesAsync();
 
             // Return the drivers Id to show complete
-            return Ok(new DriverViewModel()
+            return Ok(new DriverViewModel
             {
                 Id = driver.Id.ToString()
             });
@@ -354,9 +347,7 @@ namespace MileEyes.API.Controllers
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-            {
                 db.Dispose();
-            }
             base.Dispose(disposing);
         }
     }

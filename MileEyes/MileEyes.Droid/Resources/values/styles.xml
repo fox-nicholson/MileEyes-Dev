@@ -47,4 +47,9 @@
     <item name="lineHeightUnselected">0dp</item>
     <item name="lineHeightSelected">0dp</item>
   </style>
+
+  <style name="Theme.Splash" parent="android:Theme">
+    <item name="android:windowBackground">@drawable/mileeyes_icon</item>
+    <item name="android:windowNoTitle">true</item>
+  </style>
 </resources>

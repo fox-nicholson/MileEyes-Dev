@@ -5,29 +5,21 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using MileEyes.PublicModels.Journey;
-using MileEyes.PublicModels.Vehicles;
 using MileEyes.Services.Models;
 using Newtonsoft.Json;
-using Remotion.Linq.Parsing.Structure.IntermediateModel;
 
 namespace MileEyes.Services
 {
-    class JourneyService : IJourneyService
+    internal class JourneyService : IJourneyService
     {
+        private readonly List<Journey> _journeys = new List<Journey>();
         public event EventHandler JourneySaved = delegate { };
-
-        private List<Journey> _journeys = new List<Journey>();
 
         public async Task<IEnumerable<Journey>> GetJourneys()
         {
             var journeys = DatabaseService.Realm.All<Journey>();
 
             return journeys;
-        }
-
-        public async Task<IEnumerable<Journey>> GetAllJourneys()
-        {
-            return DatabaseService.Realm.All<Journey>();
         }
 
         public async Task<Journey> GetJourney(string id)
@@ -63,7 +55,7 @@ namespace MileEyes.Services
 
                 if (j.Company != null)
                 {
-                    var company = (await Services.Host.CompanyService.GetCompanies()).FirstOrDefault();
+                    var company = (await Host.CompanyService.GetCompanies()).FirstOrDefault();
 
                     journey.Company = company;
                 }
@@ -85,7 +77,7 @@ namespace MileEyes.Services
                 {
                     var firstAddress =
                         await
-                            Services.Host.GeocodingService.GetAddress(
+                            Host.GeocodingService.GetAddress(
                                 journey.Waypoints.OrderBy(w => w.Step).FirstOrDefault().Latitude,
                                 journey.Waypoints.OrderBy(w => w.Step).FirstOrDefault().Longitude);
 
@@ -95,7 +87,7 @@ namespace MileEyes.Services
                 {
                     var firstAddress =
                         await
-                            Services.Host.GeocodingService.GetAddress(
+                            Host.GeocodingService.GetAddress(
                                 journey.Waypoints.OrderBy(w => w.Step).FirstOrDefault().PlaceId);
 
                     journey.Waypoints.OrderBy(w => w.Step).FirstOrDefault().Label = firstAddress.Label;
@@ -105,7 +97,7 @@ namespace MileEyes.Services
                 {
                     var lastAddress =
                         await
-                            Services.Host.GeocodingService.GetAddress(
+                            Host.GeocodingService.GetAddress(
                                 journey.Waypoints.OrderBy(w => w.Step).LastOrDefault().Latitude,
                                 journey.Waypoints.OrderBy(w => w.Step).LastOrDefault().Longitude);
 
@@ -115,7 +107,7 @@ namespace MileEyes.Services
                 {
                     var lastAddress =
                         await
-                            Services.Host.GeocodingService.GetAddress(
+                            Host.GeocodingService.GetAddress(
                                 journey.Waypoints.OrderBy(w => w.Step).LastOrDefault().PlaceId);
 
                     journey.Waypoints.OrderBy(w => w.Step).LastOrDefault().Label = lastAddress.Label;
@@ -145,6 +137,12 @@ namespace MileEyes.Services
             await PushNew();
             await PullUpdate();
         }
+
+        public async Task<IEnumerable<Journey>> GetAllJourneys()
+        {
+            return DatabaseService.Realm.All<Journey>();
+        }
+
         private async Task PullUpdate()
         {
             try
@@ -171,12 +169,11 @@ namespace MileEyes.Services
                 foreach (var journeyData in result)
                 {
                     var existingJourney = (await GetAllJourneys()).FirstOrDefault(v => v.CloudId == journeyData.Id);
-                    
+
                     var vehicle = vehicles.FirstOrDefault(v => v.CloudId == journeyData.Vehicle.Id);
                     var company = companies.FirstOrDefault(c => c.CloudId == journeyData.Company.Id);
 
                     if (existingJourney == null)
-                    {
                         using (var transaction = DatabaseService.Realm.BeginWrite())
                         {
                             var journey = DatabaseService.Realm.CreateObject<Journey>();
@@ -214,9 +211,7 @@ namespace MileEyes.Services
 
                             transaction.Commit();
                         }
-                    }
                     else
-                    {
                         using (var transaction = DatabaseService.Realm.BeginWrite())
                         {
                             existingJourney.Date = journeyData.Date;
@@ -231,7 +226,6 @@ namespace MileEyes.Services
 
                             transaction.Commit();
                         }
-                    }
                 }
             }
             catch (Exception ex)
@@ -239,6 +233,7 @@ namespace MileEyes.Services
                 var message = ex.Message;
             }
         }
+
         private async Task PushNew()
         {
             var journeys = await GetJourneys();
@@ -246,7 +241,6 @@ namespace MileEyes.Services
             var journeysEnumerable = journeys as Journey[] ?? journeys.ToArray();
 
             foreach (var j in journeysEnumerable.Where(j => j.MarkedForDeletion == false))
-            {
                 try
                 {
                     if (!string.IsNullOrEmpty(j.CloudId)) continue;
@@ -257,7 +251,7 @@ namespace MileEyes.Services
 
                         var companiesEnumerable = companies.ToArray();
 
-                        var personalCompany = companiesEnumerable.FirstOrDefault(c => c.Personal == true);
+                        var personalCompany = companiesEnumerable.FirstOrDefault(c => c.Personal);
 
                         using (var transaction = DatabaseService.Realm.BeginWrite())
                         {
@@ -296,7 +290,6 @@ namespace MileEyes.Services
                 {
                     var message = ex.Message;
                 }
-            }
         }
     }
 }

@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using MileEyes.Services.Extensions;
+using MileEyes.Services;
 using MileEyes.Services.Helpers;
 using MileEyes.Services.Models;
 using Xamarin.Forms;
@@ -15,7 +12,78 @@ namespace MileEyes.ViewModels
 {
     public class JourneyViewModel : ViewModel
     {
+        private Company _company;
+
+        private decimal _cost;
         private DateTimeOffset _date;
+
+        private Address _destinationAddress;
+
+        private double _distance;
+
+        private bool _hasCost;
+
+        private bool _invoiced;
+
+        private bool _loaded;
+
+        private Address _originAddress;
+
+        private int _passengers;
+
+        private string _reason;
+
+        private bool _showDetails;
+
+        private Vehicle _vehicle;
+
+        public JourneyViewModel()
+        {
+        }
+
+        public JourneyViewModel(Journey j)
+        {
+            Distance = Units.MetersToMiles(j.Distance);
+            Cost = Convert.ToDecimal(j.Cost);
+            Date = j.Date;
+
+            Waypoints.Clear();
+
+            foreach (var w in j.Waypoints)
+                Waypoints.Add(w);
+
+            var originWaypoint = Waypoints.OrderBy(w => w.Step).First();
+            var destinationWaypoint = Waypoints.OrderBy(w => w.Step).Last();
+
+            OriginAddress = new Address
+            {
+                Label = originWaypoint.Label,
+                Latitude = originWaypoint.Latitude,
+                Longitude = originWaypoint.Longitude,
+                PlaceId = originWaypoint.PlaceId
+            };
+
+            DestinationAddress = new Address
+            {
+                Label = destinationWaypoint.Label,
+                Latitude = destinationWaypoint.Latitude,
+                Longitude = destinationWaypoint.Longitude,
+                PlaceId = destinationWaypoint.PlaceId
+            };
+
+            if (Waypoints.Count() > 2)
+                Gps = true;
+            else
+                Manual = true;
+
+            Invoiced = j.Invoiced;
+            Passengers = j.Passengers;
+            Vehicle = j.Vehicle;
+            Company = j.Company;
+            Reason = j.Reason;
+
+            ShareCommand = new Command(Share);
+        }
 
         public DateTimeOffset Date
         {
@@ -28,8 +96,6 @@ namespace MileEyes.ViewModels
             }
         }
 
-        private Address _originAddress;
-
         public Address OriginAddress
         {
             get { return _originAddress; }
@@ -40,8 +106,6 @@ namespace MileEyes.ViewModels
                 OnPropertyChanged(nameof(OriginAddress));
             }
         }
-
-        private Address _destinationAddress;
 
         public Address DestinationAddress
         {
@@ -54,8 +118,6 @@ namespace MileEyes.ViewModels
             }
         }
 
-        private Vehicle _vehicle;
-
         public Vehicle Vehicle
         {
             get { return _vehicle; }
@@ -66,8 +128,6 @@ namespace MileEyes.ViewModels
                 OnPropertyChanged(nameof(Vehicle));
             }
         }
-
-        private Company _company;
 
         public Company Company
         {
@@ -80,8 +140,6 @@ namespace MileEyes.ViewModels
             }
         }
 
-        private bool _invoiced;
-
         public bool Invoiced
         {
             get { return _invoiced; }
@@ -92,8 +150,6 @@ namespace MileEyes.ViewModels
                 OnPropertyChanged(nameof(Invoiced));
             }
         }
-
-        private string _reason;
 
         public string Reason
         {
@@ -106,8 +162,6 @@ namespace MileEyes.ViewModels
             }
         }
 
-        private int _passengers;
-
         public int Passengers
         {
             get { return _passengers; }
@@ -118,8 +172,6 @@ namespace MileEyes.ViewModels
                 OnPropertyChanged(nameof(Passengers));
             }
         }
-
-        private double _distance;
 
         public double Distance
         {
@@ -132,8 +184,6 @@ namespace MileEyes.ViewModels
             }
         }
 
-        private decimal _cost;
-
         public decimal Cost
         {
             get { return _cost; }
@@ -144,8 +194,6 @@ namespace MileEyes.ViewModels
                 OnPropertyChanged(nameof(Cost));
             }
         }
-
-        private bool _hasCost;
 
         public bool HasCost
         {
@@ -160,8 +208,6 @@ namespace MileEyes.ViewModels
         }
 
         public bool NoCost => !_hasCost;
-
-        private bool _showDetails;
 
         public bool ShowDetails
         {
@@ -186,8 +232,6 @@ namespace MileEyes.ViewModels
 
         public ObservableCollection<Waypoint> Waypoints { get; set; } = new ObservableCollection<Waypoint>();
 
-        private bool _loaded;
-
         public bool Loaded
         {
             get { return _loaded; }
@@ -198,62 +242,9 @@ namespace MileEyes.ViewModels
                 OnPropertyChanged(nameof(Loaded));
             }
         }
-        
-        public JourneyViewModel()
-        {
 
-        }
+        public ICommand ShareCommand { get; set; }
 
-        public JourneyViewModel(Journey j)
-        {
-            Distance = Units.MetersToMiles(j.Distance);
-            Cost = Convert.ToDecimal(j.Cost);
-            Date = j.Date;
-
-            Waypoints.Clear();
-
-            foreach (var w in j.Waypoints)
-            {
-                Waypoints.Add(w);
-            }
-
-            var originWaypoint = Waypoints.OrderBy(w => w.Step).First();
-            var destinationWaypoint = Waypoints.OrderBy(w => w.Step).Last();
-
-            OriginAddress = new Address()
-            {
-                Label = originWaypoint.Label,
-                Latitude = originWaypoint.Latitude,
-                Longitude = originWaypoint.Longitude,
-                PlaceId = originWaypoint.PlaceId
-            };
-
-            DestinationAddress = new Address()
-            {
-                Label = destinationWaypoint.Label,
-                Latitude = destinationWaypoint.Latitude,
-                Longitude = destinationWaypoint.Longitude,
-                PlaceId = destinationWaypoint.PlaceId
-            };
-
-            if (Waypoints.Count() > 2)
-            {
-                Gps = true;
-            }
-            else
-            {
-                Manual = true;
-            }
-
-            Invoiced = j.Invoiced;
-            Passengers = j.Passengers;
-            Vehicle = j.Vehicle;
-            Company = j.Company;
-            Reason = j.Reason;
-
-            ShareCommand = new Command(Share);
-        }
-        
         public async void InitRoute()
         {
             ShowDetails = true;
@@ -262,29 +253,23 @@ namespace MileEyes.ViewModels
                 Route.Clear();
 
                 foreach (var w in Waypoints)
-                {
                     Route.Add(new Position(w.Latitude, w.Longitude));
-                }
             }
             else
             {
-                var leg = await Services.Host.GeocodingService.GetDirectionsFromGoogle(new[] { OriginAddress.Latitude, OriginAddress.Longitude },
-                    new[] { DestinationAddress.Latitude, DestinationAddress.Longitude });
-                
+                var leg =
+                    await Host.GeocodingService.GetDirectionsFromGoogle(
+                        new[] {OriginAddress.Latitude, OriginAddress.Longitude},
+                        new[] {DestinationAddress.Latitude, DestinationAddress.Longitude});
+
                 Route.Clear();
                 if (leg != null)
-                {
                     foreach (var step in leg.steps)
-                    {
                         Route.Add(new Position(step.end_location.lat, step.end_location.lng));
-                    }
-                }
             }
 
             Loaded = true;
         }
-
-        public ICommand ShareCommand { get; set; }
 
         public void Share()
         {
@@ -297,7 +282,7 @@ namespace MileEyes.ViewModels
             var passengers = Passengers;
             var vehicle = Vehicle;
 
-            var sharedJourney = new SharedJourney()
+            var sharedJourney = new SharedJourney
             {
                 From = OriginAddress.Label,
                 To = DestinationAddress.Label,
@@ -309,7 +294,7 @@ namespace MileEyes.ViewModels
                 Vehicle = Vehicle.Registration
             };
 
-            MessagingCenter.Send<SharedJourney>(sharedJourney, "Share");
+            MessagingCenter.Send(sharedJourney, "Share");
         }
     }
 }
