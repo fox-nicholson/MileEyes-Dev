@@ -107,9 +107,16 @@ namespace MileEyes.API.Controllers
                 };
             }
 
-            driver.Vehicles.Add(vehicle);
+            try
+            {
+                driver.Vehicles.Add(vehicle);
 
-            db.Vehicles.Add(vehicle);
+                db.Vehicles.Add(vehicle);
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine(e);
+            }
 
             try
             {
@@ -117,23 +124,37 @@ namespace MileEyes.API.Controllers
             }
             catch (DbUpdateException)
             {
-                if (VehicleExists(vehicle.Id))
+                try
                 {
-                    return Conflict();
+                    if (VehicleExists(vehicle.Id))
+                    {
+                        return Conflict();
+                    }
+                }
+                catch (NullReferenceException ex)
+                {
+                    Console.WriteLine(ex);
                 }
 
                 throw;
             }
 
-            return CreatedAtRoute("DefaultApi", new { id = vehicle.Id }, new VehicleViewModel()
+            try
             {
-                Id = vehicle.Id.ToString(),
-                Registration = vehicle.Registration,
-                EngineType = new EngineTypeViewModel()
+                return CreatedAtRoute("DefaultApi", new {id = vehicle.Id}, new VehicleViewModel()
                 {
-                    Id = vehicle.EngineType.Id.ToString()
-                }
-            });
+                    Id = vehicle.Id.ToString(),
+                    Registration = vehicle.Registration,
+                    EngineType = new EngineTypeViewModel()
+                    {
+                        Id = vehicle.EngineType.Id.ToString()
+                    }
+                });
+            }
+            catch (NullReferenceException)
+            {
+                return null;
+            }
         }
 
         // DELETE: api/Vehicles/5
@@ -151,7 +172,14 @@ namespace MileEyes.API.Controllers
 
             var driver = user.Profiles.OfType<Driver>().FirstOrDefault();
 
-            driver.Vehicles.Remove(vehicle);
+            try
+            {
+                driver.Vehicles.Remove(vehicle);
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine(e);
+            }
 
             await db.SaveChangesAsync();
 

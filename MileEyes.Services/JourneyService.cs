@@ -79,7 +79,8 @@ namespace MileEyes.Services
                         await
                             Host.GeocodingService.GetAddress(
                                 journey.Waypoints.OrderBy(w => w.Step).FirstOrDefault().Latitude,
-                                journey.Waypoints.OrderBy(w => w.Step).FirstOrDefault().Longitude);
+                                journey.Waypoints.OrderBy(w => w.Step).FirstOrDefault().Longitude,
+                                0);
 
                     journey.Waypoints.OrderBy(w => w.Step).FirstOrDefault().Label = firstAddress.Label;
                 }
@@ -99,7 +100,8 @@ namespace MileEyes.Services
                         await
                             Host.GeocodingService.GetAddress(
                                 journey.Waypoints.OrderBy(w => w.Step).LastOrDefault().Latitude,
-                                journey.Waypoints.OrderBy(w => w.Step).LastOrDefault().Longitude);
+                                journey.Waypoints.OrderBy(w => w.Step).LastOrDefault().Longitude,
+                                journey.Waypoints.Count - 1);
 
                     journey.Waypoints.OrderBy(w => w.Step).LastOrDefault().Label = lastAddress.Label;
                 }

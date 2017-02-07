@@ -27,7 +27,7 @@ namespace MileEyes.API.Controllers
     {
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager;
-        private readonly ApplicationDbContext db = new ApplicationDbContext();
+        private ApplicationDbContext db = new ApplicationDbContext();
 
         public AccountController()
         {
@@ -59,16 +59,24 @@ namespace MileEyes.API.Controllers
 
             var user = db.Users.FirstOrDefault(u => u.Id == userId);
 
-            return new UserInfoViewModel
+            try
             {
-                Email = User.Identity.GetUserName(),
-                HasRegistered = externalLogin == null,
-                LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null,
-                EmailConfirmed = user.EmailConfirmed,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                PlaceId = user.Address.PlaceId
-            };
+                return new UserInfoViewModel
+                {
+                    Email = User.Identity.GetUserName(),
+                    HasRegistered = externalLogin == null,
+                    LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null,
+                    EmailConfirmed = user.EmailConfirmed,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    PlaceId = user.Address.PlaceId
+                };
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
         }
 
         [Route("UserInfo")]
@@ -81,20 +89,26 @@ namespace MileEyes.API.Controllers
 
             var user = db.Users.FirstOrDefault(u => u.Id == userId);
 
-            user.Email = model.Email;
-            user.FirstName = model.FirstName;
-            user.LastName = model.LastName;
+            try
+            {
+                user.Email = model.Email;
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
 
-            var existingAddresses = db.Addresses.Where(a => a.PlaceId == model.PlaceId);
+                var existingAddresses = db.Addresses.Where(a => a.PlaceId == model.PlaceId);
 
-            if (existingAddresses.Any())
-                user.Address = existingAddresses.FirstOrDefault();
-            else
-                user.Address = new Address
-                {
-                    PlaceId = model.PlaceId
-                };
-
+                if (existingAddresses.Any())
+                    user.Address = existingAddresses.FirstOrDefault();
+                else
+                    user.Address = new Address
+                    {
+                        PlaceId = model.PlaceId
+                    };
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine(e);
+            }
             await db.SaveChangesAsync();
 
             return Ok();

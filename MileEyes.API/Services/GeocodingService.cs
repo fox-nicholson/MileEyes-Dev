@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using MileEyes.API.Models.GeocodingModels;
 using Newtonsoft.Json;
 
@@ -105,7 +103,7 @@ namespace MileEyes.API.Services
             };
         }
 
-        public static async Task<Address> GetAddress(double lat, double lng)
+        public static async Task<Address> GetAddress(double lat, double lng, int step)
         {
             var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lng + "&key=" + key;
 
@@ -125,14 +123,28 @@ namespace MileEyes.API.Services
             var geocodeResult = JsonConvert.DeserializeObject<GeocodeResult>(response);
 
             if (geocodeResult == null) return null;
-
-            return new Address()
+            if (geocodeResult.result != null)
             {
-                PlaceId = geocodeResult.result.place_id,
-                Label = geocodeResult.result.formatted_address,
-                Latitude = geocodeResult.result.geometry.location.lat,
-                Longitude = geocodeResult.result.geometry.location.lng
-            };
+                return new Address()
+                {
+                    PlaceId = geocodeResult.result.place_id,
+                    Label = geocodeResult.result.formatted_address,
+                    Latitude = geocodeResult.result.geometry.location.lat,
+                    Longitude = geocodeResult.result.geometry.location.lng
+                };
+            }
+            else
+            {
+                if (step >= geocodeResult.results.Length) return null;
+                var currentWp = geocodeResult.results[step];
+                return new Address()
+                {
+                    PlaceId = currentWp.place_id,
+                    Label = currentWp.formatted_address,
+                    Latitude = currentWp.geometry.location.lat,
+                    Longitude = currentWp.geometry.location.lng
+                };
+            }
         }
 
         public static async Task<double[]> GetCoordinates(string placeId)
@@ -200,7 +212,7 @@ namespace MileEyes.API.Services
                 {
                     return result.address_components.First(a => a.types.Contains("postal_town")).long_name;
                 }
-            };
+            }
         }
 
         public static async Task<double> GetDistanceFromGoogle(double[] origin, double[] destination)

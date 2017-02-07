@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
-using System.Web.Http.Results;
 using Microsoft.AspNet.Identity;
 using MileEyes.API.Extensions;
 using MileEyes.API.Models;
@@ -32,44 +29,51 @@ namespace MileEyes.API.Controllers
 
             var result = new List<JourneyViewModel>();
 
-            foreach (var j in driver.Journeys)
+            try
             {
-                var waypoints = j.Waypoints.Select(w => new WaypointViewModel()
+                foreach (var j in driver.Journeys)
                 {
-                    Latitude = w.Address.Coordinates.Latitude,
-                    Longitude = w.Address.Coordinates.Longitude,
-                    PlaceId = w.Address.PlaceId,
-                    Step = w.Step,
-                    Timestamp = w.Timestamp,
-                    Id = w.Id.ToString()
-                }).ToList();
+                    var waypoints = j.Waypoints.Select(w => new WaypointViewModel()
+                    {
+                        Latitude = w.Address.Coordinates.Latitude,
+                        Longitude = w.Address.Coordinates.Longitude,
+                        PlaceId = w.Address.PlaceId,
+                        Step = w.Step,
+                        Timestamp = w.Timestamp,
+                        Id = w.Id.ToString()
+                    }).ToList();
 
-                var company = new CompanyViewModel()
-                {
-                    Id = j.Company.Id.ToString()
-                };
+                    var company = new CompanyViewModel()
+                    {
+                        Id = j.Company.Id.ToString()
+                    };
 
-                var vehicle = new VehicleViewModel()
-                {
-                    Id = j.Vehicle.Id.ToString()
-                };
+                    var vehicle = new VehicleViewModel()
+                    {
+                        Id = j.Vehicle.Id.ToString()
+                    };
 
-                var journey = new JourneyViewModel()
-                {
-                    Accepted = j.Accepted,
-                    Cost = Convert.ToDouble(j.Cost),
-                    Date = j.Date,
-                    Distance = j.Distance,
-                    Id = j.Id.ToString(),
-                    Invoiced = j.Invoiced,
-                    Passengers = j.Passengers,
-                    Reason = j.Reason,
-                    Rejected = j.Rejected,
-                    Company = company,
-                    Waypoints = waypoints,
-                    Vehicle = vehicle
-                };
-                result.Add(journey);
+                    var journey = new JourneyViewModel()
+                    {
+                        Accepted = j.Accepted,
+                        Cost = Convert.ToDouble(j.Cost),
+                        Date = j.Date,
+                        Distance = j.Distance,
+                        Id = j.Id.ToString(),
+                        Invoiced = j.Invoiced,
+                        Passengers = j.Passengers,
+                        Reason = j.Reason,
+                        Rejected = j.Rejected,
+                        Company = company,
+                        Waypoints = waypoints,
+                        Vehicle = vehicle
+                    };
+                    result.Add(journey);
+                }
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine("Caught exception in Journey Controller: " + e);
             }
 
             return result.AsQueryable();
@@ -89,8 +93,14 @@ namespace MileEyes.API.Controllers
 
             var driver = user.Profiles.OfType<Driver>().FirstOrDefault();
 
-            if (j.Driver.Id != driver.Id) return NotFound();
-
+            try
+            {
+                if (j.Driver.Id != driver.Id) return NotFound();
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine("Caught Exception in Journey Controllor: " + e);
+            }
             return Ok(new JourneyViewModel()
             {
                 Accepted = j.Accepted,
@@ -215,7 +225,8 @@ namespace MileEyes.API.Controllers
                     // Deal with us not having Address stored
                     else
                     {
-                        var addressResult = await GeocodingService.GetAddress(w.Latitude, w.Longitude);
+                        var addressResult = await GeocodingService.GetAddress(w.Latitude, w.Longitude, w.Step);
+                        if (addressResult == null) break;
 
                         // Create a new Address
                         newWaypoint.Address = new Address()
@@ -231,7 +242,7 @@ namespace MileEyes.API.Controllers
                         };
                     }
                 }
-
+                newWaypoint.Journey = j;
                 j.Waypoints.Add(newWaypoint);
             }
 

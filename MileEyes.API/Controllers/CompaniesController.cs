@@ -1,5 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -16,7 +22,7 @@ namespace MileEyes.API.Controllers
     [Authorize]
     public class CompaniesController : ApiController
     {
-        private readonly ApplicationDbContext db = new ApplicationDbContext();
+        private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: api/Companies
         public IQueryable<CompanyViewModel> GetCompanies()
@@ -25,12 +31,20 @@ namespace MileEyes.API.Controllers
 
             var driver = user.Profiles.OfType<Driver>().FirstOrDefault();
 
-            return driver.Companies.Select(c => new CompanyViewModel
+            try
             {
-                Id = c.Id.ToString(),
-                Name = c.Name,
-                Personal = c.Personal
-            }).AsQueryable();
+                return driver.Companies.Select(c => new CompanyViewModel()
+                {
+                    Id = c.Id.ToString(),
+                    Name = c.Name,
+                    Personal = c.Personal,
+                }).AsQueryable();
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
         }
 
         [ResponseType(typeof(CompanyViewModel))]
@@ -57,11 +71,11 @@ namespace MileEyes.API.Controllers
                 var addressResult = await GeocodingService.GetAddress(model.PlaceId);
 
                 // Create the new Address in database
-                address = new Address
+                address = new Address()
                 {
                     Id = Guid.NewGuid(),
                     PlaceId = addressResult.PlaceId,
-                    Coordinates = new Coordinates
+                    Coordinates = new Coordinates()
                     {
                         Id = Guid.NewGuid(),
                         Latitude = addressResult.Latitude,
@@ -76,7 +90,7 @@ namespace MileEyes.API.Controllers
             }
 
             // Setup the new company
-            var newCompany = new Company
+            var newCompany = new Company()
             {
                 Id = Guid.NewGuid(),
                 Name = model.Name,
@@ -100,7 +114,7 @@ namespace MileEyes.API.Controllers
             await db.SaveChangesAsync();
 
             // Return the new company's details
-            return Ok(new CompanyViewModel
+            return Ok(new CompanyViewModel()
             {
                 Id = newCompany.Id.ToString(),
                 Name = model.Name,
@@ -114,17 +128,19 @@ namespace MileEyes.API.Controllers
         [ResponseType(typeof(CompanyViewModel))]
         public async Task<IHttpActionResult> GetCompany(Guid id)
         {
-            var company = await db.Companies.FindAsync(id);
+            Company company = await db.Companies.FindAsync(id);
             if (company == null)
+            {
                 return NotFound();
+            }
 
-            return Ok(new CompanyViewModel
+            return Ok(new CompanyViewModel()
             {
                 Id = company.Id.ToString(),
                 Name = company.Name,
                 LowRate = company.LowRate,
                 HighRate = company.HighRate,
-                Personal = company.Personal
+                Personal = company.Personal,
             });
         }
 
@@ -135,16 +151,16 @@ namespace MileEyes.API.Controllers
 
             var driver = user.Profiles.OfType<Driver>().FirstOrDefault();
 
-            return db.Journeys.Where(j => j.Company.Id == companyId).Select(j => new JourneyViewModel
+            return db.Journeys.Where(j => j.Company.Id == companyId).Select(j => new JourneyViewModel()
             {
                 Accepted = j.Accepted,
-                Company = new CompanyViewModel
+                Company = new CompanyViewModel()
                 {
                     Id = j.Company.Id.ToString()
                 },
                 Cost = Convert.ToDouble(j.Cost),
                 Date = j.Date,
-                Driver = new DriverViewModel
+                Driver = new DriverViewModel()
                 {
                     Id = j.Driver.Id.ToString(),
                     FirstName = j.Driver.User.FirstName,
@@ -156,7 +172,7 @@ namespace MileEyes.API.Controllers
                 Passengers = j.Passengers,
                 Reason = j.Reason,
                 Rejected = j.Rejected,
-                Waypoints = j.Waypoints.Select(w => new WaypointViewModel
+                Waypoints = j.Waypoints.Select(w => new WaypointViewModel()
                 {
                     Latitude = w.Address.Coordinates.Latitude,
                     Longitude = w.Address.Coordinates.Longitude,
@@ -178,23 +194,36 @@ namespace MileEyes.API.Controllers
             var manager = user.Profiles.OfType<Manager>().FirstOrDefault();
             var owner = user.Profiles.OfType<Owner>().FirstOrDefault();
 
-            // get the company
-            var company = db.Companies.Find(companyId);
+            try
+            {
+                // get the company
+                var company = db.Companies.Find(companyId);
 
-            // get the company owners and managers
-            var companyOwners = company.Profiles.OfType<Owner>();
-            var companyManagers = company.Profiles.OfType<Manager>();
+                // get the company owners and managers
+                var companyOwners = company.Profiles.OfType<Owner>();
+                var companyManagers = company.Profiles.OfType<Manager>();
 
-            // Check if the current users has rights, if not respond with bad request
-            if (!companyManagers.Contains(manager) && !companyOwners.Contains(owner)) return BadRequest();
+                // Check if the current users has rights, if not respond with bad request
+                if (!companyManagers.Contains(manager) && !companyOwners.Contains(owner)) return BadRequest();
 
-            var journey = db.Journeys.Find(journeyId);
+                var journey = db.Journeys.Find(journeyId);
 
-            if (!company.Journeys.Contains(journey)) return BadRequest();
+                if (!company.Journeys.Contains(journey)) return BadRequest();
 
-            journey.Accepted = true;
-            journey.Rejected = false;
-
+                try
+                {
+                    journey.Accepted = true;
+                    journey.Rejected = false;
+                }
+                catch (NullReferenceException e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine(e);
+            }
             await db.SaveChangesAsync();
 
             return Ok();
@@ -210,23 +239,36 @@ namespace MileEyes.API.Controllers
             var manager = user.Profiles.OfType<Manager>().FirstOrDefault();
             var owner = user.Profiles.OfType<Owner>().FirstOrDefault();
 
-            // get the company
-            var company = db.Companies.Find(companyId);
+            try
+            {
+                // get the company
+                var company = db.Companies.Find(companyId);
 
-            // get the company owners and managers
-            var companyOwners = company.Profiles.OfType<Owner>();
-            var companyManagers = company.Profiles.OfType<Manager>();
+                // get the company owners and managers
+                var companyOwners = company.Profiles.OfType<Owner>();
+                var companyManagers = company.Profiles.OfType<Manager>();
 
-            // Check if the current users has rights, if not respond with bad request
-            if (!companyManagers.Contains(manager) && !companyOwners.Contains(owner)) return BadRequest();
+                // Check if the current users has rights, if not respond with bad request
+                if (!companyManagers.Contains(manager) && !companyOwners.Contains(owner)) return BadRequest();
 
-            var journey = db.Journeys.Find(journeyId);
+                var journey = db.Journeys.Find(journeyId);
 
-            if (!company.Journeys.Contains(journey)) return BadRequest();
+                if (!company.Journeys.Contains(journey)) return BadRequest();
 
-            journey.Accepted = false;
-            journey.Rejected = true;
-
+                try
+                {
+                    journey.Accepted = false;
+                    journey.Rejected = true;
+                }
+                catch (NullReferenceException e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine(e);
+            }
             await db.SaveChangesAsync();
 
             return Ok();
@@ -243,16 +285,22 @@ namespace MileEyes.API.Controllers
             var manager = user.Profiles.OfType<Manager>().FirstOrDefault();
             var owner = user.Profiles.OfType<Owner>().FirstOrDefault();
 
-            // get the company
-            var company = db.Companies.Find(companyId);
+            try
+            {
+                // get the company
+                var company = db.Companies.Find(companyId);
 
-            // get the company owners and managers
-            var companyOwners = company.Profiles.OfType<Owner>();
-            var companyManagers = company.Profiles.OfType<Manager>();
+                // get the company owners and managers
+                var companyOwners = company.Profiles.OfType<Owner>();
+                var companyManagers = company.Profiles.OfType<Manager>();
 
-            // Check if the current users has rights, if not respond with bad request
-            if (!companyManagers.Contains(manager) && !companyOwners.Contains(owner)) return BadRequest();
-
+                // Check if the current users has rights, if not respond with bad request
+                if (!companyManagers.Contains(manager) && !companyOwners.Contains(owner)) return BadRequest();
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine(e);
+            }
 
             /*
              * Implement accounting push here using respective API's, Fox has links to the relevant docs for this
@@ -277,27 +325,39 @@ namespace MileEyes.API.Controllers
             // get the company
             var company = db.Companies.Find(companyId);
 
-            // get the company owners and managers
-            var companyOwners = company.Profiles.OfType<Owner>();
-            var companyManagers = company.Profiles.OfType<Manager>();
+            try
+            {
+                // get the company owners and managers
+                var companyOwners = company.Profiles.OfType<Owner>();
+                var companyManagers = company.Profiles.OfType<Manager>();
 
-            // Check if the current users has rights, if not respond with bad request
-            if (!companyManagers.Contains(manager) && !companyOwners.Contains(owner)) return BadRequest();
-
+                // Check if the current users has rights, if not respond with bad request
+                if (!companyManagers.Contains(manager) && !companyOwners.Contains(owner)) return BadRequest();
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine(e);
+            }
             // get the profile of the driver to be added
             var newDriver = db.Profiles.Find(Guid.Parse(model.Id)) as Driver;
 
             // If the driver doesnt exist then return BadRequest
             if (newDriver == null) return BadRequest();
 
-            // Add the driver to the company
-            company.Profiles.Add(newDriver);
-
+            try
+            {
+                // Add the driver to the company
+                company.Profiles.Add(newDriver);
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine(e);
+            }
             // Save the changes
             await db.SaveChangesAsync();
 
             // Return the driver so that client/browser can show success
-            return Ok(new DriverViewModel
+            return Ok(new DriverViewModel()
             {
                 Id = newDriver.Id.ToString()
             });
@@ -318,36 +378,57 @@ namespace MileEyes.API.Controllers
             // get the company
             var company = db.Companies.Find(companyId);
 
-            // get the company owners and managers
-            var companyOwners = company.Profiles.OfType<Owner>();
-            var companyManagers = company.Profiles.OfType<Manager>();
+            try
+            {
+                // get the company owners and managers
+                var companyOwners = company.Profiles.OfType<Owner>();
+                var companyManagers = company.Profiles.OfType<Manager>();
 
-            // Check if the current users has rights, if not respond with bad request
-            if (!companyManagers.Contains(manager) && !companyOwners.Contains(owner)) return BadRequest();
-
+                // Check if the current users has rights, if not respond with bad request
+                if (!companyManagers.Contains(manager) && !companyOwners.Contains(owner)) return BadRequest();
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine(e);
+            }
             // Get the driver were removing
             var driver = db.Drivers.Find(driverId);
 
-            // If the driver isnt part of the company return bad request
-            if (!company.Profiles.Contains(driver)) return BadRequest();
-
+            try
+            {
+                // If the driver isnt part of the company return bad request
+                if (!company.Profiles.Contains(driver)) return BadRequest();
+            
             // Remove the driver from the company
             company.Profiles.Remove(driver);
-
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine(e);
+            }
             // Save changes
             await db.SaveChangesAsync();
 
             // Return the drivers Id to show complete
-            return Ok(new DriverViewModel
+            try
             {
-                Id = driver.Id.ToString()
-            });
+                return Ok(new DriverViewModel()
+                {
+                    Id = driver.Id.ToString()
+                });
+            }
+            catch (NullReferenceException)
+            {
+                return null;
+            }
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
+            {
                 db.Dispose();
+            }
             base.Dispose(disposing);
         }
     }

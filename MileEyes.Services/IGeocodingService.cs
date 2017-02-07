@@ -12,7 +12,7 @@ namespace MileEyes.Services
         Task<string> GetPlaceId(string address);
 
         Task<Address> GetAddress(string placeId);
-        Task<Address> GetAddress(double lat, double lng);
+        Task<Address> GetAddress(double lat, double lng, int step);
 
         Task<double[]> GetCoordinates(string placeId);
 

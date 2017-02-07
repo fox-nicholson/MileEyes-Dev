@@ -12,7 +12,8 @@ namespace MileEyes.API.Extensions
     {
         public static async Task<string> FindPlaceId(this Address address)
         {
-            return await Services.GeocodingService.GetPlaceId(address.Coordinates.Latitude, address.Coordinates.Longitude);
+            return await Services.GeocodingService.GetPlaceId(address.Coordinates.Latitude,
+                address.Coordinates.Longitude);
         }
 
         public static async Task<string> FindAddress(this Address address)

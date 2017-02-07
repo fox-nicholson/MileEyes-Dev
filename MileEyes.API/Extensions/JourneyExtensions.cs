@@ -48,8 +48,8 @@ namespace MileEyes.API.Extensions
                     var end = enumerable.OrderBy(w => w.Step).Last();
 
                     d = await Services.GeocodingService.GetDistanceFromGoogle(
-                        new[] { start.Address.Coordinates.Latitude, start.Address.Coordinates.Longitude },
-                        new[] { end.Address.Coordinates.Latitude, end.Address.Coordinates.Longitude });
+                        new[] {start.Address.Coordinates.Latitude, start.Address.Coordinates.Longitude},
+                        new[] {end.Address.Coordinates.Latitude, end.Address.Coordinates.Longitude});
                 }
 
                 return d;
@@ -74,7 +74,8 @@ namespace MileEyes.API.Extensions
         public static decimal CalculateFuelVat(this Journey journey)
         {
             // Fuel VAT is the distance multiplied by the result of the calculation fuelrate multiplied by 0.20
-            return Convert.ToDecimal(Units.MetersToMiles(journey.Distance)) * (journey.Vehicle.EngineType.FuelRate * 0.20M);
+            return Convert.ToDecimal(Units.MetersToMiles(journey.Distance)) *
+                   (journey.Vehicle.EngineType.FuelRate * 0.20M);
         }
 
         public static decimal CalculateCost(this Journey journey)
@@ -113,7 +114,7 @@ namespace MileEyes.API.Extensions
             // Calculate the under cut off cost
             var underCost = CalculateCost(underMiles, journey.Company.HighRate);
             // Calculate the over cut off cost
-            var overCost =  CalculateCost(overMiles, journey.Company.LowRate);
+            var overCost = CalculateCost(overMiles, journey.Company.LowRate);
 
             // Return the combined sum
             return underCost + overCost;

@@ -11,12 +11,12 @@ namespace MileEyes.API.Extensions
     {
         public static decimal ConvertToCurrency(this decimal amount, CurrencyRate type)
         {
-            return amount*type.Rate;
+            return amount * type.Rate;
         }
 
         public static decimal ConvertFromCurrency(this decimal amount, CurrencyRate type)
         {
-            return amount/type.Rate;
+            return amount / type.Rate;
         }
     }
 }

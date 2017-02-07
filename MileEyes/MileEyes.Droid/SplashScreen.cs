@@ -12,7 +12,7 @@ using Android.Widget;
 namespace MileEyes.Droid
 {
     [Activity(Label = "MileEyes", MainLauncher = true, Theme = "@style/Theme.Splash", NoHistory = true,
-        Icon = "@drawable/mileeyes_icon")]
+        Icon = "@drawable/ic_launcher_APP")]
     public class SplashScreen : Activity
     {
         protected override void OnCreate(Bundle bundle)
