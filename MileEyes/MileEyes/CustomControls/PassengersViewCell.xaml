@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ViewCell xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="MileEyes.CustomControls.PassengersViewCell">
+  <StackLayout Orientation="Horizontal" Padding="15, 0, 15, 0">
+    <Image Source="passenger.png" Margin="0,0,7.5,0"/>
+    <Label Text="Passengers" VerticalTextAlignment="Center">
+      <Label.TextColor>
+        <OnPlatform x:TypeArguments="Color"
+                    iOS="#FFFFFF"
+                    Android="Black" />
+      </Label.TextColor>
+    </Label>
+
+    <Label Text="{Binding Passenger.Name}"
+    HorizontalOptions="EndAndExpand"
+    TextColor="#55FFFFFF"  VerticalTextAlignment="Center" />
+  </StackLayout>
+</ViewCell>

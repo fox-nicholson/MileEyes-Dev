@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Application xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="MileEyes.App" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:forms="http://xamarin.com/schemas/2014/forms"
+             xmlns:mileEyes="clr-namespace:MileEyes;assembly=MileEyes">
+  <Application.Resources>
+    <ResourceDictionary>
+      <Color x:Key="primaryBackgroundColor">#011E22</Color>
+
+      <Color x:Key="primaryiOSBackgroundColor">#011E22</Color>
+
+      <Color x:Key="primaryAndroidBackgroundColor">White</Color>
+
+      <Color x:Key="mileeyesBlue">#58C0EE</Color>
+
+      <Color x:Key="premiumTextColor">White</Color>
+
+      <Color x:Key="errorRed">#D94C4D</Color>
+    </ResourceDictionary>
+  </Application.Resources>
+</Application>

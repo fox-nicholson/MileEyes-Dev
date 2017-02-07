@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MileEyes.Pages.PremiumFeaturesPage" Title="Premium Features" BackgroundColor="{StaticResource mileeyesBlue}">
+  <ContentPage.ToolbarItems>
+
+  </ContentPage.ToolbarItems>
+  <StackLayout>
+    <StackLayout BackgroundColor="{StaticResource errorRed}" HorizontalOptions="Fill" Padding="10">
+      <Label Text="The feature you have selected requires an active MileEyes subscription. Please login or register." FontSize="Small" />
+    </StackLayout>
+    <Image Source="mileeyes_icon.png" HorizontalOptions="Center" HeightRequest="46" WidthRequest="50" Margin="15"/>
+    <StackLayout HorizontalOptions="Fill" Padding="5">
+      <Label Text="Take the stress out of mileage." FontSize="Small" HorizontalOptions="Center" HorizontalTextAlignment="Center" TextColor="{StaticResource premiumTextColor}"/>
+    </StackLayout>
+    <StackLayout HorizontalOptions="Fill" Padding="5">
+      <Label Text="Let MileEyes take care of it for you." FontSize="Small" HorizontalOptions="Center" HorizontalTextAlignment="Center" TextColor="{StaticResource premiumTextColor}"/>
+    </StackLayout>
+    <StackLayout HorizontalOptions="Fill" Padding="5">
+      <Label Text="Cloud Sync Journeys" FontSize="Small" HorizontalOptions="Center" HorizontalTextAlignment="Center" TextColor="{StaticResource premiumTextColor}"/>
+      <Label Text="Automatically Claim Expenses" FontSize="Small" HorizontalOptions="Center" HorizontalTextAlignment="Center" TextColor="{StaticResource premiumTextColor}"/>
+      <Label Text="Access MileEyes Web Dashboard" FontSize="Small" HorizontalOptions="Center" HorizontalTextAlignment="Center" TextColor="{StaticResource premiumTextColor}"/>
+      <Label Text="Recieve Driver Insights" FontSize="Small" HorizontalOptions="Center" HorizontalTextAlignment="Center" TextColor="{StaticResource premiumTextColor}"/>
+      <Label Text="Premium in App Features" FontSize="Small" HorizontalOptions="Center" HorizontalTextAlignment="Center" TextColor="{StaticResource premiumTextColor}"/>
+    </StackLayout>
+    <Grid>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="1*"/>
+        <ColumnDefinition Width="1*"/>
+      </Grid.ColumnDefinitions>
+      <StackLayout Grid.Column="0" HorizontalOptions="Fill" Padding="10,0,10,0">
+        <Button Text="Login" Clicked="LoginButton_OnClicked" BorderWidth="1" BorderColor="{StaticResource premiumTextColor}" FontAttributes="Bold">
+          <Button.TextColor>
+            <OnPlatform x:TypeArguments="Color"
+                        iOS="{StaticResource premiumTextColor}"
+                        Android="{StaticResource mileeyesBlue}" />
+          </Button.TextColor>
+          <Button.BackgroundColor>
+            <OnPlatform x:TypeArguments="Color"
+                        iOS="Transparent"
+                        Android="{StaticResource premiumTextColor}" />
+          </Button.BackgroundColor>
+        </Button>
+        <Label Text="Existing Account" HorizontalOptions="Center" FontSize="Small" HorizontalTextAlignment="Center" TextColor="{StaticResource premiumTextColor}"/>
+      </StackLayout>
+      <StackLayout Grid.Column="1" HorizontalOptions="Fill" Padding="10,0,10,0">
+        <Button Text="Subscribe" Clicked="SubscribeButton_OnClicked" BorderWidth="1" BorderColor="{StaticResource premiumTextColor}" FontAttributes="Bold">
+          <Button.TextColor>
+            <OnPlatform x:TypeArguments="Color"
+                        iOS="{StaticResource premiumTextColor}"
+                        Android="{StaticResource mileeyesBlue}" />
+          </Button.TextColor>
+          <Button.BackgroundColor>
+            <OnPlatform x:TypeArguments="Color"
+                        iOS="Transparent"
+                        Android="{StaticResource premiumTextColor}" />
+          </Button.BackgroundColor>
+        </Button>
+        <Label Text="£0.99/Month" HorizontalOptions="Center" FontSize="Small" HorizontalTextAlignment="Center" TextColor="{StaticResource premiumTextColor}" BackgroundColor="Transparent"/>
+      </StackLayout>
+    </Grid>
+  </StackLayout>
+</ContentPage>

@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:MileEyes.ViewModels;assembly=MileEyes"
+             x:Class="MileEyes.Pages.PassengersSelectionPage">
+  <ContentPage.BackgroundColor>
+    <OnPlatform x:TypeArguments="Color"
+                iOS="{StaticResource primaryiOSBackgroundColor}"
+                Android="{StaticResource primaryAndroidBackgroundColor}" />
+  </ContentPage.BackgroundColor>
+  <ContentPage.BindingContext>
+    <viewModels:PassengersSelectionViewModel/>
+  </ContentPage.BindingContext>
+
+  <ContentPage.ToolbarItems>
+    <ToolbarItem Text="Done" Command="{Binding SelectCommand}"></ToolbarItem>
+  </ContentPage.ToolbarItems>
+  <ListView ItemsSource="{Binding Passengers}" SelectedItem="{Binding SelectedPassenger}"
+            IsRefreshing="{Binding Refreshing}">
+    <ListView.BackgroundColor>
+      <OnPlatform x:TypeArguments="Color"
+                  iOS="{StaticResource primaryiOSBackgroundColor}"
+                  Android="{StaticResource primaryAndroidBackgroundColor}" />
+    </ListView.BackgroundColor>
+    <ListView.ItemTemplate>
+      <DataTemplate>
+        <TextCell Text="{Binding Name}" DetailColor="#55FFFFFF">
+          <TextCell.TextColor>
+            <OnPlatform x:TypeArguments="Color"
+                        iOS="White"
+                        Android="Black" />
+          </TextCell.TextColor>
+        </TextCell>
+      </DataTemplate>
+    </ListView.ItemTemplate>
+  </ListView>
+</ContentPage>

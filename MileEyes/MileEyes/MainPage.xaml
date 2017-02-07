@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<customControls:CustomTabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:pages="clr-namespace:MileEyes.Pages;assembly=MileEyes"
+             xmlns:customControls="clr-namespace:MileEyes.CustomControls;assembly=MileEyes"
+             x:Class="MileEyes.MainPage" BackgroundColor="Transparent" BarBackgroundColor="#103D47">
+  <customControls:CustomNavigationPage BarTextColor="White" Title="My Journeys" Icon="journey_nofill.png" BarBackgroundColor="#103D47" BackgroundColor="{StaticResource primaryBackgroundColor}">
+    <x:Arguments>
+      <pages:JourneysPage/>
+    </x:Arguments>
+  </customControls:CustomNavigationPage>
+
+  <customControls:CustomNavigationPage BarTextColor="White" Title="Track Journey" Icon="track_nofill.png" BarBackgroundColor="#103D47" BackgroundColor="{StaticResource primaryBackgroundColor}">
+    <x:Arguments>
+      <pages:TrackPage/>
+    </x:Arguments>
+  </customControls:CustomNavigationPage>
+
+  <customControls:CustomNavigationPage BarTextColor="White" Title="My Settings" Icon="settings_nofill.png" BarBackgroundColor="#103D47" BackgroundColor="{StaticResource primaryBackgroundColor}">
+    <x:Arguments>
+      <pages:SettingsPage/>
+    </x:Arguments>
+  </customControls:CustomNavigationPage>
+</customControls:CustomTabbedPage>

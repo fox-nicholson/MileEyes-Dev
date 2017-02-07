@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:MileEyes.ViewModels;assembly=MileEyes"
+             xmlns:customControls="clr-namespace:MileEyes.CustomControls;assembly=MileEyes"
+             x:Class="MileEyes.Pages.VehiclesPage" Title="Vehicles">
+  <ContentPage.BackgroundColor>
+    <OnPlatform x:TypeArguments="Color"
+                iOS="{StaticResource primaryiOSBackgroundColor}"
+                Android="{StaticResource primaryAndroidBackgroundColor}" />
+  </ContentPage.BackgroundColor>
+  
+  <ContentPage.BindingContext>
+    <viewModels:VehiclesViewModel/>
+  </ContentPage.BindingContext>
+
+  <ContentPage.ToolbarItems>
+    <ToolbarItem  Text="Add" Clicked="MenuItem_OnClicked"/>
+  </ContentPage.ToolbarItems>
+    <customControls:CustomListView ItemsSource="{Binding Vehicles}" ItemSelected="ListView_OnItemSelected" IsPullToRefreshEnabled="True" IsRefreshing="{Binding Refreshing}" RefreshCommand="{Binding RefreshCommand}">
+      <customControls:CustomListView.BackgroundColor>
+        <OnPlatform x:TypeArguments="Color"
+                    iOS="{StaticResource primaryiOSBackgroundColor}"
+                    Android="{StaticResource primaryAndroidBackgroundColor}" />
+      </customControls:CustomListView.BackgroundColor>
+      <customControls:CustomListView.ItemTemplate>
+        <DataTemplate>
+          <customControls:CustomImageCell ImageSource="vehicle.png" ShowDisclosure="False" Text="{Binding Registration}" Detail="{Binding EngineType.Name}">
+            <customControls:CustomImageCell.ContextActions>
+              <MenuItem Text="Remove" IsDestructive="True" Clicked="RemoveMenuItem_OnClicked" CommandParameter="{Binding .}" />
+            </customControls:CustomImageCell.ContextActions>
+            <customControls:CustomImageCell.TextColor>
+              <OnPlatform x:TypeArguments="Color"
+                          iOS="#FFFFFF"
+                          Android="Black" />
+            </customControls:CustomImageCell.TextColor>
+            <customControls:CustomImageCell.DetailColor>
+              <OnPlatform x:TypeArguments="Color"
+                          iOS="#80FFFFFF"
+                          Android="#80000000" />
+            </customControls:CustomImageCell.DetailColor>
+          </customControls:CustomImageCell>
+        </DataTemplate>
+      </customControls:CustomListView.ItemTemplate>
+    </customControls:CustomListView>
+</ContentPage>

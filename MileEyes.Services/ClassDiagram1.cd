@@ -1,0 +1,474 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="MileEyes.Services.CompanyService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAQACAAAAAAACAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>CompanyService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="MileEyes.Services.DatabaseService" Collapsed="true">
+    <Position X="2.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>DatabaseService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.EngineTypeService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAABAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>EngineTypeService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="MileEyes.Services.GeocodingService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="9.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAACAAAAAABAoEAAAAAAAAAAACAAAAAAACAAA=</HashCode>
+      <FileName>GeocodingService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="MileEyes.Services.Host" Collapsed="true">
+    <Position X="12.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAABAAAAAAAACCAAAAIAAAAACAAIAgAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Host.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.HttpHelper" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>HttpHelper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="MileEyes.Services.JourneyService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="5.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAQAhBAAA=</HashCode>
+      <FileName>JourneyService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="MileEyes.Services.ReasonService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgACAAAAAAAgAAAAgAAAABAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ReasonService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="MileEyes.Services.RestService" Collapsed="true">
+    <Position X="12.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>RestService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.TrackerService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="2.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAQAIQCIABAAAAMAAAAgAAAIAAAAIIAAAAAAAAAA=</HashCode>
+      <FileName>TrackerService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="MileEyes.Services.VehicleService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAIAAAAAAACAAAAAAAAAAAAABAAAAgAAAAAAAAA=</HashCode>
+      <FileName>VehicleService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="MileEyes.Services.Extensions.CoordinatesExtensions" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Extensions\CoordinatesExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Extensions.UnitOfLength" Collapsed="true">
+    <Position X="5.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAABCAAAAEAAAAAgAAEAAAAAAA=</HashCode>
+      <FileName>Extensions\CoordinatesExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Extensions.JourneyExtensions" Collapsed="true">
+    <Position X="4" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAABAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Extensions\JourneyExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Helpers.TrigHelpers" Collapsed="true">
+    <Position X="4" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAAAAAAAAAgAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\TrigHelpers.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Helpers.Units" Collapsed="true">
+    <Position X="7.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>Helpers\Units.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Address" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEEAAAAAAAAAIAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>Models\Address.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Company" Collapsed="true">
+    <Position X="9.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAECAAAAAAAAAAAAAAAAAAQAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Company.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Coordinates" Collapsed="true">
+    <Position X="12.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAEAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Coordinates.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.EngineType" Collapsed="true">
+    <Position X="2.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAECAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\EngineType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.GeocodeResult" Collapsed="true">
+    <Position X="7.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAABAAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.ReverseGeocodeResult" Collapsed="true">
+    <Position X="2.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Result" Collapsed="true">
+    <Position X="0.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QACAAAAAIAMAgAAAAIBgAAAAKQAMAAAAAYgAAgYAAgA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Geometry" Collapsed="true">
+    <Position X="11" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgBAAAAAACAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Location" Collapsed="true">
+    <Position X="9.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Viewport" Collapsed="true">
+    <Position X="12.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Northeast" Collapsed="true">
+    <Position X="11" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Southwest" Collapsed="true">
+    <Position X="9.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Bounds" Collapsed="true">
+    <Position X="5.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Address_Components" Collapsed="true">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Opening_Hours" Collapsed="true">
+    <Position X="0.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAQ=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Period" Collapsed="true">
+    <Position X="4" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAIAAAAAAAAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Close" Collapsed="true">
+    <Position X="7.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAhAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Open" Collapsed="true">
+    <Position X="12.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAhAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Photo" Collapsed="true">
+    <Position X="5.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAQAAABAAAAAAAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Review" Collapsed="true">
+    <Position X="4" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BBABACAAAAAAAAgAAAAAAAAAAwAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Aspect" Collapsed="true">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAQABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.DistanceResult" Collapsed="true">
+    <Position X="7.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAQABAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Geocoded_Waypoints" Collapsed="true">
+    <Position X="5.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAIAAAAAAAAAAAAAAAAAAAAIAAAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Route" Collapsed="true">
+    <Position X="5.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAAAAAAIAAAAQAAABAAAAAAAACACAAgAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Overview_Polyline" Collapsed="true">
+    <Position X="2.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Leg" Collapsed="true">
+    <Position X="7.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAiAAAIAAQAAAAABBAAAAAAAAEAAAAAAAAAAgAAAQAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Distance" Collapsed="true">
+    <Position X="4" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAIAAAAAAAAAAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Duration" Collapsed="true">
+    <Position X="9.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAIAAAAAAAAAAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.End_Location" Collapsed="true">
+    <Position X="12.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Start_Location" Collapsed="true">
+    <Position X="11" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Step" Collapsed="true">
+    <Position X="0.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgIAAAIAAAAAAAIABAAAAAAAAEAAAAAABAAAAAAAQAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Distance1" Collapsed="true">
+    <Position X="5.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAIAAAAAAAAAAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Duration1" Collapsed="true">
+    <Position X="11" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAIAAAAAAAAAAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.End_Location1" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Polyline" Collapsed="true">
+    <Position X="7.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Start_Location1" Collapsed="true">
+    <Position X="12.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\GoogleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Journey" Collapsed="true">
+    <Position X="2.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAECQAAAABQAAAIAAAAAEhAABAAAAABBAAAABAAAAAA=</HashCode>
+      <FileName>Models\Journey.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Reason" Collapsed="true">
+    <Position X="9.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>Models\Reason.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.SharedJourney" Collapsed="true">
+    <Position X="7.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAABQAAAIAAAAAAAAABAAIAABBAAAAAAAAAAA=</HashCode>
+      <FileName>Models\SharedJourney.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Vehicle" Collapsed="true">
+    <Position X="9.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAECAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Models\Vehicle.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.Services.Models.Waypoint" Collapsed="true">
+    <Position X="0.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAEAAAAAAAAAKAAAAAAAAAAAAIAAAAAAABAA=</HashCode>
+      <FileName>Models\Waypoint.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="MileEyes.Services.ICompanyService" Collapsed="true">
+    <Position X="0.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQACAAAAAAACAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ICompanyService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="MileEyes.Services.IEngineTypeService" Collapsed="true">
+    <Position X="2.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAABAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IEngineTypeService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="MileEyes.Services.IGeocodingService" Collapsed="true">
+    <Position X="4" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAACAAAAAABAoAAAAAAAAAAAACAAAAAAACAAA=</HashCode>
+      <FileName>IGeocodingService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="MileEyes.Services.IHttpHelper" Collapsed="true">
+    <Position X="5.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IHttpHelper.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="MileEyes.Services.IJourneyService" Collapsed="true">
+    <Position X="7.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAhBAAA=</HashCode>
+      <FileName>IJourneyService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="MileEyes.Services.IReasonService" Collapsed="true">
+    <Position X="9.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgACAAAAAAAgAAAAgAAAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IReasonService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="MileEyes.Services.ITrackerService" Collapsed="true">
+    <Position X="11" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAQAAQCIABAAAAIAAAAgAAAIAAAAIIAAAAAAAAAA=</HashCode>
+      <FileName>ITrackerService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="MileEyes.Services.IVehicleService" Collapsed="true">
+    <Position X="12.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAIAAAAAAACAAAAAAAAAAAAABAAAAgAAAAAAAAA=</HashCode>
+      <FileName>IVehicleService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="MileEyes.Services.IAuthService">
+    <Position X="7.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAIAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IAuthService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

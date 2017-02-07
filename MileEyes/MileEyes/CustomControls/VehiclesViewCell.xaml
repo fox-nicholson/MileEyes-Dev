@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ViewCell xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+          x:Class="MileEyes.CustomControls.VehiclesViewCell">
+  <StackLayout Orientation="Horizontal" Padding="15, 0, 15, 0">
+    <Image Source="vehicles.png" Margin="0,0,7.5,0"/>
+    <Label Text="Vehicles" VerticalTextAlignment="Center">
+      <Label.TextColor>
+        <OnPlatform x:TypeArguments="Color"
+                    iOS="#FFFFFF"
+                    Android="Black" />
+      </Label.TextColor>
+    </Label>
+    <Label Text="{Binding VehicleCount, StringFormat='{0} vehicles saved'}" IsVisible="{Binding MultipleVehicles}"
+    HorizontalOptions="EndAndExpand"
+    TextColor="#55FFFFFF"  VerticalTextAlignment="Center" />
+    <Label Text="{Binding VehicleCount, StringFormat='{0} vehicle saved'}" IsVisible="{Binding SingleVehicle}"
+    HorizontalOptions="EndAndExpand"
+    TextColor="#55FFFFFF"  VerticalTextAlignment="Center" />
+  </StackLayout>
+</ViewCell>

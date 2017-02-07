@@ -1,0 +1,505 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="MileEyes.API.BundleConfig" Collapsed="true">
+    <Position X="43.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>App_Start\BundleConfig.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.FilterConfig" Collapsed="true">
+    <Position X="43.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>App_Start\FilterConfig.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.ApplicationUserManager" Collapsed="true">
+    <Position X="41.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>App_Start\IdentityConfig.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.RouteConfig" Collapsed="true">
+    <Position X="38" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>App_Start\RouteConfig.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Startup" Collapsed="true">
+    <Position X="39.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAAAAAEAgIAAAAAAAAA=</HashCode>
+      <FileName>App_Start\Startup.Auth.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.WebApiConfig" Collapsed="true">
+    <Position X="38" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>App_Start\WebApiConfig.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.WebApiApplication" Collapsed="true">
+    <Position X="36.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>Global.asax.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Areas.HelpPage.ApiDescriptionExtensions" Collapsed="true">
+    <Position X="36.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAA=</HashCode>
+      <FileName>Areas\HelpPage\ApiDescriptionExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Areas.HelpPage.HelpPageConfig" Collapsed="true">
+    <Position X="38" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Areas\HelpPage\App_Start\HelpPageConfig.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Areas.HelpPage.HelpPageAreaRegistration" Collapsed="true">
+    <Position X="36.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Areas\HelpPage\HelpPageAreaRegistration.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Areas.HelpPage.HelpPageConfigurationExtensions" Collapsed="true">
+    <Position X="39.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAABAICACACEAACGSCAAAADABAAAEMAAAAAIEA=</HashCode>
+      <FileName>Areas\HelpPage\HelpPageConfigurationExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Areas.HelpPage.HelpPageSampleGenerator" Collapsed="true">
+    <Position X="41.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAYAARQAQAAEAJgAAAQAAgAAEAgFAAAAABCAAAI=</HashCode>
+      <FileName>Areas\HelpPage\SampleGeneration\HelpPageSampleGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Areas.HelpPage.HelpPageSampleKey" Collapsed="true">
+    <Position X="43.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAABAAAgAgAAAAAAAAAAAAICQAAAEAAAAAAA=</HashCode>
+      <FileName>Areas\HelpPage\SampleGeneration\HelpPageSampleKey.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Areas.HelpPage.ImageSample" Collapsed="true">
+    <Position X="34.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEgAAAAAAAAAAAAIAAAAIAAAAAAAA=</HashCode>
+      <FileName>Areas\HelpPage\SampleGeneration\ImageSample.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Areas.HelpPage.InvalidSample" Collapsed="true">
+    <Position X="36.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAEgAAAAAAAAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>Areas\HelpPage\SampleGeneration\InvalidSample.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Areas.HelpPage.ObjectGenerator" Collapsed="true">
+    <Position X="32.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABDAoAAAAAACAEAICAAAYAAACAAAAAAgCAgAAAAIA=</HashCode>
+      <FileName>Areas\HelpPage\SampleGeneration\ObjectGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Areas.HelpPage.TextSample" Collapsed="true">
+    <Position X="41.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEgAAAAAAAAAAAAIAAAAAACAAAAAA=</HashCode>
+      <FileName>Areas\HelpPage\SampleGeneration\TextSample.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Areas.HelpPage.XmlDocumentationProvider" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="39.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QIEAAAAIBAEAQAAABIAAAAAAAAAAAAAAAAAAAAAAAkg=</HashCode>
+      <FileName>Areas\HelpPage\XmlDocumentationProvider.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="MileEyes.API.Areas.HelpPage.Controllers.HelpController" Collapsed="true">
+    <Position X="32.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAABAAAAAAAAAAAAAAAAAAAAAAAgAEAAAAgAAA=</HashCode>
+      <FileName>Areas\HelpPage\Controllers\HelpController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Areas.HelpPage.ModelDescriptions.EnumValueDescription" Collapsed="true">
+    <Position X="41.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAEAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Areas\HelpPage\ModelDescriptions\EnumValueDescription.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator" Collapsed="true">
+    <Position X="39.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAGQBAAJAABAAACBAgAAAAASBAAAAAAAAAEAACAQAAA=</HashCode>
+      <FileName>Areas\HelpPage\ModelDescriptions\ModelDescriptionGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Areas.HelpPage.ModelDescriptions.ModelNameAttribute" Collapsed="true">
+    <Position X="41.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Areas\HelpPage\ModelDescriptions\ModelNameAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Areas.HelpPage.ModelDescriptions.ModelNameHelper" Collapsed="true">
+    <Position X="43.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAA=</HashCode>
+      <FileName>Areas\HelpPage\ModelDescriptions\ModelNameHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Areas.HelpPage.ModelDescriptions.ParameterAnnotation" Collapsed="true">
+    <Position X="34.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Areas\HelpPage\ModelDescriptions\ParameterAnnotation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Areas.HelpPage.ModelDescriptions.ParameterDescription" Collapsed="true">
+    <Position X="36.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAAAAAAAAQAQAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Areas\HelpPage\ModelDescriptions\ParameterDescription.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Areas.HelpPage.Models.HelpPageApiModel" Collapsed="true">
+    <Position X="34.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAGBAAAAAAAAAAAAAgAAAAAAAUBAAAAAQAQAg=</HashCode>
+      <FileName>Areas\HelpPage\Models\HelpPageApiModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Controllers.AccountController" Collapsed="true">
+    <Position X="32.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAFACQACAQgQAAEAARAgIAABABEBAAAAAAgAAAAQA=</HashCode>
+      <FileName>Controllers\AccountController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Controllers.HomeController" Collapsed="true">
+    <Position X="32.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>Controllers\HomeController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Controllers.ValuesController" Collapsed="true">
+    <Position X="34.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAACAEAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Controllers\ValuesController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Extensions.AddressExtensions" Collapsed="true">
+    <Position X="34.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQQAAAAAAA=</HashCode>
+      <FileName>Extensions\AddressExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Extensions.CoordinatesExtensions" Collapsed="true">
+    <Position X="36.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Extensions\CoordinatesExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Extensions.UnitOfLength" Collapsed="true">
+    <Position X="32.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAABCAAAAEAAAAAgAAEAAAAAAA=</HashCode>
+      <FileName>Extensions\CoordinatesExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Extensions.CurrencyConversionExtensions" Collapsed="true">
+    <Position X="38" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Extensions\CurrencyConversionExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Extensions.JourneyExtensions" Collapsed="true">
+    <Position X="38" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAADQAAIAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAA=</HashCode>
+      <FileName>Extensions\JourneyExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Helpers.TrigHelpers" Collapsed="true">
+    <Position X="43.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\TrigHelpers.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Migrations.Configuration" Collapsed="true">
+    <Position X="34.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Migrations\Configuration.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Models.ApplicationUser">
+    <Position X="8.75" Y="2" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAACAAAAgAAAAAAAAEACgAAABACAAAAAAAAAAg=</HashCode>
+      <FileName>Models\IdentityModels.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Profiles" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="MileEyes.API.Models.ApplicationDbContext" Collapsed="true">
+    <Position X="38" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAJBAACAACAAggAAAgAgAggQIBAggMCAEAAAAAAAAAA=</HashCode>
+      <FileName>Models\IdentityModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Models.DatabaseModels.Accountant">
+    <Position X="9.5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\DatabaseModels\Accountant.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Models.DatabaseModels.AccountingEntry">
+    <Position X="22" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAABAAAAQA=</HashCode>
+      <FileName>Models\DatabaseModels\AccountingEntry.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Models.DatabaseModels.AccountingToken">
+    <Position X="8" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAABAABAAA=</HashCode>
+      <FileName>Models\DatabaseModels\AccountingToken.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Models.DatabaseModels.Address">
+    <Position X="22.25" Y="3.5" Width="1.5" />
+    <AssociationLine Name="Companies" Type="MileEyes.API.Models.DatabaseModels.Company" FixedToPoint="true">
+      <Path>
+        <Point X="22.25" Y="3.748" />
+        <Point X="18.25" Y="3.748" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAgAAIAAgAAAAAAAAAAAABAA=</HashCode>
+      <FileName>Models\DatabaseModels\Address.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Coordinates" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Companies" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="MileEyes.API.Models.DatabaseModels.Adjustment">
+    <Position X="13.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAACABAAAAAAAABAABAABAAAAAA=</HashCode>
+      <FileName>Models\DatabaseModels\Adjustment.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Models.DatabaseModels.Company">
+    <Position X="16.5" Y="1.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAICAAGAEACQAgAAABAAAAQQCDAABICDAAAAAAAIAAA=</HashCode>
+      <FileName>Models\DatabaseModels\Company.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Owner" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Profiles" />
+      <Property Name="Adjustments" />
+      <Property Name="AccountingTokens" />
+      <Property Name="DriverInvites" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="MileEyes.API.Models.DatabaseModels.Coordinates">
+    <Position X="25.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAEAAAAAAAAAIAAAAAEAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\DatabaseModels\Coordinates.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Models.DatabaseModels.CurrencyRate" Collapsed="true">
+    <Position X="39.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAACAAAAAAAAAAAAAAAgAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\DatabaseModels\CurrencyRate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Models.DatabaseModels.Driver">
+    <Position X="16.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAgAAAAAAAAAAAAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\DatabaseModels\Driver.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Vehicles" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="MileEyes.API.Models.DatabaseModels.DriverInvite">
+    <Position X="20.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Models\DatabaseModels\DriverInvite.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Models.DatabaseModels.EngineType">
+    <Position X="14.75" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAgAAAAAAAAAQAAAAEAAAAEAAAAAAAAAA=</HashCode>
+      <FileName>Models\DatabaseModels\EngineType.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="FuelType" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="MileEyes.API.Models.DatabaseModels.FuelType">
+    <Position X="14.75" Y="14" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\DatabaseModels\FuelType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Models.DatabaseModels.Invite">
+    <Position X="23" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAACAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\DatabaseModels\Invite.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Models.DatabaseModels.Journey">
+    <Position X="19.25" Y="6" Width="1.5" />
+    <AssociationLine Name="Company" Type="MileEyes.API.Models.DatabaseModels.Company" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="19.719" Y="6" />
+        <Point X="19.719" Y="4.879" />
+        <Point X="18.25" Y="4.879" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAACQAAAABQAAAIAABAAEhAABACAgABBAAAABAAgAAA=</HashCode>
+      <FileName>Models\DatabaseModels\Journey.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Driver" />
+      <Property Name="Company" />
+      <Property Name="Vehicle" />
+      <Property Name="AccountingEntry" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Waypoints" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="MileEyes.API.Models.DatabaseModels.Manager">
+    <Position X="11.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\DatabaseModels\Manager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Models.DatabaseModels.Owner">
+    <Position X="14" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\DatabaseModels\Owner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Models.DatabaseModels.Profile">
+    <Position X="12.75" Y="4.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAIDAAAAAAAAAAAAAAAAAAAAABAgIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\DatabaseModels\Profile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Models.DatabaseModels.Vehicle">
+    <Position X="17.75" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAACAAAAAAAAAAAAABAAABAAAAAAAIAAAAAAAAAEAAA=</HashCode>
+      <FileName>Models\DatabaseModels\Vehicle.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="EngineType" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="MileEyes.API.Models.DatabaseModels.Waypoint">
+    <Position X="22.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAACAAAAAAEAAAACIAAAAAAAAAA=</HashCode>
+      <FileName>Models\DatabaseModels\Waypoint.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Address" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="MileEyes.API.Models.DatabaseModels.XeroToken">
+    <Position X="7.75" Y="12" Width="1.75" />
+    <InheritanceLine Type="MileEyes.API.Models.DatabaseModels.AccountingToken" FixedToPoint="true">
+      <Path>
+        <Point X="8.75" Y="10.93" />
+        <Point X="8.75" Y="12" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAEAAQAAAAAAQgkEAAAAIAQAAAIAAAAAAAA=</HashCode>
+      <FileName>Models\DatabaseModels\XeroToken.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Providers.ApplicationOAuthProvider" Collapsed="true">
+    <Position X="39.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAACAAAAAAAAAAAAAEAAEIAAAAAAAAAAAgA=</HashCode>
+      <FileName>Providers\ApplicationOAuthProvider.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MileEyes.API.Results.ChallengeResult" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="32.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Results\ChallengeResult.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="MileEyes.API.Models.DatabaseModels.FreeAgentToken">
+    <Position X="10.5" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgCAAAAAQAA=</HashCode>
+      <FileName>Models\DatabaseModels\FreeAgentToken.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="MileEyes.API.Areas.HelpPage.ModelDescriptions.IModelDocumentationProvider" Collapsed="true">
+    <Position X="32.75" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Areas\HelpPage\ModelDescriptions\IModelDocumentationProvider.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="MileEyes.API.Areas.HelpPage.SampleDirection" Collapsed="true">
+    <Position X="32.75" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Areas\HelpPage\SampleGeneration\SampleDirection.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

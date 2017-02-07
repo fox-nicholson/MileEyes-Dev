@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:MileEyes.ViewModels;assembly=MileEyes"
+             xmlns:views="clr-namespace:MileEyes.Views;assembly=MileEyes"
+             xmlns:customControls="clr-namespace:MileEyes.CustomControls;assembly=MileEyes"
+             x:Class="MileEyes.Pages.JourneysPage" Title="My Journeys">
+  <ContentPage.BackgroundColor>
+    <OnPlatform x:TypeArguments="Color"
+                iOS="{StaticResource primaryiOSBackgroundColor}"
+                Android="{StaticResource primaryAndroidBackgroundColor}" />
+  </ContentPage.BackgroundColor>
+  <ContentPage.BindingContext>
+    <viewModels:JourneysViewModel/>
+  </ContentPage.BindingContext>
+  <ContentPage.ToolbarItems>
+    <ToolbarItem Text="Add" Clicked="Button_OnClicked"/>
+  </ContentPage.ToolbarItems>
+  <ContentPage.Content>
+    <StackLayout VerticalOptions="Fill">
+      <customControls:CustomListView IsVisible="{Binding HasJourneys}" ItemsSource="{Binding Journeys}" HasUnevenRows="True"
+                                 RefreshCommand="{Binding RefreshCommand}" IsPullToRefreshEnabled="True"
+                                 IsRefreshing="{Binding Refreshing}" IsGroupingEnabled="True" GroupDisplayBinding="{Binding Title}" ItemSelected="ListView_OnItemSelected"
+                                     ItemAppearing="ListView_OnItemAppearing">
+        <customControls:CustomListView.BackgroundColor>
+          <OnPlatform x:TypeArguments="Color"
+                      iOS="{StaticResource primaryiOSBackgroundColor}"
+                      Android="{StaticResource primaryAndroidBackgroundColor}" />
+        </customControls:CustomListView.BackgroundColor>
+        <ListView.ItemTemplate>
+          <DataTemplate>
+            <customControls:CustomJourneyCell />
+          </DataTemplate>
+        </ListView.ItemTemplate>
+        <ListView.GroupHeaderTemplate>
+          <DataTemplate>
+            <views:JourneyGroupCell/>
+          </DataTemplate>
+        </ListView.GroupHeaderTemplate>
+      </customControls:CustomListView>
+      <Grid IsVisible="{Binding HasNoJourneys}" HorizontalOptions="Fill" VerticalOptions="Fill">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="1*"/>
+          <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <StackLayout Grid.Row="0" HorizontalOptions="Fill" VerticalOptions="End">
+          <Label Text="No Journeys Recorded Yet" FontSize="Large" HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center" LineBreakMode="WordWrap" Margin="25">
+            <Label.TextColor>
+              <OnPlatform x:TypeArguments="Color"
+                          iOS="Gray"
+                          Android="Black" />
+            </Label.TextColor>
+          </Label>
+          <Label Text="Record your business journeys with MileEyes to start claiming mileage expenses quickly and easily." TextColor="Gray" HorizontalOptions="Center" VerticalOptions="Center" Margin="20" HorizontalTextAlignment="Center" LineBreakMode="WordWrap"/>
+        </StackLayout>
+        <StackLayout Grid.Row="1" HorizontalOptions="Fill" VerticalOptions="Start" Padding="25,0,25,0">
+          <Button Text="Record New Journey" Margin="15" Clicked="Button_OnClicked" BorderWidth="1" BackgroundColor="Transparent" BorderColor="Gray" VerticalOptions="Center" HorizontalOptions="Fill">
+            <Button.TextColor>
+              <OnPlatform x:TypeArguments="Color"
+                          iOS="Gray"
+                          Android="{StaticResource mileeyesBlue}" />
+            </Button.TextColor>
+          </Button>
+          <Button Text="Connect MileEyes Account" IsVisible="{Binding NotAuthenticated}" Clicked="ConnectButton_OnClicked" BorderWidth="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="15">
+            <Button.TextColor>
+              <OnPlatform x:TypeArguments="Color"
+                          iOS="Lime"
+                          Android="White" />
+            </Button.TextColor>
+            <Button.BackgroundColor>
+              <OnPlatform x:TypeArguments="Color"
+                          iOS="Transparent"
+                          Android="{StaticResource mileeyesBlue}" />
+            </Button.BackgroundColor>
+            <Button.BorderColor>
+              <OnPlatform x:TypeArguments="Color"
+                          iOS="Lime"
+                          Android="{StaticResource mileeyesBlue}" />
+            </Button.BorderColor>
+          </Button>
+        </StackLayout>
+      </Grid>
+    </StackLayout>
+  </ContentPage.Content>
+</ContentPage>
