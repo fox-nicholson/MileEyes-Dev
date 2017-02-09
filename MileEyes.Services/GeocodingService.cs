@@ -110,7 +110,7 @@ namespace MileEyes.Services
             };
         }
 
-        public async Task<Address> GetAddress(double lat, double lng, int step)
+        public async Task<Address> GetAddress(double lat, double lng)
         {
             var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lng + "&key=" + key;
 
@@ -130,26 +130,31 @@ namespace MileEyes.Services
             var geocodeResult = JsonConvert.DeserializeObject<GeocodeResult>(response);
 
             if (geocodeResult == null) return null;
+
             if (geocodeResult.result != null)
             {
-                return new Address()
+                var result = geocodeResult.result;
                 {
-                    PlaceId = geocodeResult.result.place_id,
-                    Label = geocodeResult.result.formatted_address,
-                    Latitude = geocodeResult.result.geometry.location.lat,
-                    Longitude = geocodeResult.result.geometry.location.lng
-                };
+                    return new Address()
+                    {
+                        PlaceId = result.place_id,
+                        Label = result.formatted_address,
+                        Latitude = result.geometry.location.lat,
+                        Longitude = result.geometry.location.lng
+                    };
+                }
             }
             else
             {
-                if (step >= geocodeResult.results.Length) return null;
-                var currentWp = geocodeResult.results[step];
+                if (geocodeResult.results == null || geocodeResult.results.Length < 1) return null;
+
+                var geoResult = geocodeResult.results[0];
                 return new Address()
                 {
-                    PlaceId = currentWp.place_id,
-                    Label = currentWp.formatted_address,
-                    Latitude = currentWp.geometry.location.lat,
-                    Longitude = currentWp.geometry.location.lng
+                    PlaceId = geoResult.place_id,
+                    Label = geoResult.formatted_address,
+                    Latitude = geoResult.geometry.location.lat,
+                    Longitude = geoResult.geometry.location.lng
                 };
             }
         }

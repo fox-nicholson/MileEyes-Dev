@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
+using Microsoft.Data.OData.Query.SemanticAst;
 using MileEyes.API.Extensions;
 using MileEyes.API.Models;
 using MileEyes.API.Models.DatabaseModels;
@@ -12,6 +15,7 @@ using MileEyes.API.Services;
 using MileEyes.PublicModels.Company;
 using MileEyes.PublicModels.Journey;
 using MileEyes.PublicModels.Vehicles;
+using WebGrease.Css.Extensions;
 
 namespace MileEyes.API.Controllers
 {
@@ -225,7 +229,7 @@ namespace MileEyes.API.Controllers
                     // Deal with us not having Address stored
                     else
                     {
-                        var addressResult = await GeocodingService.GetAddress(w.Latitude, w.Longitude, w.Step);
+                        var addressResult = await GeocodingService.GetAddress(w.Latitude, w.Longitude);
                         if (addressResult == null) break;
 
                         // Create a new Address
@@ -242,7 +246,16 @@ namespace MileEyes.API.Controllers
                         };
                     }
                 }
-                newWaypoint.Journey = j;
+                bool skipWaypoint = false;
+                if (j.Waypoints.Count < 1) skipWaypoint = false;
+                for (int i = 0; i < j.Waypoints.Count; i++)
+                {
+                    var waypoint = j.Waypoints.ElementAt(i);
+                    if (newWaypoint.Address.Coordinates.Longitude == waypoint.Address.Coordinates.Longitude &&
+                        newWaypoint.Address.Coordinates.Latitude == waypoint.Address.Coordinates.Latitude)
+                        skipWaypoint = true;
+                }
+                if (skipWaypoint) continue;
                 j.Waypoints.Add(newWaypoint);
             }
 

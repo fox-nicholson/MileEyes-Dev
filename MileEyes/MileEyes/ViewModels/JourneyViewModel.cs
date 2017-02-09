@@ -251,8 +251,9 @@ namespace MileEyes.ViewModels
             if (Waypoints.Count() > 2)
             {
                 Route.Clear();
+                IOrderedEnumerable<Waypoint> orderedWaypoints = Waypoints.OrderBy(wp => wp.Step);
 
-                foreach (var w in Waypoints)
+                foreach (var w in orderedWaypoints)
                     Route.Add(new Position(w.Latitude, w.Longitude));
             }
             else

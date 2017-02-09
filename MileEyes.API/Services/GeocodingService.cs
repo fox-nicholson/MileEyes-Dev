@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using MileEyes.API.Models.GeocodingModels;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace MileEyes.API.Services
 {
@@ -12,19 +12,20 @@ namespace MileEyes.API.Services
 
         public static async Task<IEnumerable<Address>> AddressLookup(string input)
         {
-            var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + input + "&components=country:GB&sensor=true&&key=" + key;
+            var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + input +
+                      "&components=country:GB&sensor=true&&key=" + key;
 
             var response = await Helpers.HttpHelper.FileGetContents(url);
 
             if (string.IsNullOrEmpty(response))
             {
-                return new Address[1] { new Address() { PlaceId = "", Label = "Unknown Address" } };
+                return new Address[1] {new Address() {PlaceId = "", Label = "Unknown Address"}};
             }
 
             var result = JsonConvert.DeserializeObject<ReverseGeocodeResult>(response);
 
             if (!result.results.Any())
-                return new Address[1] { new Address() { PlaceId = "", Label = "Unknown Address" } };
+                return new Address[1] {new Address() {PlaceId = "", Label = "Unknown Address"}};
 
             return result.results.Select(a => new Address()
             {
@@ -56,7 +57,7 @@ namespace MileEyes.API.Services
         public static async Task<string> GetPlaceId(string address)
         {
             var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address +
-                "&components=country:GB&key=" + key;
+                      "&components=country:GB&key=" + key;
 
             var response = await Helpers.HttpHelper.FileGetContents(url);
 
@@ -75,7 +76,7 @@ namespace MileEyes.API.Services
         public static async Task<Address> GetAddress(string placeId)
         {
             var url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId +
-                "&components=country:GB&key=" + key;
+                      "&components=country:GB&key=" + key;
 
             var response = await Helpers.HttpHelper.FileGetContents(url);
 
@@ -103,7 +104,7 @@ namespace MileEyes.API.Services
             };
         }
 
-        public static async Task<Address> GetAddress(double lat, double lng, int step)
+        public static async Task<Address> GetAddress(double lat, double lng)
         {
             var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lng + "&key=" + key;
 
@@ -135,14 +136,15 @@ namespace MileEyes.API.Services
             }
             else
             {
-                if (step >= geocodeResult.results.Length) return null;
-                var currentWp = geocodeResult.results[step];
+                if (geocodeResult.results == null || geocodeResult.results.Length < 1) return null;
+
+                var geoResult = geocodeResult.results[0];
                 return new Address()
                 {
-                    PlaceId = currentWp.place_id,
-                    Label = currentWp.formatted_address,
-                    Latitude = currentWp.geometry.location.lat,
-                    Longitude = currentWp.geometry.location.lng
+                    PlaceId = geoResult.place_id,
+                    Label = geoResult.formatted_address,
+                    Latitude = geoResult.geometry.location.lat,
+                    Longitude = geoResult.geometry.location.lng
                 };
             }
         }
@@ -150,13 +152,13 @@ namespace MileEyes.API.Services
         public static async Task<double[]> GetCoordinates(string placeId)
         {
             var url = "https://maps.googleapis.com/maps/api/geocode/json?place_id=" + placeId +
-                   "&key=" + key;
+                      "&key=" + key;
 
             var response = await Helpers.HttpHelper.FileGetContents(url);
 
             if (string.IsNullOrEmpty(response))
             {
-                return new[] { 0D, 0D };
+                return new[] {0D, 0D};
             }
 
             var geocodeResult = JsonConvert.DeserializeObject<GeocodeResult>(response);
@@ -199,7 +201,9 @@ namespace MileEyes.API.Services
 
                     if (locality == null)
                     {
-                        var administrativeLevel = result.address_components.FirstOrDefault(a => a.types.Contains("administrative_area_level_2"));
+                        var administrativeLevel =
+                            result.address_components.FirstOrDefault(
+                                a => a.types.Contains("administrative_area_level_2"));
 
                         return administrativeLevel == null ? "Unknown Address" : administrativeLevel.long_name;
                     }
@@ -217,8 +221,9 @@ namespace MileEyes.API.Services
 
         public static async Task<double> GetDistanceFromGoogle(double[] origin, double[] destination)
         {
-            var url = "http://maps.googleapis.com/maps/api/directions/json?origin=" + origin[0] + "," + origin[1] + "&destination=" +
-                     destination[0] + "," + destination[1] + "&sensor=true&units=metric";
+            var url = "http://maps.googleapis.com/maps/api/directions/json?origin=" + origin[0] + "," + origin[1] +
+                      "&destination=" +
+                      destination[0] + "," + destination[1] + "&sensor=true&units=metric";
 
             var content = await Helpers.HttpHelper.FileGetContents(url);
 
@@ -233,8 +238,9 @@ namespace MileEyes.API.Services
 
         public static async Task<Leg> GetDirectionsFromGoogle(double[] origin, double[] destination)
         {
-            var url = "http://maps.googleapis.com/maps/api/directions/json?origin=" + origin[0] + "," + origin[1] + "&destination=" +
-                     destination[0] + "," + destination[1] + "&sensor=true&units=metric";
+            var url = "http://maps.googleapis.com/maps/api/directions/json?origin=" + origin[0] + "," + origin[1] +
+                      "&destination=" +
+                      destination[0] + "," + destination[1] + "&sensor=true&units=metric";
 
             var content = await Helpers.HttpHelper.FileGetContents(url);
 

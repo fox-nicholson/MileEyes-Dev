@@ -437,6 +437,19 @@ namespace MileEyes.API.Controllers
             return Ok();
         }
 
+        // POST api/Account/CheckEmail
+        [AllowAnonymous]
+        [Route("CheckEmail")]
+        [HttpGet]
+		public async Task<IHttpActionResult> CheckEmail(String email)
+		{
+			var result = UserManager.FindByEmail(email);
+			if (result != null)
+				return BadRequest();
+
+			return Ok(email);
+		}
+
         // POST api/Account/RegisterExternal
         [OverrideAuthentication]
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
