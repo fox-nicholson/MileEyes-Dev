@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MileEyes.PublicModels.Vehicles;
 
 namespace MileEyes.PublicModels.Driver
 {
@@ -14,6 +15,6 @@ namespace MileEyes.PublicModels.Driver
 
 		public Guid LastActiveVehicle { get; set; }
 
-
+		public IList<VehicleViewModel> Vehicles { get; set; }
     }
 }

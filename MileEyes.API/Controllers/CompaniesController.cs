@@ -16,6 +16,8 @@ using MileEyes.API.Services;
 using MileEyes.PublicModels.Company;
 using MileEyes.PublicModels.Driver;
 using MileEyes.PublicModels.Journey;
+using MileEyes.PublicModels.Vehicles;
+using MileEyes.PublicModels.EngineTypes;
 
 namespace MileEyes.API.Controllers
 {
@@ -383,7 +385,16 @@ namespace MileEyes.API.Controllers
 							LastActiveVehicle = d.LastActiveVehicle,
 							FirstName = d.User.FirstName,
 							LastName = d.User.LastName,
-
+							Vehicles = d.Vehicles.Select(v => new VehicleViewModel()
+							{
+								Id = v.Id.ToString(),
+								Registration = v.Registration,
+								EngineType = new EngineTypeViewModel()
+								{
+									Id = v.EngineType.Id.ToString(),
+									Name = v.EngineType.Name
+								}
+							}).ToList()
 						});
 					}
 
