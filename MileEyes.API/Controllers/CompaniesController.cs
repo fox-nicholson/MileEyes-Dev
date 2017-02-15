@@ -42,7 +42,7 @@ namespace MileEyes.API.Controllers
 
 				var companies = new List<Company>();
 
-				foreach (var c in driver.Companies.)
+				foreach (var c in driver.Companies)
 				{
 					if (companies.Contains(c))
 					{
