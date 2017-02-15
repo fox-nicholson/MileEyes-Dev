@@ -84,6 +84,7 @@
     <Compile Include="CustomControls\DestinationAddressViewCell.xaml.cs">
       <DependentUpon>DestinationAddressViewCell.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CustomControls\DoubleComparison.cs" />
     <Compile Include="CustomControls\EngineTypeCell.xaml.cs">
       <DependentUpon>EngineTypeCell.xaml</DependentUpon>
     </Compile>

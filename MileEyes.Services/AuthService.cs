@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using MileEyes.PublicModels;
 using MileEyes.Services.Models;
 using Newtonsoft.Json;
+using Xamarin.Forms;
 
 namespace MileEyes.Services
 {
@@ -21,7 +22,8 @@ namespace MileEyes.Services
 
             using (var transaction = DatabaseService.Realm.BeginWrite())
             {
-                DatabaseService.Realm.RemoveAll<AuthToken>();
+//                DatabaseService.Realm.RemoveAll<AuthToken>();
+                DatabaseService.Realm.RemoveAll();
 
                 transaction.Commit();
             }
@@ -97,7 +99,11 @@ namespace MileEyes.Services
 
                 // Set the token to successful
                 tokenResult.Success = true;
-
+                
+                await Host.EngineTypeService.Sync();
+                await Host.VehicleService.Sync();
+                await Host.CompanyService.Sync();
+                Host.JourneyService.Sync();
 
                 // Return the token
                 return tokenResult;

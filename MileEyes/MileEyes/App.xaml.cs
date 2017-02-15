@@ -29,7 +29,7 @@ namespace MileEyes
                     MainPage = new AndroidMainPage();
                 });
 
-            SyncTimer();
+//            SyncTimer();
             Device.StartTimer(TimeSpan.FromMinutes(1), SyncTimer);
         }
 

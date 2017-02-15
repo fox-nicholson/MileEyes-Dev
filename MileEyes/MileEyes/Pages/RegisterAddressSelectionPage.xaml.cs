@@ -23,7 +23,7 @@ namespace MileEyes.Pages
 
             var address = (e.SelectedItem as Address);
 
-            if (string.IsNullOrEmpty(address.PlaceId))
+            if (string.IsNullOrEmpty(address?.PlaceId))
             {
                 (sender as ListView).SelectedItem = null;
                 return;

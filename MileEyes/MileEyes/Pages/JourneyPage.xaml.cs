@@ -20,11 +20,6 @@ namespace MileEyes.Pages
             InitRoute();
         }
 
-        private bool _open = true;
-        private Rectangle _drawerExpandedPosition;
-        private Rectangle _drawerMidPosition;
-        private Rectangle _drawerCollapsedPosition;
-
         protected override void OnAppearing()
         {
             SegmentedControl.SelectedValue = "Details";
@@ -58,7 +53,7 @@ namespace MileEyes.Pages
 
         private void SegmentedControl_OnValueChanged(object sender, EventArgs e)
         {
-            switch (SegmentedControl.SelectedValue.ToString().ToUpper())
+            switch (SegmentedControl.SelectedValue.ToUpper())
             {
                 case "DETAILS":
                     (BindingContext as JourneyViewModel).ShowDetails = true;

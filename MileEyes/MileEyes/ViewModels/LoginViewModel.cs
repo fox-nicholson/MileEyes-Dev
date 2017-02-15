@@ -68,6 +68,8 @@ namespace MileEyes.ViewModels
             {
                 LoginSuccess?.Invoke(this, EventArgs.Empty);
 
+//                Device.StartTimer(TimeSpan.FromSeconds(30), waitLogin);
+
                 Busy = false;
 
                 return;
@@ -76,6 +78,11 @@ namespace MileEyes.ViewModels
             LoginFailed?.Invoke(this, result.error_description);
 
             Busy = false;
+        }
+
+        private bool waitLogin()
+        {
+            return false;
         }
     }
 }

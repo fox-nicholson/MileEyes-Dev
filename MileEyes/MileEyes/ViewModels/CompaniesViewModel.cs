@@ -41,8 +41,6 @@ namespace MileEyes.ViewModels
             Companies.Clear();
             var companies = await Services.Host.CompanyService.GetCompanies();
 
-            var c1 = companies;
-
             foreach (var c in companies)
             {
                 Companies.Add(new CompanyViewModel(c));

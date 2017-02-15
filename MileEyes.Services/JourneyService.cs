@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using MileEyes.PublicModels.Journey;
 using MileEyes.Services.Models;
 using Newtonsoft.Json;
+using Xamarin.Forms;
 
 namespace MileEyes.Services
 {
@@ -53,11 +54,15 @@ namespace MileEyes.Services
 
                 journey.Vehicle = vehicle;
 
-                if (j.Company != null)
+                if (j.Company == null)
                 {
                     var company = (await Host.CompanyService.GetCompanies()).FirstOrDefault();
 
                     journey.Company = company;
+                }
+                else
+                {
+                    journey.Company = j.Company;
                 }
 
                 foreach (var w in j.Waypoints)
@@ -234,8 +239,14 @@ namespace MileEyes.Services
             }
         }
 
+        private bool _busy;
+
         private async Task PushNew()
         {
+            if (_busy) return;
+            _busy = true;
+            Device.StartTimer(TimeSpan.FromSeconds(45), Wait);
+
             var journeys = await GetJourneys();
 
             var journeysEnumerable = journeys as Journey[] ?? journeys.ToArray();
@@ -290,6 +301,13 @@ namespace MileEyes.Services
                 {
                     var message = ex.Message;
                 }
+            _busy = false;
+        }
+
+        private bool Wait()
+        {
+            _busy = false;
+            return false;
         }
     }
 }

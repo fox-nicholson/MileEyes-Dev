@@ -62,7 +62,7 @@ namespace MileEyes.ViewModels
             Refresh();
         }
 
-        public virtual async void Refresh()
+        public virtual void Refresh()
         {
             Authenticated = Services.Host.AuthService.Authenticated;
         }

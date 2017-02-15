@@ -16,7 +16,7 @@ namespace MileEyes.Pages
         {
             InitializeComponent();
 
-            Services.Host.TrackerService.HasMoved += TrackerService_HasMoved;
+            Host.TrackerService.HasMoved += TrackerService_HasMoved;
 
             (BindingContext as JourneyCurrentViewModel).StopRequested += JourneyCurrentPage_StopRequested;
         }
@@ -41,7 +41,7 @@ namespace MileEyes.Pages
                     (BindingContext as JourneyCurrentViewModel).EndJourneyConfirmed();
                     break;
                 case "Stop & Delete Journey":
-                    await Services.Host.TrackerService.Cancel();
+                    await Host.TrackerService.Cancel();
                     break;
                 case "Cancel":
                     (BindingContext as JourneyCurrentViewModel).Busy = false;

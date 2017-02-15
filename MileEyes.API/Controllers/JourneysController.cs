@@ -132,6 +132,7 @@ namespace MileEyes.API.Controllers
             });
         }
 
+
         [ResponseType(typeof(JourneyViewModel))]
         public async Task<IHttpActionResult> PostJourney(JourneyBindingModel model)
         {
@@ -172,91 +173,212 @@ namespace MileEyes.API.Controllers
                 Passengers = model.Passengers
             };
 
-            // Loop through Waypoints in Model
-            foreach (var w in model.Waypoints)
+//            // Loop through Waypoints in Model
+//            foreach (var w in model.Waypoints)
+//            {
+//                // Create new Waypoint
+//                var newWaypoint = new Waypoint()
+//                {
+//                    Id = Guid.NewGuid(),
+//                    Step = w.Step,
+//                    Timestamp = w.Timestamp
+//                };
+//
+//                // Check if Model Waypoint has a PlaceId
+//                if (!string.IsNullOrEmpty(w.PlaceId))
+//                {
+//                    // Get existing Addresses with PlaceId
+//                    var existingAddresses = db.Addresses.Where(a => a.PlaceId == w.PlaceId);
+//
+//                    //Check if weve already stored the Address
+//                    if (existingAddresses.Any())
+//                    {
+//                        newWaypoint.Address = existingAddresses.FirstOrDefault();
+//                    }
+//                    // Deal with us not having Address stored
+//                    else
+//                    {
+//                        var addressResult = await GeocodingService.GetAddress(w.PlaceId);
+//
+//                        // Create a new Address
+//                        newWaypoint.Address = new Address()
+//                        {
+//                            Id = Guid.NewGuid(),
+//                            PlaceId = addressResult.PlaceId,
+//                            Coordinates = new Coordinates()
+//                            {
+//                                Id = Guid.NewGuid(),
+//                                Latitude = addressResult.Latitude,
+//                                Longitude = addressResult.Longitude
+//                            }
+//                        };
+//                    }
+//                }
+//                // Deal with having no PlaceId
+//                else
+//                {
+//                    var existingAddresses =
+//                        db.Addresses.Where(
+//                            a =>
+//                                Math.Abs(a.Coordinates.Latitude - w.Latitude) < 0.0005 &&
+//                                Math.Abs(a.Coordinates.Longitude - w.Longitude) < 0.0005);
+//                    //Check if weve already stored the Address
+//                    if (existingAddresses.Any())
+//                    {
+//                        newWaypoint.Address = existingAddresses.FirstOrDefault();
+//                    }
+//                    // Deal with us not having Address stored
+//                    else
+//                    {
+//                        var addressResult = await GeocodingService.GetAddress(w.Latitude, w.Longitude);
+//                        if (addressResult == null) break;
+//
+//                        // Create a new Address
+//                        newWaypoint.Address = new Address()
+//                        {
+//                            Id = Guid.NewGuid(),
+//                            PlaceId = addressResult.PlaceId,
+//                            Coordinates = new Coordinates()
+//                            {
+//                                Id = Guid.NewGuid(),
+//                                Latitude = addressResult.Latitude,
+//                                Longitude = addressResult.Longitude
+//                            }
+//                        };
+//                    }
+//                }
+//                bool skipWaypoint = false;
+//                if (j.Waypoints.Count < 1) skipWaypoint = false;
+//                for (int i = 0; i < j.Waypoints.Count; i++)
+//                {
+//                    var waypoint = j.Waypoints.ElementAt(i);
+//                    if (newWaypoint.Address.Coordinates.Longitude == waypoint.Address.Coordinates.Longitude &&
+//                        newWaypoint.Address.Coordinates.Latitude == waypoint.Address.Coordinates.Latitude)
+//                        skipWaypoint = true;
+//                }
+//                if (skipWaypoint) continue;
+//                j.Waypoints.Add(newWaypoint);
+//            }
+
+            // If this is a GPS Journey, execute this code
+            if (model.Waypoints.Count > 2)
             {
-                // Create new Waypoint
-                var newWaypoint = new Waypoint()
+                var firstWaypoint = model.Waypoints.First();
+                var lastWaypoint = model.Waypoints.Last();
+
+                var addressResult = await GeocodingService.GetAddress(firstWaypoint.Latitude, firstWaypoint.Longitude);
+
+                // Create a new Address
+                var firstWp = new Waypoint();
+                firstWp.Id = Guid.NewGuid();
+                firstWp.Step = firstWaypoint.Step;
+                firstWp.Timestamp = firstWaypoint.Timestamp;
+                firstWp.Journey = j;
+                firstWp.Address = new Address()
                 {
                     Id = Guid.NewGuid(),
-                    Step = w.Step,
-                    Timestamp = w.Timestamp
+                    PlaceId = addressResult.PlaceId,
+                    Coordinates = new Coordinates()
+                    {
+                        Id = Guid.NewGuid(),
+                        Latitude = firstWaypoint.Latitude,
+                        Longitude = firstWaypoint.Longitude
+                    }
                 };
 
-                // Check if Model Waypoint has a PlaceId
-                if (!string.IsNullOrEmpty(w.PlaceId))
+                j.Waypoints.Add(firstWp);
+
+                for (int i = 1; i < model.Waypoints.Count - 1; i++)
                 {
-                    // Get existing Addresses with PlaceId
-                    var existingAddresses = db.Addresses.Where(a => a.PlaceId == w.PlaceId);
+                    var currentWaypoint = model.Waypoints.ElementAt(i);
+                    var newWaypoint = new Waypoint();
+                    newWaypoint.Id = Guid.NewGuid();
 
-                    //Check if weve already stored the Address
-                    if (existingAddresses.Any())
+                    newWaypoint.Address = new Address()
                     {
-                        newWaypoint.Address = existingAddresses.FirstOrDefault();
-                    }
-                    // Deal with us not having Address stored
-                    else
-                    {
-                        var addressResult = await GeocodingService.GetAddress(w.PlaceId);
-
-                        // Create a new Address
-                        newWaypoint.Address = new Address()
+                        Id = Guid.NewGuid(),
+                        PlaceId = "     ",
+                        Coordinates = new Coordinates()
                         {
                             Id = Guid.NewGuid(),
-                            PlaceId = addressResult.PlaceId,
-                            Coordinates = new Coordinates()
-                            {
-                                Id = Guid.NewGuid(),
-                                Latitude = addressResult.Latitude,
-                                Longitude = addressResult.Longitude
-                            }
-                        };
-                    }
+                            Latitude = currentWaypoint.Latitude,
+                            Longitude = currentWaypoint.Longitude
+                        }
+                    };
+                    newWaypoint.Step = currentWaypoint.Step;
+                    newWaypoint.Timestamp = currentWaypoint.Timestamp;
+                    newWaypoint.Journey = j;
+                    j.Waypoints.Add(newWaypoint);
                 }
-                // Deal with having no PlaceId
-                else
-                {
-                    var existingAddresses =
-                        db.Addresses.Where(
-                            a =>
-                                Math.Abs(a.Coordinates.Latitude - w.Latitude) < 0.0005 &&
-                                Math.Abs(a.Coordinates.Longitude - w.Longitude) < 0.0005);
-                    //Check if weve already stored the Address
-                    if (existingAddresses.Any())
-                    {
-                        newWaypoint.Address = existingAddresses.FirstOrDefault();
-                    }
-                    // Deal with us not having Address stored
-                    else
-                    {
-                        var addressResult = await GeocodingService.GetAddress(w.Latitude, w.Longitude);
-                        if (addressResult == null) break;
 
-                        // Create a new Address
-                        newWaypoint.Address = new Address()
-                        {
-                            Id = Guid.NewGuid(),
-                            PlaceId = addressResult.PlaceId,
-                            Coordinates = new Coordinates()
-                            {
-                                Id = Guid.NewGuid(),
-                                Latitude = addressResult.Latitude,
-                                Longitude = addressResult.Longitude
-                            }
-                        };
-                    }
-                }
-                bool skipWaypoint = false;
-                if (j.Waypoints.Count < 1) skipWaypoint = false;
-                for (int i = 0; i < j.Waypoints.Count; i++)
+
+                addressResult = await GeocodingService.GetAddress(lastWaypoint.Latitude, lastWaypoint.Longitude);
+
+                // Create a new Address
+                var lastWp = new Waypoint();
+                lastWp.Id = Guid.NewGuid();
+                lastWp.Step = lastWaypoint.Step;
+                lastWp.Timestamp = lastWaypoint.Timestamp;
+                lastWp.Journey = j;
+                lastWp.Address = new Address()
                 {
-                    var waypoint = j.Waypoints.ElementAt(i);
-                    if (newWaypoint.Address.Coordinates.Longitude == waypoint.Address.Coordinates.Longitude &&
-                        newWaypoint.Address.Coordinates.Latitude == waypoint.Address.Coordinates.Latitude)
-                        skipWaypoint = true;
-                }
-                if (skipWaypoint) continue;
-                j.Waypoints.Add(newWaypoint);
+                    Id = Guid.NewGuid(),
+                    PlaceId = addressResult.PlaceId,
+                    Coordinates = new Coordinates()
+                    {
+                        Id = Guid.NewGuid(),
+                        Latitude = lastWaypoint.Latitude,
+                        Longitude = lastWaypoint.Longitude
+                    }
+                };
+
+                j.Waypoints.Add(lastWp);
+            }
+            // Else, use a cut down version for only 2 Waypoints
+            else
+            {
+                var newOrigin = new Waypoint();
+                var newDestination = new Waypoint();
+                var origin = model.Waypoints[0];
+                var destination = model.Waypoints[1];
+
+                newOrigin.Id = Guid.NewGuid();
+                newDestination.Id = Guid.NewGuid();
+
+                newOrigin.Step = origin.Step;
+                newDestination.Step = destination.Step;
+
+                newOrigin.Timestamp = origin.Timestamp;
+                newDestination.Timestamp = destination.Timestamp;
+
+                newOrigin.Journey = j;
+                newDestination.Journey = j;
+
+                newOrigin.Address = new Address()
+                {
+                    Id = Guid.NewGuid(),
+                    PlaceId = origin.PlaceId,
+                    Coordinates = new Coordinates()
+                    {
+                        Id = Guid.NewGuid(),
+                        Latitude = origin.Latitude,
+                        Longitude = origin.Longitude
+                    }
+                };
+                newDestination.Address = new Address()
+                {
+                    Id = Guid.NewGuid(),
+                    PlaceId = destination.PlaceId,
+                    Coordinates = new Coordinates()
+                    {
+                        Id = Guid.NewGuid(),
+                        Latitude = destination.Latitude,
+                        Longitude = destination.Longitude
+                    }
+                };
+
+                j.Waypoints.Add(newOrigin);
+                j.Waypoints.Add(newDestination);
             }
 
             // Calculate Cost and VAT
@@ -266,8 +388,15 @@ namespace MileEyes.API.Controllers
             // Add Journey to the Database
             j = db.Journeys.Add(j);
 
-            // Save Changes
-            await db.SaveChangesAsync();
+            try
+            {
+                // Save Changes
+                await db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
 
             // Return Journey with new Id
             return Ok(new JourneyViewModel()

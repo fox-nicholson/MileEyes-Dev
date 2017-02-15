@@ -43,9 +43,5 @@ namespace MileEyes.CustomControls
             get { return (string)GetValue(TextProperty); }
             set { SetValue(TextProperty, value); }
         }
-
-        public SegmentedControlOption()
-        {
-        }
     }
 }

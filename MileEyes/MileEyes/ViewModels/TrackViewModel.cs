@@ -55,7 +55,7 @@ namespace MileEyes.ViewModels
             GpsPingCallback();
         }
 
-        public override async void Refresh()
+        public override void Refresh()
         {
             GPSAvailable = Plugin.Geolocator.CrossGeolocator.Current.IsGeolocationAvailable && Plugin.Geolocator.CrossGeolocator.Current.IsGeolocationEnabled;
         }

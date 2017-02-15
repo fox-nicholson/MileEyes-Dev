@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using MileEyes.CustomControls;
 using MileEyes.Services.Helpers;
 using MileEyes.Services.Models;
 using Xamarin.Forms;
@@ -47,7 +48,7 @@ namespace MileEyes.ViewModels
             get { return _currentDistance; }
             set
             {
-                if (_currentDistance == value) return;
+                if (DoubleComparison.isEqual(_currentDistance, value)) return;
                 _currentDistance = value;
                 OnPropertyChanged(nameof(CurrentDistance));
             }

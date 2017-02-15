@@ -27,7 +27,6 @@ namespace MileEyes.Pages
 
             var selectAddressPage = new CloudAddressSelectionPage();
             selectAddressPage.AddressSelected += SelectAddressPage_AddressSelected;
-            ;
 
             Device.BeginInvokeOnMainThread(
                 async () => { await Navigation.PushModalAsync(new NavigationPage(selectAddressPage)); });

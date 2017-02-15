@@ -38,6 +38,8 @@ namespace MileEyes.API.Controllers
                     Id = c.Id.ToString(),
                     Name = c.Name,
                     Personal = c.Personal,
+					LowRate = c.LowRate,
+					HighRate = c.HighRate
                 }).AsQueryable();
             }
             catch (NullReferenceException e)
@@ -61,6 +63,13 @@ namespace MileEyes.API.Controllers
 
             // Get existing addresses with the same PlaceId
             var existingAddress = db.Addresses.FirstOrDefault(a => a.PlaceId == model.PlaceId);
+
+			// Checks if the posted company name has already been taken.
+			var existingCompany = db.Companies.FirstOrDefault(c => c.Name == model.Name);
+			if (existingCompany != null)
+			{
+				return BadRequest("Company name already taken!");
+			}
 
             Address address;
 
@@ -110,6 +119,8 @@ namespace MileEyes.API.Controllers
             newCompany.Profiles.Add(manager);
             newCompany.Profiles.Add(accountant);
 
+			db.Companies.Add(newCompany);
+
             // Save the changes
             await db.SaveChangesAsync();
 
@@ -144,47 +155,74 @@ namespace MileEyes.API.Controllers
             });
         }
 
-        [Route("Companies/{companyId}/Journeys")]
-        public IQueryable<JourneyViewModel> GetJourneys(Guid companyId)
+        [Route("api/Companies/{companyId}/Journeys")]
+		public IQueryable<JourneyViewModel> GetJourneys(Guid companyId)
         {
-            var user = db.Users.Find(User.Identity.GetUserId());
+			var result = new List<JourneyViewModel>();
 
-            var driver = user.Profiles.OfType<Driver>().FirstOrDefault();
+			var user = db.Users.Find(User.Identity.GetUserId());
 
-            return db.Journeys.Where(j => j.Company.Id == companyId).Select(j => new JourneyViewModel()
-            {
-                Accepted = j.Accepted,
-                Company = new CompanyViewModel()
-                {
-                    Id = j.Company.Id.ToString()
-                },
-                Cost = Convert.ToDouble(j.Cost),
-                Date = j.Date,
-                Driver = new DriverViewModel()
-                {
-                    Id = j.Driver.Id.ToString(),
-                    FirstName = j.Driver.User.FirstName,
-                    LastName = j.Driver.User.LastName
-                },
-                Distance = j.Distance,
-                Id = j.Id.ToString(),
-                Invoiced = j.Invoiced,
-                Passengers = j.Passengers,
-                Reason = j.Reason,
-                Rejected = j.Rejected,
-                Waypoints = j.Waypoints.Select(w => new WaypointViewModel()
-                {
-                    Latitude = w.Address.Coordinates.Latitude,
-                    Longitude = w.Address.Coordinates.Longitude,
-                    PlaceId = w.Address.PlaceId,
-                    Step = w.Step,
-                    Timestamp = w.Timestamp,
-                    Id = w.Id.ToString()
-                }).ToList()
-            });
+			var owner = user.Profiles.OfType<Owner>().FirstOrDefault();
+			var manager = user.Profiles.OfType<Manager>().FirstOrDefault();
+			var accountant = user.Profiles.OfType<Accountant>().FirstOrDefault();
+
+			try
+			{
+				var company = db.Companies.Find(companyId);
+
+				var companyOwners = company.Profiles.OfType<Owner>();
+				var companyManagers = company.Profiles.OfType<Manager>();
+				var companyAccountants = company.Profiles.OfType<Accountant>();
+
+				if(companyOwners.Contains(owner) || companyManagers.Contains(manager) || companyAccountants.Contains(accountant))
+				{
+					var journeys = company.Journeys;
+
+					foreach (var j in journeys)
+					{
+						result.Add(new JourneyViewModel()
+						{
+							Accepted = j.Accepted,
+							Company = new CompanyViewModel()
+							{
+								Id = j.Company.Id.ToString()
+							},
+							Cost = Convert.ToDouble(j.Cost),
+							Date = j.Date,
+							Driver = new DriverViewModel()
+							{
+								Id = j.Driver.Id.ToString(),
+								FirstName = j.Driver.User.FirstName,
+								LastName = j.Driver.User.LastName,
+								LastActiveVehicle = j.Driver.LastActiveVehicle
+							},
+							Distance = j.Distance,
+							Id = j.Id.ToString(),
+							Invoiced = j.Invoiced,
+							Passengers = j.Passengers,
+							Reason = j.Reason,
+							Rejected = j.Rejected,
+							Waypoints = j.Waypoints.Select(w => new WaypointViewModel()
+							{
+								Latitude = w.Address.Coordinates.Latitude,
+								Longitude = w.Address.Coordinates.Longitude,
+								PlaceId = w.Address.PlaceId,
+								Step = w.Step,
+								Timestamp = w.Timestamp,
+								Id = w.Id.ToString()
+							}).ToList()
+						});
+					}
+				}
+
+			} catch (NullReferenceException e)
+			{
+				Console.WriteLine(e);
+			}
+			return result.AsQueryable();
         }
 
-        [Route("Companies/{companyId}/Journeys/{journeyId}/Accept")]
+        [Route("api/Companies/{companyId}/Journeys/{journeyId}/Accept")]
         public async Task<IHttpActionResult> AcceptCompanyJourney(Guid companyId, Guid journeyId)
         {
             // Get the current User
@@ -229,7 +267,7 @@ namespace MileEyes.API.Controllers
             return Ok();
         }
 
-        [Route("Companies/{companyId}/Journeys/{journeyId}/Reject")]
+        [Route("api/Companies/{companyId}/Journeys/{journeyId}/Reject")]
         public async Task<IHttpActionResult> RejectCompanyJourney(Guid companyId, Guid journeyId)
         {
             // Get the current User
@@ -274,7 +312,7 @@ namespace MileEyes.API.Controllers
             return Ok();
         }
 
-        [Route("Companies/{companyId}/Journeys/{journeyId}/PushToAccountancy/{accountingPackage}")]
+        [Route("api/Companies/{companyId}/Journeys/{journeyId}/PushToAccountancy/{accountingPackage}")]
         public async Task<IHttpActionResult> PushCompanyJourneyToAccouncy(Guid companyId, Guid journeyId,
             string accountancyPackage)
         {
@@ -311,8 +349,55 @@ namespace MileEyes.API.Controllers
             return BadRequest();
         }
 
+		[HttpGet]
+		[HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
+		[Route("api/Companies/{companyId}/Drivers")]
+		public IQueryable<DriverViewModel> GetDrivers(Guid companyId) {
+			var result = new List<DriverViewModel>();
+
+			var user = db.Users.Find(User.Identity.GetUserId());
+
+			var owner = user.Profiles.OfType<Owner>().FirstOrDefault();
+			var manager = user.Profiles.OfType<Manager>().FirstOrDefault();
+			var accountant = user.Profiles.OfType<Accountant>().FirstOrDefault();
+
+			try
+			{
+				// get the company
+				var company = db.Companies.Find(companyId);
+
+				// get the company owners and managers
+				var companyOwners = company.Profiles.OfType<Owner>();
+				var companyManagers = company.Profiles.OfType<Manager>();
+				var companyAccountants = company.Profiles.OfType<Accountant>();
+
+				// Check if the current users has rights, if not respond with bad request
+				if (companyOwners.Contains(owner) || companyManagers.Contains(manager) || companyAccountants.Contains(accountant))
+				{
+					var drivers = company.Profiles.OfType<Driver>();
+					foreach (var d in drivers)
+					{
+						result.Add(new DriverViewModel()
+						{
+							Id = d.Id.ToString(),
+							LastActiveVehicle = d.LastActiveVehicle,
+							FirstName = d.User.FirstName,
+							LastName = d.User.LastName,
+
+						});
+					}
+
+				}
+			}
+			catch (NullReferenceException e) {
+				//return BadRequest(e.ToString());
+			}
+			return result.AsQueryable();
+		}
+
+
         [HttpPost]
-        [Route("Companies/{companyId}/AddDriver")]
+        [Route("api/Companies/{companyId}/AddDriver")]
         public async Task<IHttpActionResult> AddCompanyDriver(Guid companyId, DriverBindingModel model)
         {
             // Get the current User
@@ -365,7 +450,7 @@ namespace MileEyes.API.Controllers
 
         [HttpPost]
         [ResponseType(typeof(DriverViewModel))]
-        [Route("Companies/{companyId}/RemoveDriver/{driverId}")]
+        [Route("api/Companies/{companyId}/RemoveDriver/{driverId}")]
         public async Task<IHttpActionResult> RemoveCompanyDriver(Guid companyId, Guid driverId)
         {
             // Get the current User

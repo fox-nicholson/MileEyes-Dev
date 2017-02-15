@@ -19,10 +19,12 @@ namespace MileEyes.Pages
 
         private void LoginPage_LoginSuccess(object sender, EventArgs e)
         {
+            (BindingContext as LoginViewModel).Busy = true;
             Device.BeginInvokeOnMainThread(async () =>
             {
                 await Navigation.PopToRootAsync();
             });
+            (BindingContext as LoginViewModel).Busy = false;
         }
 
         private void LoginPage_LoginFailed(object sender, string e)

@@ -37,7 +37,7 @@ namespace MileEyes.Pages
         private void AddressCell_OnTapped(object sender, EventArgs e)
         {
             var selectAddressPage = new RegisterAddressSelectionPage();
-            selectAddressPage.AddressSelected += SelectAddressPage_AddressSelected; ;
+            selectAddressPage.AddressSelected += SelectAddressPage_AddressSelected;
 
             Device.BeginInvokeOnMainThread(() =>
             {

@@ -36,7 +36,7 @@ namespace MileEyes.Pages
                 {
                     var addReasonPage = new ReasonAddPage();
                     (addReasonPage.BindingContext as ReasonViewModel).SaveComplete += ReasonSelectionPage_SaveComplete;
-                    ;
+                    
                     Device.BeginInvokeOnMainThread(async () =>
                     {
                         await Navigation.PushAsync(addReasonPage);
