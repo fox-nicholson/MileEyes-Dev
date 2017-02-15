@@ -29,26 +29,72 @@ namespace MileEyes.API.Controllers
         // GET: api/Companies
         public IQueryable<CompanyViewModel> GetCompanies()
         {
-            var user = db.Users.Find(User.Identity.GetUserId());
+			var user = db.Users.Find(User.Identity.GetUserId());
 
-            var driver = user.Profiles.OfType<Driver>().FirstOrDefault();
-
+			var result = new List<CompanyViewModel>();
             try
             {
-                return driver.Companies.Select(c => new CompanyViewModel()
-                {
-                    Id = c.Id.ToString(),
-                    Name = c.Name,
-                    Personal = c.Personal,
-					LowRate = c.LowRate,
-					HighRate = c.HighRate
-                }).AsQueryable();
+				var driver = user.Profiles.OfType<Driver>().FirstOrDefault();
+				var accountant = user.Profiles.OfType<Accountant>().FirstOrDefault();
+				var manager = user.Profiles.OfType<Manager>().FirstOrDefault();
+				var owner = user.Profiles.OfType<Owner>().FirstOrDefault();
+
+
+				var companies = new List<Company>();
+
+				foreach (var c in driver.Companies.)
+				{
+					if (companies.Contains(c))
+					{
+						continue;
+					}
+					companies.Add(c);
+				}
+
+				foreach (var c in accountant.Companies)
+				{
+					if (companies.Contains(c))
+					{
+						continue;
+					}
+					companies.Add(c);
+				}
+
+				foreach (var c in manager.Companies)
+				{
+					if (companies.Contains(c))
+					{
+						continue;
+					}
+					companies.Add(c);
+				}
+
+				foreach (var c in owner.Companies)
+				{
+					if (companies.Contains(c))
+					{
+						continue;
+					}
+					companies.Add(c);
+				}
+
+				foreach (var c in companies)
+				{
+					result.Add(new CompanyViewModel()
+					{
+						Id = c.Id.ToString(),
+						Name = c.Name,
+						Personal = c.Personal,
+						LowRate = c.LowRate,
+						HighRate = c.HighRate
+					});
+				}
             }
             catch (NullReferenceException e)
             {
                 Console.WriteLine(e);
-                return null;
             }
+			return result.AsQueryable();
         }
 
         [ResponseType(typeof(CompanyViewModel))]
@@ -494,9 +540,9 @@ namespace MileEyes.API.Controllers
             {
                 // If the driver isnt part of the company return bad request
                 if (!company.Profiles.Contains(driver)) return BadRequest();
-            
-            // Remove the driver from the company
-            company.Profiles.Remove(driver);
+	            
+	            // Remove the driver from the company
+	            company.Profiles.Remove(driver);
             }
             catch (NullReferenceException e)
             {
