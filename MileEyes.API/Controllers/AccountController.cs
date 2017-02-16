@@ -442,7 +442,6 @@ namespace MileEyes.API.Controllers
         [AllowAnonymous]
         [Route("CheckEmail")]
         [HttpGet]
-<<<<<<< HEAD
         public async Task<IHttpActionResult> CheckEmail(String email)
         {
             var result = UserManager.FindByEmail(email);
@@ -483,40 +482,6 @@ namespace MileEyes.API.Controllers
             {
                 return BadRequest();
             }
-            return Ok();
-        }
-
-        [Route("AcceptDriverInviteEmail")]
-        [HttpPost]
-        public async Task<IHttpActionResult> AcceptDriverInviteEmail(String invite, String email)
-        {
-            var user = db.Users.Find(User.Identity.GetUserId());
-            if (user.Email.ToLower() != email.ToLower())
-            {
-                return BadRequest();
-            }
-            var driverInvite =
-                db.DriverInvites.FirstOrDefault(i => i.Id.ToString() == invite && i.Email.ToLower() == email.ToLower());
-            if (driverInvite == null)
-            {
-                return BadRequest("Invite isn't valid anymore!");
-            }
-
-            var company = db.Companies.FirstOrDefault(c => c.Id == driverInvite.Company.Id);
-            if (company == null)
-            {
-                return BadRequest("Unable to find company!");
-            }
-
-            var driver = new Driver
-            {
-                Id = Guid.NewGuid()
-            };
-
-            driverInvite.Company.Profiles.Add(driver);
-
-            db.DriverInvites.Remove(driverInvite);
-            db.SaveChanges();
             return Ok();
         }
 
@@ -604,50 +569,6 @@ namespace MileEyes.API.Controllers
             return Ok("Email Sent");
         }
 
-        //ResendDriverInviteEmai;
-=======
-		public async Task<IHttpActionResult> CheckEmail(String email)
-		{
-			var result = UserManager.FindByEmail(email);
-			if (result != null)
-			{
-				return BadRequest("The email address has been taken!");
-			}
-			return Ok();
-		}
-
-		// GET api/Account/CheckInvite
-		[OverrideAuthentication]
-		[HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
-		[Route("CheckDriverInvite")]
-		[HttpGet]
-		public async Task<IHttpActionResult> CheckDriverInvite(String companyId, String email)
-		{
-			var company = db.Companies.FirstOrDefault(c => c.Id.ToString() == companyId);
-			if (company == null)
-			{
-				return BadRequest();
-			}
-			var user = db.Users.Find(User.Identity.GetUserId());
-			var owner = user.Profiles.OfType<Owner>().FirstOrDefault();
-			var manager = user.Profiles.OfType<Manager>().FirstOrDefault();
-
-			var companyOwners = company.Profiles.OfType<Owner>();
-			var companyManagers = company.Profiles.OfType<Manager>();
-
-			if (!companyOwners.Contains(owner) && !companyManagers.Contains(manager))
-			{
-				return BadRequest();
-			}
-			var driverInvite = db.DriverInvites.FirstOrDefault(i => i.Company.Id.ToString() == companyId && i.Email.ToLower() == email.ToLower());
-			if (driverInvite != null)
-			{
-				return BadRequest();
-			}
-			return Ok();
-		}
->>>>>>> 7c0d5dd6fdc1f0ac51e61a247d37ab94bd99b00c
-
 		[OverrideAuthentication]
 		[HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
 		[Route("AcceptDriverInviteEmail")]
@@ -681,39 +602,6 @@ namespace MileEyes.API.Controllers
 			db.DriverInvites.Remove(driverInvite);
 			db.SaveChanges();
 			return Ok();
-		}
-
-		[OverrideAuthentication]
-		[HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
-		[Route("SendDriverInviteEmail")]
-		[HttpPost]
-		public async Task<IHttpActionResult> SendDriverInviteEmail(String companyId, String email)
-		{
-			var company = db.Companies.FirstOrDefault(c => c.Id.ToString() == companyId);
-			if (company == null)
-			{
-				return BadRequest();
-			}
-			var user = db.Users.Find(User.Identity.GetUserId());
-			var owner = user.Profiles.OfType<Owner>().FirstOrDefault();
-			var manager = user.Profiles.OfType<Manager>().FirstOrDefault();
-
-			var companyOwners = company.Profiles.OfType<Owner>();
-			var companyManagers = company.Profiles.OfType<Manager>();
-
-			if (!companyOwners.Contains(owner) && !companyManagers.Contains(manager))
-			{
-				return BadRequest();
-			}
-			var driverInvite = db.DriverInvites.FirstOrDefault(i => i.Company.Id.ToString() == companyId && i.Email.ToLower() == email.ToLower());
-			if (driverInvite != null)
-			{
-				return BadRequest();
-			}
-
-			UserManager.SendEmail(user.Id, "You have been invited to be driver for " + company.Name, "Hello World");
-
-			return Ok("Invite has been sent!");
 		}
 
 		//ResendDriverInviteEmai;
