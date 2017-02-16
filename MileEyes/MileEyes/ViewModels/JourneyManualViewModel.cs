@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using MileEyes.CustomControls;
 using MileEyes.Services.Extensions;
 using MileEyes.Services.Models;
 using Xamarin.Forms;
@@ -180,6 +181,9 @@ namespace MileEyes.ViewModels
             var defaultPassengers = Helpers.Settings.DefaultPassengers;
             var defaultReasons = (await Services.Host.ReasonService.GetReasons()).Where(r => r.Default);
             var defaultCompanies = (await Services.Host.CompanyService.GetCompanies()).Where(c => c.Default);
+            var defaultInvoiced = Helpers.Settings.InvoicedDefault;
+
+            Invoiced = defaultInvoiced;
 
             if (defaultVehicles.Any())
             {
