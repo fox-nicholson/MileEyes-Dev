@@ -98,8 +98,8 @@
         </Label>
       </StackLayout>
 
-      <StackLayout Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center">
-        <customControls:CustomButton Pulse="False" IsRed="True" Text="End Journey" WidthRequest="125" HeightRequest="125" Command="{Binding StopCommand}" HorizontalOptions="Center" VerticalOptions="Center">
+      <StackLayout  Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center">
+        <customControls:CustomButton Pulse="False" IsRed="True" Text="End Journey" WidthRequest="125" HeightRequest="125" Command="{Binding StopCommand}" HorizontalOptions="Center" VerticalOptions="Center" IsEnabled="{Binding NotBusy}">
           <customControls:CustomButton.TextColor>
             <OnPlatform x:TypeArguments="Color" Android="White" iOS="Red"/>
           </customControls:CustomButton.TextColor>

@@ -25,7 +25,6 @@
     </customControls:CustomTableView.BackgroundColor>
     <TableRoot>
       <TableSection Title="Expense Details">
-        <customControls:InvoicedViewCell />
 
         <customControls:CustomSwitchCell ImageSource="bill_to_client.png" Text="Bill to Client" On="{Binding Invoiced}">
           <customControls:CustomSwitchCell.TextColor>

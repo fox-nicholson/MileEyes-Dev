@@ -32,5 +32,19 @@ namespace MileEyes.API.App_Start
 
             dynamic response = await sg.client.mail.send.post(requestBody: mail.Get());
         }
+
+        public static void SendEmail(string email, string subject, string body)
+        {
+            var apiKey = ConfigurationManager.AppSettings["SendGridKey"];
+
+            dynamic sg = new SendGridAPIClient(apiKey);
+
+            var from = new Email("noreply@mileeyes.com");
+            var to = new Email(email);
+            var content = new Content("text/html", body);
+            var mail = new Mail(from, subject, to, content);
+
+            dynamic response = sg.client.mail.send.post(requestBody: mail.Get());
+        }
     }
 }

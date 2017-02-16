@@ -27,7 +27,7 @@ namespace MileEyes.ViewModels
                 OnPropertyChanged(nameof(HasLocation));
             }
         }
-        
+
         private string _currentLocation;
 
         public string CurrentLocation
@@ -76,7 +76,7 @@ namespace MileEyes.ViewModels
             Refresh();
 
             Device.StartTimer(TimeSpan.FromSeconds(1), RefreshDuration);
-            
+
             Device.StartTimer(TimeSpan.FromMinutes(1), UpdateLocalityCallback);
             UpdateLocalityCallback();
         }
@@ -102,7 +102,7 @@ namespace MileEyes.ViewModels
             }
 
             CurrentDistance = Units.MetersToMiles(Services.Host.TrackerService.CurrentDistance);
-            
+
             Refreshing = false;
         }
 
@@ -118,7 +118,8 @@ namespace MileEyes.ViewModels
 
         public async void UpdateLocation()
         {
-            var loc = await Services.Host.GeocodingService.GetWeather(Services.Host.TrackerService.CurrentLocation.Latitude,
+            var loc =
+                await Services.Host.GeocodingService.GetWeather(Services.Host.TrackerService.CurrentLocation.Latitude,
                     Services.Host.TrackerService.CurrentLocation.Longitude);
 
             if (loc.name != "Unknown Location")
@@ -156,8 +157,15 @@ namespace MileEyes.ViewModels
 
         public async void Stop()
         {
-            Busy = true;
+            if (Busy) return;
+            var currentWaypoints = Services.Host.TrackerService.CurrentWaypoints;
+            if (currentWaypoints.Count() < 2)
+            {
+                await Services.Host.TrackerService.Cancel();
+                return;
+            }
             StopRequested?.Invoke(this, EventArgs.Empty);
+            Busy = false;
         }
 
         public async void EndJourneyConfirmed()

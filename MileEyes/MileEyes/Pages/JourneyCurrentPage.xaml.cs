@@ -30,6 +30,9 @@ namespace MileEyes.Pages
 
         private async void JourneyCurrentPage_StopRequested(object sender, EventArgs e)
         {
+            if ((BindingContext as JourneyCurrentViewModel).Busy) return;
+            (BindingContext as JourneyCurrentViewModel).Busy = true;
+
             var response =
                    await
                        DisplayActionSheet("Have you reached your destination?", "Cancel", "Stop & Delete Journey",
