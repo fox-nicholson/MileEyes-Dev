@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using MileEyes.Extensions;
 using MileEyes.Services.Models;
@@ -14,7 +11,7 @@ namespace MileEyes.ViewModels
     /// <summary>
     /// Journeys List View Model
     /// </summary>
-    class JourneysViewModel : ViewModel
+    internal class JourneysViewModel : ViewModel
     {
         public ObservableCollection<JourneyGroup> Journeys { get; set; } = new ObservableCollection<JourneyGroup>();
 
@@ -58,12 +55,13 @@ namespace MileEyes.ViewModels
             // Dump to array to prevent multiple enumerations
             var enumerable = journeys as Journey[] ?? journeys.ToArray();
 
-            var sortedJourneys = enumerable.OrderBy(j => j.Date);
+            var sortedJourneys = enumerable.OrderByDescending(j => j.Date.DateTime);
 
             // Hold todays date
             var todaysDate = DateTime.UtcNow.Date;
             // Use Todays Date to filter journeys for Today and factory them into JourneyViewModel's
-            var todaysJourneys = sortedJourneys.Where(j => j.Date.Date == todaysDate).Select(j => new JourneyViewModel(j));
+            var todaysJourneys =
+                sortedJourneys.Where(j => j.Date.Date == todaysDate).Select(j => new JourneyViewModel(j));
             // Dump to array to prevent multiple enumerations.
             var todaysJourneyViewModels = todaysJourneys as JourneyViewModel[] ?? todaysJourneys.ToArray();
             // Check if there were any journey's today.
@@ -101,7 +99,8 @@ namespace MileEyes.ViewModels
             var lastWeeksDate = DateTimeOffset.UtcNow.Date.AddDays(-7).StartOfWeek(DayOfWeek.Sunday);
 
             // Use Yesterdays Date and Last Weeks Date to filter journeys for Last Week and factory them into JourneyViewModel's
-            var lastWeeksJourneys = sortedJourneys.Where(j => j.Date.Date > lastWeeksDate && j.Date.Date < yesterdaysDate)
+            var lastWeeksJourneys = sortedJourneys.Where(
+                    j => j.Date.Date > lastWeeksDate && j.Date.Date < yesterdaysDate)
                 .Select(j => new JourneyViewModel(j));
             // Dump to array to prevent multiple enumerations.
             var lastWeeksJourneyViewModels = lastWeeksJourneys as JourneyViewModel[] ?? lastWeeksJourneys.ToArray();
@@ -120,7 +119,7 @@ namespace MileEyes.ViewModels
             var remainingJourneys = sortedJourneys.Where(j => j.Date < lastWeeksDate);
             // Group journeys by Year
             var journeysByYear = remainingJourneys.GroupBy(j => j.Date.Date.Year).Select(g => g.ToList()).ToList();
-            
+
             // Go through years
             foreach (var yearsJourneys in journeysByYear)
             {
@@ -132,7 +131,8 @@ namespace MileEyes.ViewModels
                 foreach (var monthsJourneys in journeysByMonth)
                 {
                     // Create the JourneyGroup for the Month
-                    var monthsGroup = new JourneyGroup(monthsJourneys.FirstOrDefault().Date.ToString("MMMM", null), monthsJourneys.FirstOrDefault().Date.ToString("MMMM", null));
+                    var monthsGroup = new JourneyGroup(monthsJourneys.FirstOrDefault().Date.ToString("MMMM", null),
+                        monthsJourneys.FirstOrDefault().Date.ToString("MMMM", null));
                     // Add Journeys to the JourneyGroup
                     monthsGroup.AddRange(monthsJourneys.Select(j => new JourneyViewModel(j)));
                     // Add 

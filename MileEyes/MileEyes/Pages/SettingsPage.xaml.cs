@@ -114,7 +114,7 @@ namespace MileEyes.Pages
 
             var selectCompanyPage = new CompanySelectionPage();
             (selectCompanyPage.BindingContext as CompaniesViewModel).Selected += SettingsPage_CompanySelected;
-            ;
+
             Device.BeginInvokeOnMainThread(async () => { await Navigation.PushAsync(selectCompanyPage); });
 
             Device.StartTimer(TimeSpan.FromSeconds(1), Wait);
@@ -137,8 +137,7 @@ namespace MileEyes.Pages
 
             var selectPassengersPage = new PassengersSelectionPage();
             (selectPassengersPage.BindingContext as PassengersSelectionViewModel).Selected += SettingsPage_Selected1;
-            ;
-            ;
+
             Device.BeginInvokeOnMainThread(async () => { await Navigation.PushAsync(selectPassengersPage); });
 
             Device.StartTimer(TimeSpan.FromSeconds(1), Wait);

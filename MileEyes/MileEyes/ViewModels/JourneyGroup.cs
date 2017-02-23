@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace MileEyes.ViewModels
 {
-    class JourneyGroup : List<JourneyViewModel>
+    internal class JourneyGroup : List<JourneyViewModel>
     {
         public string Title { get; set; }
         public string ShortName { get; set; } //will be used for jump lists

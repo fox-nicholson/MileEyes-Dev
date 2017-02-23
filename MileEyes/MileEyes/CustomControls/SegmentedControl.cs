@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace MileEyes.CustomControls
@@ -36,11 +33,12 @@ namespace MileEyes.CustomControls
 
     public class SegmentedControlOption : View
     {
-        public static readonly BindableProperty TextProperty = BindableProperty.Create<SegmentedControlOption, string>(p => p.Text, "");
+        public static readonly BindableProperty TextProperty =
+            BindableProperty.Create<SegmentedControlOption, string>(p => p.Text, "");
 
         public string Text
         {
-            get { return (string)GetValue(TextProperty); }
+            get { return (string) GetValue(TextProperty); }
             set { SetValue(TextProperty, value); }
         }
     }

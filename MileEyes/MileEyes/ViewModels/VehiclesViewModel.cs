@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using MileEyes.Services.Models;
 using Xamarin.Forms;
 
 namespace MileEyes.ViewModels
 {
-    class VehiclesViewModel : ViewModel
+    internal class VehiclesViewModel : ViewModel
     {
-        public ObservableCollection<VehicleViewModel> Vehicles { get; set; } = new ObservableCollection<VehicleViewModel>();
-        
+        public ObservableCollection<VehicleViewModel> Vehicles { get; set; } =
+            new ObservableCollection<VehicleViewModel>();
+
         private VehicleViewModel _selectedVehicle;
 
         public VehicleViewModel SelectedVehicle
@@ -80,11 +77,13 @@ namespace MileEyes.ViewModels
 
             if (vehicle == null)
             {
-                VehicleNotRemoved?.Invoke(this, v.Registration + " was not removed." + Environment.NewLine + "This is most likely because the vehicle was used for a journey.");
+                VehicleNotRemoved?.Invoke(this,
+                    v.Registration + " was not removed." + Environment.NewLine +
+                    "This is most likely because the vehicle was used for a journey.");
             }
             else
             {
-                VehicleRemoved?.Invoke(this, vehicle.Registration + " was removed.");
+                VehicleRemoved?.Invoke(this, v.Registration + " was removed.");
             }
 
             Busy = false;
@@ -104,7 +103,7 @@ namespace MileEyes.ViewModels
 
             Busy = false;
         }
-        
+
         public ICommand SelectCommand { get; set; }
 
         public event EventHandler<VehicleViewModel> Selected = delegate { };

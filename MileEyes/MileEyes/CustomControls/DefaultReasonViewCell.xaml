@@ -1,17 +1,19 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ViewCell xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="MileEyes.CustomControls.DefaultReasonViewCell">
-  <StackLayout Orientation="Horizontal" Padding="15, 0, 15, 0">
-    <Image Source="journey_reason.png" Margin="0,0,7.5,0"/>
-    <Label Text="Default Reason" VerticalTextAlignment="Center">
-      <Label.TextColor>
-        <OnPlatform x:TypeArguments="Color"
-                    iOS="#FFFFFF"
-                    Android="Black" />
-      </Label.TextColor>
-    </Label>
-    <!--
+
+<ViewCell xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+          x:Class="MileEyes.CustomControls.DefaultReasonViewCell">
+    <StackLayout Orientation="Horizontal" Padding="15, 0, 15, 0">
+        <Image Source="journey_reason.png" Margin="0,0,7.5,0" />
+        <Label Text="Default Reason" VerticalTextAlignment="Center">
+            <Label.TextColor>
+                <OnPlatform x:TypeArguments="Color"
+                            iOS="#FFFFFF"
+                            Android="Black" />
+            </Label.TextColor>
+        </Label>
+        <!--
     <Label Text="Connect"
     HorizontalOptions="EndAndExpand"
     TextColor="#55FFFFFF"  VerticalTextAlignment="Center" /> -->
-  </StackLayout>
+    </StackLayout>
 </ViewCell>

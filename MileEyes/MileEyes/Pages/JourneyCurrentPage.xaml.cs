@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MileEyes.Services;
 using MileEyes.ViewModels;
 using Xamarin.Forms;
@@ -21,6 +17,8 @@ namespace MileEyes.Pages
             (BindingContext as JourneyCurrentViewModel).StopRequested += JourneyCurrentPage_StopRequested;
         }
 
+        private bool exited;
+
         protected override void OnAppearing()
         {
             base.OnAppearing();
@@ -30,14 +28,13 @@ namespace MileEyes.Pages
 
         private async void JourneyCurrentPage_StopRequested(object sender, EventArgs e)
         {
-            if ((BindingContext as JourneyCurrentViewModel).Busy) return;
+            if ((BindingContext as JourneyCurrentViewModel).Busy || exited) return;
             (BindingContext as JourneyCurrentViewModel).Busy = true;
 
             var response =
-                   await
-                       DisplayActionSheet("Have you reached your destination?", "Cancel", "Stop & Delete Journey",
-                           "Yes, Save Journey");
-
+                await
+                    DisplayActionSheet("Have you reached your destination?", "Cancel", "Stop & Delete Journey",
+                        "Yes, Save Journey");
             switch (response)
             {
                 case "Yes, Save Journey":
@@ -45,9 +42,9 @@ namespace MileEyes.Pages
                     break;
                 case "Stop & Delete Journey":
                     await Host.TrackerService.Cancel();
+                    exited = true;
                     break;
                 case "Cancel":
-                    (BindingContext as JourneyCurrentViewModel).Busy = false;
                     break;
             }
         }
@@ -60,7 +57,7 @@ namespace MileEyes.Pages
 
             map.MoveToRegion(MapSpan.FromCenterAndRadius(
                 new Position(pos.Latitude,
-                pos.Longitude), Distance.FromMiles(0.25)));
+                    pos.Longitude), Distance.FromMiles(0.25)));
 
             // LocationIcon.Rotation = Services.Host.TrackerService.CurrentLocation.Heading;
         }

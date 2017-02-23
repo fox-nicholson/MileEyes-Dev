@@ -1,21 +1,21 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
-using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
-using Microsoft.Data.OData.Query.SemanticAst;
 using MileEyes.API.Extensions;
 using MileEyes.API.Models;
 using MileEyes.API.Models.DatabaseModels;
+using MileEyes.API.Models.GeocodingModels;
 using MileEyes.API.Services;
 using MileEyes.PublicModels.Company;
 using MileEyes.PublicModels.Journey;
 using MileEyes.PublicModels.Vehicles;
-using WebGrease.Css.Extensions;
+using Newtonsoft.Json;
+using Address = MileEyes.API.Models.DatabaseModels.Address;
+using Coordinates = MileEyes.API.Models.DatabaseModels.Coordinates;
 
 namespace MileEyes.API.Controllers
 {
@@ -142,15 +142,25 @@ namespace MileEyes.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            // Get User and then Driver Profile
+            // Get User
             var user = db.Users.Find(User.Identity.GetUserId());
-
-            var driver = user.Profiles.OfType<Driver>().FirstOrDefault();
 
             // Get Company
             var company = db.Companies.Find(Guid.Parse(model.Company.CloudId));
 
             if (company == null) return BadRequest();
+
+            var drivers = company.Profiles.OfType<Driver>();
+
+            Driver driver = null;
+            foreach (var d in drivers)
+            {
+                if (user.Email == d.User.Email)
+                {
+                    driver = d;
+                    break;
+                }
+            }
 
             // Get Vehicle
             var vehicle = db.Vehicles.Find(Guid.Parse(model.Vehicle.CloudId));
@@ -424,6 +434,34 @@ namespace MileEyes.API.Controllers
                     Id = w.Id.ToString()
                 }).ToList()
             });
+        }
+
+        private static String GOOGLE_API_KEY = "AIzaSyArLAcqpQ1v_IxC_o0Qo41SYPUlGxKtMtI";
+
+        [HttpGet]
+        [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
+        [Route("api/Journeys/Address")]
+        public async Task<IHttpActionResult> GetAddress(String placeId)
+        {
+            try
+            {
+                var url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&key=" + GOOGLE_API_KEY;
+
+                var response = await Helpers.HttpHelper.FileGetContents(url);
+
+                if (string.IsNullOrEmpty(response))
+                {
+                    return BadRequest("Unknown address");
+                }
+
+                var result = JsonConvert.DeserializeObject<GeocodeResult>(response);
+                return Ok(result);
+            }
+            catch (NullReferenceException e)
+            {
+                //return BadRequest(e.ToString());
+            }
+            return BadRequest("Error trying to find address, please try again later.");
         }
     }
 }

@@ -60,6 +60,10 @@ namespace MileEyes.Services
 
                     journey.Company = company;
                 }
+                else if (j.Company.Name == "N/A")
+                {
+                    journey.Company = null;
+                }
                 else
                 {
                     journey.Company = j.Company;

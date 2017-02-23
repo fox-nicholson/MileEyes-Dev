@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MileEyes.CustomControls;
 using MileEyes.ViewModels;
 using Xamarin.Forms;
@@ -28,41 +24,29 @@ namespace MileEyes.Pages
 
         private void VehiclesPage_VehicleNotRemoved(object sender, string e)
         {
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                await DisplayAlert("Vehicle Not Removed", e, "Ok");
-            });
+            Device.BeginInvokeOnMainThread(async () => { await DisplayAlert("Vehicle Not Removed", e, "Ok"); });
         }
 
         private void VehiclesPage_VehicleRemoved(object sender, string e)
         {
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                await DisplayAlert("Vehicle Removed", e, "Ok");
-            });
+            Device.BeginInvokeOnMainThread(async () => { await DisplayAlert("Vehicle Removed", e, "Ok"); });
         }
 
         private void RemoveMenuItem_OnClicked(object sender, EventArgs e)
         {
-            (BindingContext as VehiclesViewModel).Remove(((sender as MenuItem).CommandParameter as VehicleViewModel));
+            (BindingContext as VehiclesViewModel).Remove((sender as MenuItem).CommandParameter as VehicleViewModel);
         }
 
         private void MenuItem_OnClicked(object sender, EventArgs e)
         {
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                await Navigation.PushAsync(new VehicleAddPage());
-            });
+            Device.BeginInvokeOnMainThread(async () => { await Navigation.PushAsync(new VehicleAddPage()); });
         }
 
         private void ListView_OnItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
             if (e.SelectedItem == null) return;
 
-            Device.OnPlatform(iOS: () =>
-            {
-                (sender as CustomListView).SelectedItem = null;
-            });
+            Device.OnPlatform(iOS: () => { (sender as CustomListView).SelectedItem = null; });
         }
     }
 }

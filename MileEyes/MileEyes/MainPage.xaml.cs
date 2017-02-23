@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MileEyes.CustomControls;
 using MileEyes.Pages;
-using Xamarin.Forms;
 
 namespace MileEyes
 {

@@ -1,53 +1,56 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:MileEyes.ViewModels;assembly=MileEyes"
              xmlns:customControls="clr-namespace:MileEyes.CustomControls;assembly=MileEyes"
              x:Class="MileEyes.Pages.VehicleAddPage" Title="New Vehicle">
-  <ContentPage.BackgroundColor>
-    <OnPlatform x:TypeArguments="Color"
-                iOS="{StaticResource primaryiOSBackgroundColor}"
-                Android="{StaticResource primaryAndroidBackgroundColor}" />
-  </ContentPage.BackgroundColor>
-  <ContentPage.BindingContext>
-    <viewModels:VehicleViewModel/>
-  </ContentPage.BindingContext>
+    <ContentPage.BackgroundColor>
+        <OnPlatform x:TypeArguments="Color"
+                    iOS="{StaticResource primaryiOSBackgroundColor}"
+                    Android="{StaticResource primaryAndroidBackgroundColor}" />
+    </ContentPage.BackgroundColor>
+    <ContentPage.BindingContext>
+        <viewModels:VehicleViewModel />
+    </ContentPage.BindingContext>
 
-  <ContentPage.ToolbarItems>
-    <ToolbarItem Text="Save" Command="{Binding SaveCommand}" />
-  </ContentPage.ToolbarItems>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Save" Command="{Binding SaveCommand}" />
+    </ContentPage.ToolbarItems>
 
-  <customControls:CustomTableView Intent="Form">
-    <customControls:CustomTableView.BackgroundColor>
-      <OnPlatform x:TypeArguments="Color"
-                  iOS="{StaticResource primaryiOSBackgroundColor}"
-                  Android="{StaticResource primaryAndroidBackgroundColor}" />
-    </customControls:CustomTableView.BackgroundColor>
-    <TableRoot>
-      <TableSection>
-        <customControls:CustomEntryCell Label="Registration" Text="{Binding Registration}" Placeholder="Required">
-          <customControls:CustomEntryCell.LabelColor>
+    <customControls:CustomTableView Intent="Form">
+        <customControls:CustomTableView.BackgroundColor>
             <OnPlatform x:TypeArguments="Color"
-                        iOS="{StaticResource premiumTextColor}"
-                        Android="Black" />
-          </customControls:CustomEntryCell.LabelColor>
-        </customControls:CustomEntryCell>
-      </TableSection>
+                        iOS="{StaticResource primaryiOSBackgroundColor}"
+                        Android="{StaticResource primaryAndroidBackgroundColor}" />
+        </customControls:CustomTableView.BackgroundColor>
+        <TableRoot>
+            <TableSection>
+                <customControls:CustomEntryCell Label="Registration" Text="{Binding Registration}"
+                                                Placeholder="Required">
+                    <customControls:CustomEntryCell.LabelColor>
+                        <OnPlatform x:TypeArguments="Color"
+                                    iOS="{StaticResource premiumTextColor}"
+                                    Android="Black" />
+                    </customControls:CustomEntryCell.LabelColor>
+                </customControls:CustomEntryCell>
+            </TableSection>
 
-      <TableSection Title="Vehicle Details">
-        <customControls:CustomImageCell ImageSource="engine_type.png" Text="Engine Type" Detail="{Binding EngineType.Name}" Tapped="Cell_OnTapped">
-          <customControls:CustomImageCell.TextColor>
-            <OnPlatform x:TypeArguments="Color"
-                        iOS="#FFFFFF"
-                        Android="Black" />
-          </customControls:CustomImageCell.TextColor>
-          <customControls:CustomImageCell.DetailColor>
-            <OnPlatform x:TypeArguments="Color"
-                        iOS="#80FFFFFF"
-                        Android="#80000000" />
-          </customControls:CustomImageCell.DetailColor>
-        </customControls:CustomImageCell>
-      </TableSection>
-    </TableRoot>
-  </customControls:CustomTableView>
+            <TableSection Title="Vehicle Details">
+                <customControls:CustomImageCell ImageSource="engine_type.png" Text="Engine Type"
+                                                Detail="{Binding EngineType.Name}" Tapped="Cell_OnTapped">
+                    <customControls:CustomImageCell.TextColor>
+                        <OnPlatform x:TypeArguments="Color"
+                                    iOS="#FFFFFF"
+                                    Android="Black" />
+                    </customControls:CustomImageCell.TextColor>
+                    <customControls:CustomImageCell.DetailColor>
+                        <OnPlatform x:TypeArguments="Color"
+                                    iOS="#80FFFFFF"
+                                    Android="#80000000" />
+                    </customControls:CustomImageCell.DetailColor>
+                </customControls:CustomImageCell>
+            </TableSection>
+        </TableRoot>
+    </customControls:CustomTableView>
 </ContentPage>

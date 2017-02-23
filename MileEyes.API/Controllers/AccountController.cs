@@ -452,9 +452,59 @@ namespace MileEyes.API.Controllers
             return Ok();
         }
 
-        // GET api/Account/CheckInvite
-        [OverrideAuthentication]
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
+        [Route("CheckUserRight")]
+        [HttpGet]
+        public async Task<IHttpActionResult> CheckUserRight(String companyId)
+        {
+            var company = db.Companies.FirstOrDefault(c => c.Id.ToString() == companyId);
+            if (company == null)
+            {
+                return BadRequest("Unable to find company!");
+            }
+            var user = db.Users.Find(User.Identity.GetUserId());
+
+            var owner = user.Profiles.OfType<Owner>();
+            var companyOwners = company.Profiles.OfType<Owner>();
+            foreach (var o in owner)
+            {
+                if (companyOwners.Contains(o))
+                {
+                    return Ok("4");
+                }
+            }
+            var accountant = user.Profiles.OfType<Accountant>();
+            var companyAccountants = company.Profiles.OfType<Accountant>();
+            foreach (var a in accountant)
+            {
+                if (companyAccountants.Contains(a))
+                {
+                    return Ok("3");
+                }
+            }
+            var manager = user.Profiles.OfType<Manager>();
+            var companyManagers = company.Profiles.OfType<Manager>();
+            foreach (var m in manager)
+            {
+                if (companyManagers.Contains(m))
+                {
+                    return Ok("2");
+                }
+            }
+            var driver = user.Profiles.OfType<Driver>();
+            var companyDrivers = company.Profiles.OfType<Driver>();
+            foreach (var d in driver)
+            {
+                if (companyDrivers.Contains(d))
+                {
+                    return Ok("1");
+                }
+            }
+            return BadRequest("You don't have the rights to use this.");
+        }
+
+        // GET api/Account/CheckInvite
+        [AllowAnonymous]
         [Route("CheckDriverInvite")]
         [HttpGet]
         public async Task<IHttpActionResult> CheckDriverInvite(String companyId, String email)
@@ -462,7 +512,63 @@ namespace MileEyes.API.Controllers
             var company = db.Companies.FirstOrDefault(c => c.Id.ToString() == companyId);
             if (company == null)
             {
-                return BadRequest();
+                return BadRequest("Unable to find company!");
+            }
+            var driverInvite =
+                db.DriverInvites.FirstOrDefault(
+                    i => i.Company.Id.ToString() == companyId && i.Email.ToLower() == email.ToLower());
+            if (driverInvite == null)
+            {
+                return BadRequest("Unable to find driver invite!");
+            }
+            return Ok();
+        }
+
+        [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
+        [Route("AcceptDriverInviteEmail")]
+        [HttpPost]
+        public async Task<IHttpActionResult> AcceptDriverInviteEmail(String invite, String email)
+        {
+            var user = db.Users.Find(User.Identity.GetUserId());
+            if (user.Email.ToLower() != email.ToLower())
+            {
+                return BadRequest("Invite isn't for you!");
+            }
+            var driverInvite =
+                db.DriverInvites.FirstOrDefault(i => i.Id.ToString() == invite && i.Email.ToLower() == email.ToLower());
+            if (driverInvite == null)
+            {
+                return BadRequest("Invite isn't valid anymore!");
+            }
+
+            var company = db.Companies.FirstOrDefault(c => c.Id == driverInvite.Company.Id);
+            if (company == null)
+            {
+                return BadRequest("Unable to find company!");
+            }
+
+            var driver = new Driver
+            {
+                Id = Guid.NewGuid(),
+                User = user
+            };
+
+            company.Profiles.Add(driver);
+
+            db.DriverInvites.Remove(driverInvite);
+            db.SaveChanges();
+            return Ok();
+        }
+
+        [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
+        [Route("SendDriverInviteEmail")]
+        [HttpPost]
+        public async Task<IHttpActionResult> SendDriverInviteEmail(String companyId, String email)
+        {
+            var company = db.Companies.FirstOrDefault(c => c.Id.ToString() == companyId);
+            if (company == null)
+            {
+                return BadRequest("Unable to find company!");
             }
             var user = db.Users.Find(User.Identity.GetUserId());
             var owner = user.Profiles.OfType<Owner>().FirstOrDefault();
@@ -473,46 +579,34 @@ namespace MileEyes.API.Controllers
 
             if (!companyOwners.Contains(owner) && !companyManagers.Contains(manager))
             {
-                return BadRequest();
+                return BadRequest("You don't have the rights to do this.");
             }
-            var driverInvite =
-                db.DriverInvites.FirstOrDefault(
-                    i => i.Company.Id.ToString() == companyId && i.Email.ToLower() == email.ToLower());
+            var driverInvite = db.DriverInvites.FirstOrDefault(i => i.Company.Id.ToString() == companyId && i.Email.ToLower() == email.ToLower());
             if (driverInvite != null)
             {
-                return BadRequest();
+                db.DriverInvites.Remove(driverInvite);
             }
-            return Ok();
-        }
+            var otherUser = UserManager.FindByEmail(email);
+            if (otherUser != null)
+            {
+                var drivers = company.Profiles.OfType<Driver>();
+                foreach (var d in drivers)
+                {
+                    if (d.User.Id == otherUser.Id)
+                    {
+                        return BadRequest("The driver is already in the company.");
+                    }
+                }
 
-        [AllowAnonymous]
-        [Route("SendDriverInviteEmail")]
-        [HttpPost]
-        public async Task<IHttpActionResult> SendDriverInviteEmail(String companyId, String email)
-        {
-            var company = db.Companies.FirstOrDefault(c => c.Id.ToString() == companyId);
-            if (company == null)
-            {
-                return BadRequest();
             }
-            /* var user = db.Users.Find(User.Identity.GetUserId());
-            var owner = user.Profiles.OfType<Owner>().FirstOrDefault();
-            var manager = user.Profiles.OfType<Manager>().FirstOrDefault();
-            
-            var companyOwners = company.Profiles.OfType<Owner>();
-            var companyManagers = company.Profiles.OfType<Manager>();
-            
-            if (!companyOwners.Contains(owner) && !companyManagers.Contains(manager))
+            var invite = new DriverInvite
             {
-            return BadRequest();
-            }
-            var driverInvite =
-            db.DriverInvites.FirstOrDefault(
-            i => i.Company.Id.ToString() == companyId && i.Email.ToLower() == email.ToLower());
-            if (driverInvite != null)
-            {
-            return BadRequest();
-            }*/
+                Company = company,
+                Id = Guid.NewGuid(),
+                Email = email
+            };
+            db.DriverInvites.Add(invite);
+            db.SaveChanges();
             EmailService.SendEmail(email, company.Name + " - Driver Invite!",
                 "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'><html xmlns='http://www.w3.org/1999/xhtml'> <head> <meta http-equiv='Content-Type' content='text/html; charset=utf-8'> <meta name='viewport' content='width=device-width'> <style> #outlook a { padding: 0; } body { width: 100% !important; min-width: 100%; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; margin: 0; Margin: 0; padding: 0; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; } .ExternalClass { width: 100%; }" +
                 " .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div { line-height: 100%; } #backgroundTable { margin: 0; Margin: 0; padding: 0; width: 100% !important; line-height: 100% !important; } img { outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; clear: both; display: block; } center { width: 100%; min-width: 580px; } a img { border: none; } a.button {	 background-color: #47a800;	 color: white;	 padding: 1em;	 border-radius: 0.25em;	 display: inline-block;	 margin: 2em 0; }" +
@@ -564,47 +658,10 @@ namespace MileEyes.API.Controllers
                 company.Name + ". Simply choose " + company.Name +
                 " from the list of companies at the end of your journey and we'll do the rest. </p> <p>What's more, it won't cost you anything more to track mileage for " +
                 company.Name +
-                ".</p> <table class='callout'> <tr> <td class='callout-inner primary button-row'> <br/> <a href='https://app.mileeyes.com/' class='button'>Register</a> </td> <td class='expander'></td> </tr>								</table> </th> </tr> </table> </th> </tr> </tbody> </table> </td> </tr> <tr class='transparent'>				 <th>					 <br/>					 <br/>					 <p>&copy; Powerhouse Software</p>					 <br/>					 <br/>				 </th>			 </tr> </tbody> </table> </center> </td> </tr> </table> </body></html>");
+                                   ".</p> <table class='callout'> <tr> <td class='callout-inner primary button-row'> <br/> <a href='http://localhost:4000/#/invite?type=driver&invite=" + invite.Id + "&email=" + email + "&companyId=" + companyId + "&companyName=" + company.Name + "' class='button'>Join</a> </td> <td class='expander'></td> </tr>								</table> </th> </tr> </table> </th> </tr> </tbody> </table> </td> </tr> <tr class='transparent'>				 <th>					 <br/>					 <br/>					 <p>&copy; Powerhouse Software</p>					 <br/>					 <br/>				 </th>			 </tr> </tbody> </table> </center> </td> </tr> </table> </body></html>");
 
-            return Ok("Email Sent");
+            return Ok("Email has been sent!");
         }
-
-		[OverrideAuthentication]
-		[HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
-		[Route("AcceptDriverInviteEmail")]
-		[HttpPost]
-		public async Task<IHttpActionResult> AcceptDriverInviteEmail(String invite, String email)
-		{
-			var user = db.Users.Find(User.Identity.GetUserId());
-			if (user.Email.ToLower() != email.ToLower())
-			{
-				return BadRequest();
-			}
-			var driverInvite = db.DriverInvites.FirstOrDefault(i => i.Id.ToString() == invite && i.Email.ToLower() == email.ToLower());
-			if (driverInvite == null)
-			{
-				return BadRequest("Invite isn't valid anymore!");
-			}
-
-			var company = db.Companies.FirstOrDefault(c => c.Id == driverInvite.Company.Id);
-			if (company == null)
-			{
-				return BadRequest("Unable to find company!");
-			}
-
-			var driver = new Driver
-			{
-				Id = Guid.NewGuid()
-			};
-
-			driverInvite.Company.Profiles.Add(driver);
-
-			db.DriverInvites.Remove(driverInvite);
-			db.SaveChanges();
-			return Ok();
-		}
-
-		//ResendDriverInviteEmai;
 
         // POST api/Account/RegisterExternal
         [OverrideAuthentication]
@@ -619,7 +676,7 @@ namespace MileEyes.API.Controllers
             if (info == null)
                 return InternalServerError();
 
-            var user = new ApplicationUser {UserName = model.Email, Email = model.Email};
+            var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
 
             var result = await UserManager.CreateAsync(user);
             if (!result.Succeeded)

@@ -22,7 +22,6 @@ namespace MileEyes.Services
 
             using (var transaction = DatabaseService.Realm.BeginWrite())
             {
-//                DatabaseService.Realm.RemoveAll<AuthToken>();
                 DatabaseService.Realm.RemoveAll();
 
                 transaction.Commit();

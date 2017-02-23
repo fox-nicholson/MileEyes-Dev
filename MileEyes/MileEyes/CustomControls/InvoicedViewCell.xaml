@@ -1,16 +1,18 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ViewCell xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="MileEyes.CustomControls.InvoicedViewCell">
-  <StackLayout Orientation="Horizontal" HorizontalOptions="Fill" Padding="15, 0, 12.5, 0">
-    <Image Source="bill_to_client.png" Margin="0,0,7.5,0"/>
-    <Label Text="Bill to Client?" VerticalTextAlignment="Center">
-      <Label.TextColor>
-        <OnPlatform x:TypeArguments="Color"
-                    iOS="#FFFFFF"
-                    Android="Black" />
-      </Label.TextColor>
-    </Label>
-    <ContentView HorizontalOptions="EndAndExpand">
-      <Switch  VerticalOptions="Center" IsToggled="{Binding Invoiced}" />
-    </ContentView>
-  </StackLayout>
+
+<ViewCell xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+          x:Class="MileEyes.CustomControls.InvoicedViewCell">
+    <StackLayout Orientation="Horizontal" HorizontalOptions="Fill" Padding="15, 0, 12.5, 0">
+        <Image Source="bill_to_client.png" Margin="0,0,7.5,0" />
+        <Label Text="Bill to Client?" VerticalTextAlignment="Center">
+            <Label.TextColor>
+                <OnPlatform x:TypeArguments="Color"
+                            iOS="#FFFFFF"
+                            Android="Black" />
+            </Label.TextColor>
+        </Label>
+        <ContentView HorizontalOptions="EndAndExpand">
+            <Switch VerticalOptions="Center" IsToggled="{Binding Invoiced}" />
+        </ContentView>
+    </StackLayout>
 </ViewCell>

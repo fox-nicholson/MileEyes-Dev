@@ -1,17 +1,20 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ViewCell xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="MileEyes.CustomControls.DestinationAddressViewCell">
-  <StackLayout Orientation="Horizontal" Padding="15, 0, 15, 0">
-    <Image Source="destination.png" Margin="0,0,7.5,0"/>
-    <Label Text="Destination" VerticalTextAlignment="Center">
-      <Label.TextColor>
-        <OnPlatform x:TypeArguments="Color"
-                    iOS="#FFFFFF"
-                    Android="Black" />
-      </Label.TextColor>
-    </Label>
 
-    <Label Text="{Binding DestinationAddress.Label}"
-    HorizontalOptions="FillAndExpand"
-    TextColor="#55FFFFFF"  VerticalTextAlignment="Center" HorizontalTextAlignment="End" LineBreakMode="TailTruncation"/>
-  </StackLayout>
+<ViewCell xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+          x:Class="MileEyes.CustomControls.DestinationAddressViewCell">
+    <StackLayout Orientation="Horizontal" Padding="15, 0, 15, 0">
+        <Image Source="destination.png" Margin="0,0,7.5,0" />
+        <Label Text="Destination" VerticalTextAlignment="Center">
+            <Label.TextColor>
+                <OnPlatform x:TypeArguments="Color"
+                            iOS="#FFFFFF"
+                            Android="Black" />
+            </Label.TextColor>
+        </Label>
+
+        <Label Text="{Binding DestinationAddress.Label}"
+               HorizontalOptions="FillAndExpand"
+               TextColor="#55FFFFFF" VerticalTextAlignment="Center" HorizontalTextAlignment="End"
+               LineBreakMode="TailTruncation" />
+    </StackLayout>
 </ViewCell>

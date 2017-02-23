@@ -1,18 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using MileEyes.Services.Models;
 using Xamarin.Forms;
 
 namespace MileEyes.ViewModels
 {
-    class EngineTypesViewModel : ViewModel
+    internal class EngineTypesViewModel : ViewModel
     {
-        public ObservableCollection<EngineTypeViewModel> EngineTypes { get; set; } = new ObservableCollection<EngineTypeViewModel>();
+        public ObservableCollection<EngineTypeViewModel> EngineTypes { get; set; } =
+            new ObservableCollection<EngineTypeViewModel>();
 
         private EngineTypeViewModel _selectedEngineType;
 
@@ -42,7 +40,11 @@ namespace MileEyes.ViewModels
         {
             base.Refresh();
 
+            if (Refreshing) return;
+            if (Busy) return;
+
             Refreshing = true;
+            Busy = true;
 
             EngineTypes.Clear();
 
@@ -57,7 +59,7 @@ namespace MileEyes.ViewModels
                     EngineTypes.Add(new EngineTypeViewModel(et));
                 }
             }
-
+            Device.StartTimer(TimeSpan.FromSeconds(2), Wait);
             Refreshing = false;
         }
 
@@ -77,6 +79,12 @@ namespace MileEyes.ViewModels
             {
                 NotSelected?.Invoke(this, EventArgs.Empty);
             }
+        }
+
+        private bool Wait()
+        {
+            Busy = false;
+            return false;
         }
     }
 }

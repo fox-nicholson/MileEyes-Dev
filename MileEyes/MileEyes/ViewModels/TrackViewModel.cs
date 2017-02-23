@@ -1,20 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using MileEyes.Annotations;
-using Plugin.Geolocator.Abstractions;
 using Xamarin.Forms;
 
 namespace MileEyes.ViewModels
 {
-    class TrackViewModel : ViewModel
+    internal class TrackViewModel : ViewModel
     {
         private string _currentLocation;
-        
+
         public string CurrentLocation
         {
             get { return _currentLocation; }
@@ -41,7 +34,7 @@ namespace MileEyes.ViewModels
         }
 
         public bool GPSUnavailable => !_gpsAvailable;
-        
+
         public TrackViewModel()
         {
             StartJourneyCommand = new Command(StartJourney);
@@ -57,7 +50,8 @@ namespace MileEyes.ViewModels
 
         public override void Refresh()
         {
-            GPSAvailable = Plugin.Geolocator.CrossGeolocator.Current.IsGeolocationAvailable && Plugin.Geolocator.CrossGeolocator.Current.IsGeolocationEnabled;
+            GPSAvailable = Plugin.Geolocator.CrossGeolocator.Current.IsGeolocationAvailable &&
+                           Plugin.Geolocator.CrossGeolocator.Current.IsGeolocationEnabled;
         }
 
         public bool GpsPingCallback()

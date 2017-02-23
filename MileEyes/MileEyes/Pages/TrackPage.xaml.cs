@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MileEyes.CustomControls;
 using MileEyes.ViewModels;
 using Xamarin.Forms;
@@ -39,7 +35,13 @@ namespace MileEyes.Pages
 
         private void TrackerService_Cancelled(object sender, EventArgs e)
         {
+            if ((BindingContext as TrackViewModel).Busy) return;
+
+            (BindingContext as TrackViewModel).Busy = true;
+
             Device.BeginInvokeOnMainThread(async () => { await Navigation.PopModalAsync(); });
+
+            Device.StartTimer(TimeSpan.FromSeconds(1), Wait);
         }
 
         private void TrackerService_Stopped(object sender, Services.Models.Journey e)

@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using MileEyes.CustomControls;
-using MileEyes.Pages;
 using Xamarin.Forms;
 
 namespace MileEyes
@@ -20,14 +15,8 @@ namespace MileEyes
              * Almost Identical apart from Tab Icons being omitted from Android
              */
             Device.OnPlatform(
-                iOS: () =>
-                {
-                    MainPage = new MainPage();
-                },
-                Android: () =>
-                {
-                    MainPage = new AndroidMainPage();
-                });
+                iOS: () => { MainPage = new MainPage(); },
+                Android: () => { MainPage = new AndroidMainPage(); });
 
 //            SyncTimer();
             Device.StartTimer(TimeSpan.FromMinutes(1), SyncTimer);
@@ -37,7 +26,7 @@ namespace MileEyes
         /// Triggers Sync of Data for Authenticated Users
         /// </summary>
         /// <returns></returns>
-        private bool SyncTimer()
+        private static bool SyncTimer()
         {
             if (Services.Host.AuthService.Authenticated)
             {
@@ -46,7 +35,7 @@ namespace MileEyes
                 Services.Host.CompanyService.Sync();
                 Services.Host.JourneyService.Sync();
             }
-            
+
             return true;
         }
 

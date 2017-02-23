@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using MileEyes.Annotations;
 
 namespace MileEyes.ViewModels
@@ -28,6 +23,7 @@ namespace MileEyes.ViewModels
         public bool NotAuthenticated => !_authenticated;
 
         private bool _busy;
+
         public bool Busy
         {
             get { return _busy; }
@@ -39,9 +35,11 @@ namespace MileEyes.ViewModels
                 OnPropertyChanged(nameof(NotBusy));
             }
         }
+
         public bool NotBusy => !_busy;
 
         private bool _refreshing;
+
         public bool Refreshing
         {
             get { return _refreshing; }
@@ -53,6 +51,7 @@ namespace MileEyes.ViewModels
                 OnPropertyChanged(nameof(Refreshed));
             }
         }
+
         public bool Refreshed => !_refreshing;
 
         public event PropertyChangedEventHandler PropertyChanged;

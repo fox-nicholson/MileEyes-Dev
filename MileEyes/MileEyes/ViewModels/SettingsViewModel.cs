@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using MileEyes.Services;
 using MileEyes.Services.Models;
 
 namespace MileEyes.ViewModels
 {
-    class SettingsViewModel : ViewModel
+    internal class SettingsViewModel : ViewModel
     {
         private bool _invoicedDefault;
 
@@ -25,8 +21,9 @@ namespace MileEyes.ViewModels
                 OnPropertyChanged(nameof(InvoicedDefault));
             }
         }
-        
+
         private Vehicle _defaultVehicle;
+
         public Vehicle DefaultVehicle
         {
             get { return _defaultVehicle; }
@@ -39,6 +36,7 @@ namespace MileEyes.ViewModels
         }
 
         private Passenger _defaultPassenger;
+
         public Passenger DefaultPassenger
         {
             get { return _defaultPassenger; }
@@ -51,6 +49,7 @@ namespace MileEyes.ViewModels
         }
 
         private Reason _defaultReason;
+
         public Reason DefaultReason
         {
             get { return _defaultReason; }
@@ -74,7 +73,7 @@ namespace MileEyes.ViewModels
                 OnPropertyChanged(nameof(DefaultCompany));
             }
         }
-        
+
         private string _mileEyesConnectDetail;
 
         public string MileEyesConnectDetail
@@ -121,12 +120,12 @@ namespace MileEyes.ViewModels
             get { return _companyCountString; }
             set
             {
-                if(_companyCountString == value) return;
+                if (_companyCountString == value) return;
                 _companyCountString = value;
                 OnPropertyChanged(nameof(CompanyCountString));
             }
         }
-        
+
         public SettingsViewModel()
         {
             Refresh();
@@ -140,7 +139,6 @@ namespace MileEyes.ViewModels
             {
                 var userDetails = await Host.UserService.GetDetails();
 
-                var temp = userDetails;
                 if (!string.IsNullOrEmpty(userDetails?.Result.Email))
                 {
                     MileEyesConnectDetail = userDetails.Result.Email;
@@ -198,7 +196,7 @@ namespace MileEyes.ViewModels
             if (Helpers.Settings.DefaultPassengers > 0)
             {
                 DefaultPassenger =
-                    (new PassengersSelectionViewModel()).Passengers.FirstOrDefault(
+                    new PassengersSelectionViewModel().Passengers.FirstOrDefault(
                         p => p.Number == Helpers.Settings.DefaultPassengers);
             }
             else
@@ -211,23 +209,22 @@ namespace MileEyes.ViewModels
             }
 
             var defaultVehicle =
-                (await Services.Host.VehicleService.GetVehicles()).FirstOrDefault(v => v.Default == true);
+                (await Host.VehicleService.GetVehicles()).FirstOrDefault(v => v.Default);
 
             DefaultVehicle = defaultVehicle;
 
             var defaultReason =
-                (await Services.Host.ReasonService.GetReasons()).FirstOrDefault(v => v.Default == true);
+                (await Host.ReasonService.GetReasons()).FirstOrDefault(v => v.Default);
 
             DefaultReason = defaultReason;
 
             if (Authenticated)
             {
                 var defaultCompany =
-                        (await Services.Host.CompanyService.GetCompanies()).FirstOrDefault(v => v.Default == true);
+                    (await Host.CompanyService.GetCompanies()).FirstOrDefault(v => v.Default);
 
-                DefaultCompany = defaultCompany; 
+                DefaultCompany = defaultCompany;
             }
         }
     }
 }
-

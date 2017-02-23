@@ -1,37 +1,38 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:MileEyes.ViewModels;assembly=MileEyes"
              xmlns:customControls="clr-namespace:MileEyes.CustomControls;assembly=MileEyes"
              x:Class="MileEyes.Pages.ReasonAddPage">
-  <ContentPage.BackgroundColor>
-    <OnPlatform x:TypeArguments="Color"
-                iOS="{StaticResource primaryiOSBackgroundColor}"
-                Android="{StaticResource primaryAndroidBackgroundColor}" />
-  </ContentPage.BackgroundColor>
-  <ContentPage.BindingContext>
-    <viewModels:ReasonViewModel/>
-  </ContentPage.BindingContext>
+    <ContentPage.BackgroundColor>
+        <OnPlatform x:TypeArguments="Color"
+                    iOS="{StaticResource primaryiOSBackgroundColor}"
+                    Android="{StaticResource primaryAndroidBackgroundColor}" />
+    </ContentPage.BackgroundColor>
+    <ContentPage.BindingContext>
+        <viewModels:ReasonViewModel />
+    </ContentPage.BindingContext>
 
-  <ContentPage.ToolbarItems>
-    <ToolbarItem Text="Save" Command="{Binding SaveCommand}"/>
-  </ContentPage.ToolbarItems>
-  <customControls:CustomTableView Intent="Form">
-    <customControls:CustomTableView.BackgroundColor>
-      <OnPlatform x:TypeArguments="Color"
-                  iOS="{StaticResource primaryiOSBackgroundColor}"
-                  Android="{StaticResource primaryAndroidBackgroundColor}" />
-    </customControls:CustomTableView.BackgroundColor>
-    <TableRoot>
-      <TableSection>
-        <customControls:CustomEntryCell Label="Reason" Text="{Binding Text}" Placeholder="Required">
-          <customControls:CustomEntryCell.LabelColor>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Save" Command="{Binding SaveCommand}" />
+    </ContentPage.ToolbarItems>
+    <customControls:CustomTableView Intent="Form">
+        <customControls:CustomTableView.BackgroundColor>
             <OnPlatform x:TypeArguments="Color"
-                        iOS="{StaticResource premiumTextColor}"
-                        Android="Black" />
-          </customControls:CustomEntryCell.LabelColor>
-        </customControls:CustomEntryCell>
-      </TableSection>
-    </TableRoot>
-  </customControls:CustomTableView>
+                        iOS="{StaticResource primaryiOSBackgroundColor}"
+                        Android="{StaticResource primaryAndroidBackgroundColor}" />
+        </customControls:CustomTableView.BackgroundColor>
+        <TableRoot>
+            <TableSection>
+                <customControls:CustomEntryCell Label="Reason" Text="{Binding Text}" Placeholder="Required">
+                    <customControls:CustomEntryCell.LabelColor>
+                        <OnPlatform x:TypeArguments="Color"
+                                    iOS="{StaticResource premiumTextColor}"
+                                    Android="Black" />
+                    </customControls:CustomEntryCell.LabelColor>
+                </customControls:CustomEntryCell>
+            </TableSection>
+        </TableRoot>
+    </customControls:CustomTableView>
 </ContentPage>

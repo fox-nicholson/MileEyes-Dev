@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using MileEyes.Services.Models;
 using Xamarin.Forms;
 
 namespace MileEyes.ViewModels
 {
-    class VehicleViewModel : ViewModel
+    internal class VehicleViewModel : ViewModel
     {
         private Vehicle _vehicle;
 
@@ -101,7 +97,7 @@ namespace MileEyes.ViewModels
 
             Refreshing = false;
         }
-        
+
         public event EventHandler<string> VehicleNotSaved = delegate { };
         public event EventHandler<string> VehicleSaved = delegate { };
 
@@ -119,7 +115,7 @@ namespace MileEyes.ViewModels
                 Busy = false;
                 return;
             }
-            
+
             if (string.IsNullOrEmpty(Registration))
             {
                 VehicleNotSaved?.Invoke(this, "Registration is required.");

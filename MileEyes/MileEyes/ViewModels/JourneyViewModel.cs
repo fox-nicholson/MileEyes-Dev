@@ -178,7 +178,7 @@ namespace MileEyes.ViewModels
             get { return _distance; }
             set
             {
-                if (_distance == value) return;
+                if (CustomControls.DoubleComparison.isEqual(_distance, value)) return;
                 _distance = value;
                 OnPropertyChanged(nameof(Distance));
             }
@@ -251,7 +251,7 @@ namespace MileEyes.ViewModels
             if (Waypoints.Count() > 2)
             {
                 Route.Clear();
-                IOrderedEnumerable<Waypoint> orderedWaypoints = Waypoints.OrderBy(wp => wp.Step);
+                var orderedWaypoints = Waypoints.OrderBy(wp => wp.Step);
 
                 foreach (var w in orderedWaypoints)
                     Route.Add(new Position(w.Latitude, w.Longitude));

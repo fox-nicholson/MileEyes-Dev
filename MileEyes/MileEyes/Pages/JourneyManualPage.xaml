@@ -1,122 +1,133 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:MileEyes.ViewModels;assembly=MileEyes"
              xmlns:customControls="clr-namespace:MileEyes.CustomControls;assembly=MileEyes"
              x:Class="MileEyes.Pages.JourneyManualPage" Title="Manual Journey">
-  <ContentPage.BackgroundColor>
-    <OnPlatform x:TypeArguments="Color"
-                iOS="{StaticResource primaryiOSBackgroundColor}"
-                Android="{StaticResource primaryAndroidBackgroundColor}" />
-  </ContentPage.BackgroundColor>
-  <ContentPage.BindingContext>
-    <viewModels:JourneyManualViewModel/>
-  </ContentPage.BindingContext>
-
-  <ContentPage.ToolbarItems>
-    <ToolbarItem Text="Cancel" Command="{Binding CancelCommand}" Priority="1" />
-    <ToolbarItem Text="Save" Command="{Binding SaveCommand}" />
-  </ContentPage.ToolbarItems>
-  <StackLayout VerticalOptions="FillAndExpand">
-    <customControls:CustomDatePicker Date="{Binding Date}" MaximumDate="{Binding MaxDate}" HorizontalOptions="Center" TextColor="Gray" />
-    <customControls:CustomTableView Intent="Settings">
-      <customControls:CustomTableView.BackgroundColor>
+    <ContentPage.BackgroundColor>
         <OnPlatform x:TypeArguments="Color"
                     iOS="{StaticResource primaryiOSBackgroundColor}"
                     Android="{StaticResource primaryAndroidBackgroundColor}" />
-      </customControls:CustomTableView.BackgroundColor>
-      <TableRoot>
-        <TableSection Title="Journey Details">
-          <customControls:CustomImageCell ImageSource="origin.png" Text="Origin" Detail="{Binding OriginAddress.Label}" Tapped="OriginCell_OnTapped">
-            <customControls:CustomImageCell.TextColor>
-              <OnPlatform x:TypeArguments="Color"
-                          iOS="#FFFFFF"
-                          Android="Black" />
-            </customControls:CustomImageCell.TextColor>
-            <customControls:CustomImageCell.DetailColor>
-              <OnPlatform x:TypeArguments="Color"
-                          iOS="#80FFFFFF"
-                          Android="#80000000" />
-            </customControls:CustomImageCell.DetailColor>
-          </customControls:CustomImageCell>
+    </ContentPage.BackgroundColor>
+    <ContentPage.BindingContext>
+        <viewModels:JourneyManualViewModel />
+    </ContentPage.BindingContext>
 
-          <customControls:CustomImageCell ImageSource="destination.png" Text="Destination" Detail="{Binding DestinationAddress.Label}" Tapped="DestinationCell_OnTapped">
-            <customControls:CustomImageCell.TextColor>
-              <OnPlatform x:TypeArguments="Color"
-                          iOS="#FFFFFF"
-                          Android="Black" />
-            </customControls:CustomImageCell.TextColor>
-            <customControls:CustomImageCell.DetailColor>
-              <OnPlatform x:TypeArguments="Color"
-                          iOS="#80FFFFFF"
-                          Android="#80000000" />
-            </customControls:CustomImageCell.DetailColor>
-          </customControls:CustomImageCell>
-        </TableSection>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Cancel" Command="{Binding CancelCommand}" Priority="1" />
+        <ToolbarItem Text="Save" Command="{Binding SaveCommand}" />
+    </ContentPage.ToolbarItems>
+    <StackLayout VerticalOptions="FillAndExpand">
+        <customControls:CustomDatePicker Date="{Binding Date}" MaximumDate="{Binding MaxDate}"
+                                         HorizontalOptions="Center" TextColor="Gray" />
+        <customControls:CustomTableView Intent="Settings">
+            <customControls:CustomTableView.BackgroundColor>
+                <OnPlatform x:TypeArguments="Color"
+                            iOS="{StaticResource primaryiOSBackgroundColor}"
+                            Android="{StaticResource primaryAndroidBackgroundColor}" />
+            </customControls:CustomTableView.BackgroundColor>
+            <TableRoot>
+                <TableSection Title="Journey Details">
+                    <customControls:CustomImageCell ImageSource="origin.png" Text="Origin"
+                                                    Detail="{Binding OriginAddress.Label}" Tapped="OriginCell_OnTapped">
+                        <customControls:CustomImageCell.TextColor>
+                            <OnPlatform x:TypeArguments="Color"
+                                        iOS="#FFFFFF"
+                                        Android="Black" />
+                        </customControls:CustomImageCell.TextColor>
+                        <customControls:CustomImageCell.DetailColor>
+                            <OnPlatform x:TypeArguments="Color"
+                                        iOS="#80FFFFFF"
+                                        Android="#80000000" />
+                        </customControls:CustomImageCell.DetailColor>
+                    </customControls:CustomImageCell>
 
-        <TableSection Title="Expense Details">
+                    <customControls:CustomImageCell ImageSource="destination.png" Text="Destination"
+                                                    Detail="{Binding DestinationAddress.Label}"
+                                                    Tapped="DestinationCell_OnTapped">
+                        <customControls:CustomImageCell.TextColor>
+                            <OnPlatform x:TypeArguments="Color"
+                                        iOS="#FFFFFF"
+                                        Android="Black" />
+                        </customControls:CustomImageCell.TextColor>
+                        <customControls:CustomImageCell.DetailColor>
+                            <OnPlatform x:TypeArguments="Color"
+                                        iOS="#80FFFFFF"
+                                        Android="#80000000" />
+                        </customControls:CustomImageCell.DetailColor>
+                    </customControls:CustomImageCell>
+                </TableSection>
 
-          <customControls:CustomSwitchCell ImageSource="bill_to_client.png" Text="Bill to Client" On="{Binding Invoiced}">
-            <customControls:CustomSwitchCell.TextColor>
-              <OnPlatform x:TypeArguments="Color"
-                          iOS="#FFFFFF"
-                          Android="Black" />
-            </customControls:CustomSwitchCell.TextColor>
-          </customControls:CustomSwitchCell>
+                <TableSection Title="Expense Details">
 
-          <customControls:CustomImageCell ImageSource="vehicle.png" Text="Vehicle" Detail="{Binding Vehicle.Registration}" Tapped="VehicleCell_OnTapped">
-            <customControls:CustomImageCell.TextColor>
-              <OnPlatform x:TypeArguments="Color"
-                          iOS="#FFFFFF"
-                          Android="Black" />
-            </customControls:CustomImageCell.TextColor>
-            <customControls:CustomImageCell.DetailColor>
-              <OnPlatform x:TypeArguments="Color"
-                          iOS="#80FFFFFF"
-                          Android="#80000000" />
-            </customControls:CustomImageCell.DetailColor>
-          </customControls:CustomImageCell>
+                    <customControls:CustomSwitchCell ImageSource="bill_to_client.png" Text="Bill to Client"
+                                                     On="{Binding Invoiced}">
+                        <customControls:CustomSwitchCell.TextColor>
+                            <OnPlatform x:TypeArguments="Color"
+                                        iOS="#FFFFFF"
+                                        Android="Black" />
+                        </customControls:CustomSwitchCell.TextColor>
+                    </customControls:CustomSwitchCell>
 
-          <customControls:CustomImageCell ImageSource="company.png" Text="Company" Detail="{Binding Company.Name}" Tapped="CompanyCell_OnTapped">
-            <customControls:CustomImageCell.TextColor>
-              <OnPlatform x:TypeArguments="Color"
-                          iOS="#FFFFFF"
-                          Android="Black" />
-            </customControls:CustomImageCell.TextColor>
-            <customControls:CustomImageCell.DetailColor>
-              <OnPlatform x:TypeArguments="Color"
-                          iOS="#80FFFFFF"
-                          Android="#80000000" />
-            </customControls:CustomImageCell.DetailColor>
-          </customControls:CustomImageCell>
+                    <customControls:CustomImageCell ImageSource="vehicle.png" Text="Vehicle"
+                                                    Detail="{Binding Vehicle.Registration}"
+                                                    Tapped="VehicleCell_OnTapped">
+                        <customControls:CustomImageCell.TextColor>
+                            <OnPlatform x:TypeArguments="Color"
+                                        iOS="#FFFFFF"
+                                        Android="Black" />
+                        </customControls:CustomImageCell.TextColor>
+                        <customControls:CustomImageCell.DetailColor>
+                            <OnPlatform x:TypeArguments="Color"
+                                        iOS="#80FFFFFF"
+                                        Android="#80000000" />
+                        </customControls:CustomImageCell.DetailColor>
+                    </customControls:CustomImageCell>
 
-          <customControls:CustomImageCell ImageSource="passenger.png" Text="Passengers" Detail="{Binding Passenger.Name}" Tapped="PassengersCell_OnTapped">
-            <customControls:CustomImageCell.TextColor>
-              <OnPlatform x:TypeArguments="Color"
-                          iOS="#FFFFFF"
-                          Android="Black" />
-            </customControls:CustomImageCell.TextColor>
-            <customControls:CustomImageCell.DetailColor>
-              <OnPlatform x:TypeArguments="Color"
-                          iOS="#80FFFFFF"
-                          Android="#80000000" />
-            </customControls:CustomImageCell.DetailColor>
-          </customControls:CustomImageCell>
+                    <customControls:CustomImageCell ImageSource="company.png" Text="Company"
+                                                    Detail="{Binding Company.Name}" Tapped="CompanyCell_OnTapped">
+                        <customControls:CustomImageCell.TextColor>
+                            <OnPlatform x:TypeArguments="Color"
+                                        iOS="#FFFFFF"
+                                        Android="Black" />
+                        </customControls:CustomImageCell.TextColor>
+                        <customControls:CustomImageCell.DetailColor>
+                            <OnPlatform x:TypeArguments="Color"
+                                        iOS="#80FFFFFF"
+                                        Android="#80000000" />
+                        </customControls:CustomImageCell.DetailColor>
+                    </customControls:CustomImageCell>
 
-          <customControls:CustomImageCell ImageSource="journey_reason.png" Text="Reason" Detail="{Binding Reason}" Tapped="ReasonCell_OnTapped">
-            <customControls:CustomImageCell.TextColor>
-              <OnPlatform x:TypeArguments="Color"
-                          iOS="#FFFFFF"
-                          Android="Black" />
-            </customControls:CustomImageCell.TextColor>
-            <customControls:CustomImageCell.DetailColor>
-              <OnPlatform x:TypeArguments="Color"
-                          iOS="#80FFFFFF"
-                          Android="#80000000" />
-            </customControls:CustomImageCell.DetailColor>
-          </customControls:CustomImageCell>
-        </TableSection>
-      </TableRoot>
-    </customControls:CustomTableView>
-  </StackLayout>
+                    <customControls:CustomImageCell ImageSource="passenger.png" Text="Passengers"
+                                                    Detail="{Binding Passenger.Name}" Tapped="PassengersCell_OnTapped">
+                        <customControls:CustomImageCell.TextColor>
+                            <OnPlatform x:TypeArguments="Color"
+                                        iOS="#FFFFFF"
+                                        Android="Black" />
+                        </customControls:CustomImageCell.TextColor>
+                        <customControls:CustomImageCell.DetailColor>
+                            <OnPlatform x:TypeArguments="Color"
+                                        iOS="#80FFFFFF"
+                                        Android="#80000000" />
+                        </customControls:CustomImageCell.DetailColor>
+                    </customControls:CustomImageCell>
+
+                    <customControls:CustomImageCell ImageSource="journey_reason.png" Text="Reason"
+                                                    Detail="{Binding Reason}" Tapped="ReasonCell_OnTapped">
+                        <customControls:CustomImageCell.TextColor>
+                            <OnPlatform x:TypeArguments="Color"
+                                        iOS="#FFFFFF"
+                                        Android="Black" />
+                        </customControls:CustomImageCell.TextColor>
+                        <customControls:CustomImageCell.DetailColor>
+                            <OnPlatform x:TypeArguments="Color"
+                                        iOS="#80FFFFFF"
+                                        Android="#80000000" />
+                        </customControls:CustomImageCell.DetailColor>
+                    </customControls:CustomImageCell>
+                </TableSection>
+            </TableRoot>
+        </customControls:CustomTableView>
+    </StackLayout>
 </ContentPage>

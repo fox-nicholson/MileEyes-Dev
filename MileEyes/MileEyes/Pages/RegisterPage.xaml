@@ -43,7 +43,7 @@
                     <customControls:CustomEntryCell Keyboard="Email" Label="Email"
                                                     LabelColor="{StaticResource premiumTextColor}"
                                                     Placeholder="Required" Text="{Binding Email}" />
-                    <customControls:CustomEntryCell Label="Password" IsPassword="True" 
+                    <customControls:CustomEntryCell Label="Password" IsPassword="True"
                                                     LabelColor="{StaticResource premiumTextColor}"
                                                     Placeholder="Required" Text="{Binding Password}" />
                     <customControls:CustomEntryCell Label="Confirm Password" IsPassword="True"

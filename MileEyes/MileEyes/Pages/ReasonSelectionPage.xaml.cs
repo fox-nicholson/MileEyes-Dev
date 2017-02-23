@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MileEyes.ViewModels;
 using Xamarin.Forms;
 
@@ -36,11 +32,8 @@ namespace MileEyes.Pages
                 {
                     var addReasonPage = new ReasonAddPage();
                     (addReasonPage.BindingContext as ReasonViewModel).SaveComplete += ReasonSelectionPage_SaveComplete;
-                    
-                    Device.BeginInvokeOnMainThread(async () =>
-                    {
-                        await Navigation.PushAsync(addReasonPage);
-                    });
+
+                    Device.BeginInvokeOnMainThread(async () => { await Navigation.PushAsync(addReasonPage); });
                 }
                 else
                 {
@@ -56,10 +49,8 @@ namespace MileEyes.Pages
 
         private void ReasonSelectionPage_NotSelected(object sender, EventArgs e)
         {
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                await DisplayAlert("Problem...", "You Must Select a Default Reason", "Ok");
-            });
+            Device.BeginInvokeOnMainThread(
+                async () => { await DisplayAlert("Problem...", "You Must Select a Default Reason", "Ok"); });
         }
     }
 }

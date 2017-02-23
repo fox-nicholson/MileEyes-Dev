@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MileEyes.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
@@ -14,7 +10,7 @@ namespace MileEyes.Pages
         public JourneyPage(JourneyViewModel j)
         {
             InitializeComponent();
-            
+
             BindingContext = j;
 
             InitRoute();
@@ -24,7 +20,6 @@ namespace MileEyes.Pages
         {
             SegmentedControl.SelectedValue = "Details";
             base.OnAppearing();
-            
         }
 
         private void InitRoute()

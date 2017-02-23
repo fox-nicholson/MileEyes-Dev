@@ -1,60 +1,62 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:customControls="clr-namespace:MileEyes.CustomControls;assembly=MileEyes"
              xmlns:viewModels="clr-namespace:MileEyes.ViewModels;assembly=MileEyes"
              x:Class="MileEyes.Pages.CloudPage">
-  <ContentPage.BackgroundColor>
-    <OnPlatform x:TypeArguments="Color"
-                iOS="{StaticResource primaryiOSBackgroundColor}"
-                Android="{StaticResource primaryAndroidBackgroundColor}" />
-  </ContentPage.BackgroundColor>
-  
-  <ContentPage.BindingContext>
-    <viewModels:CloudViewModel/>
-  </ContentPage.BindingContext>
-  <ContentPage.ToolbarItems>
-    <ToolbarItem Text="Save" Command="{Binding SaveCommand}"/>
-  </ContentPage.ToolbarItems>
-  <customControls:CustomTableView Intent="Form">
-    <customControls:CustomTableView.BackgroundColor>
-      <OnPlatform x:TypeArguments="Color"
-                  iOS="{StaticResource primaryiOSBackgroundColor}"
-                  Android="{StaticResource primaryAndroidBackgroundColor}" />
-    </customControls:CustomTableView.BackgroundColor>
-    <TableRoot>
-      <TableSection>
-        <customControls:CustomEntryCell Label="Email" Placeholder="Required" Text="{Binding Email}">
-          <customControls:CustomEntryCell.LabelColor>
+    <ContentPage.BackgroundColor>
+        <OnPlatform x:TypeArguments="Color"
+                    iOS="{StaticResource primaryiOSBackgroundColor}"
+                    Android="{StaticResource primaryAndroidBackgroundColor}" />
+    </ContentPage.BackgroundColor>
+
+    <ContentPage.BindingContext>
+        <viewModels:CloudViewModel />
+    </ContentPage.BindingContext>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Save" Command="{Binding SaveCommand}" />
+    </ContentPage.ToolbarItems>
+    <customControls:CustomTableView Intent="Form">
+        <customControls:CustomTableView.BackgroundColor>
             <OnPlatform x:TypeArguments="Color"
-                        iOS="{StaticResource premiumTextColor}"
-                        Android="Black" />
-          </customControls:CustomEntryCell.LabelColor>
-        </customControls:CustomEntryCell>
-        <customControls:CustomEntryCell Label="First Name" Placeholder="Required" Text="{Binding FirstName}" >
-          <customControls:CustomEntryCell.LabelColor>
-            <OnPlatform x:TypeArguments="Color"
-                        iOS="{StaticResource premiumTextColor}"
-                        Android="Black" />
-          </customControls:CustomEntryCell.LabelColor>
-        </customControls:CustomEntryCell>
-        <customControls:CustomEntryCell Label="Last Name" Placeholder="Required" Text="{Binding LastName}">
-          <customControls:CustomEntryCell.LabelColor>
-            <OnPlatform x:TypeArguments="Color"
-                        iOS="{StaticResource premiumTextColor}"
-                        Android="Black" />
-          </customControls:CustomEntryCell.LabelColor>
-        </customControls:CustomEntryCell>
-        
-        <customControls:CloudAddressViewCell Tapped="AddressCell_OnTapped"/>
-      </TableSection>
-      <TableSection>
-        <ViewCell>
-          <StackLayout HorizontalOptions="Center">
-            <Button Text="Logout" FontSize="Large" TextColor="Red" HorizontalOptions="Center" VerticalOptions="Center" Command="{Binding LogoutCommand}"/>
-          </StackLayout>
-        </ViewCell>
-      </TableSection>
-    </TableRoot>
-  </customControls:CustomTableView>
+                        iOS="{StaticResource primaryiOSBackgroundColor}"
+                        Android="{StaticResource primaryAndroidBackgroundColor}" />
+        </customControls:CustomTableView.BackgroundColor>
+        <TableRoot>
+            <TableSection>
+                <customControls:CustomEntryCell Label="Email" Placeholder="Required" Text="{Binding Email}">
+                    <customControls:CustomEntryCell.LabelColor>
+                        <OnPlatform x:TypeArguments="Color"
+                                    iOS="{StaticResource premiumTextColor}"
+                                    Android="Black" />
+                    </customControls:CustomEntryCell.LabelColor>
+                </customControls:CustomEntryCell>
+                <customControls:CustomEntryCell Label="First Name" Placeholder="Required" Text="{Binding FirstName}">
+                    <customControls:CustomEntryCell.LabelColor>
+                        <OnPlatform x:TypeArguments="Color"
+                                    iOS="{StaticResource premiumTextColor}"
+                                    Android="Black" />
+                    </customControls:CustomEntryCell.LabelColor>
+                </customControls:CustomEntryCell>
+                <customControls:CustomEntryCell Label="Last Name" Placeholder="Required" Text="{Binding LastName}">
+                    <customControls:CustomEntryCell.LabelColor>
+                        <OnPlatform x:TypeArguments="Color"
+                                    iOS="{StaticResource premiumTextColor}"
+                                    Android="Black" />
+                    </customControls:CustomEntryCell.LabelColor>
+                </customControls:CustomEntryCell>
+
+                <customControls:CloudAddressViewCell Tapped="AddressCell_OnTapped" />
+            </TableSection>
+            <TableSection>
+                <ViewCell>
+                    <StackLayout HorizontalOptions="Center">
+                        <Button Text="Logout" FontSize="Large" TextColor="Red" HorizontalOptions="Center"
+                                VerticalOptions="Center" Command="{Binding LogoutCommand}" />
+                    </StackLayout>
+                </ViewCell>
+            </TableSection>
+        </TableRoot>
+    </customControls:CustomTableView>
 </ContentPage>

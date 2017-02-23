@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace MileEyes.CustomControls
@@ -18,7 +14,7 @@ namespace MileEyes.CustomControls
 
         public bool IsRed
         {
-            get { return (bool)GetValue(IsRedProperty); }
+            get { return (bool) GetValue(IsRedProperty); }
             set { SetValue(IsRedProperty, value); }
         }
 
@@ -31,7 +27,7 @@ namespace MileEyes.CustomControls
 
         public bool Pulse
         {
-            get { return (bool)GetValue(PulseProperty); }
+            get { return (bool) GetValue(PulseProperty); }
             set { SetValue(PulseProperty, value); }
         }
 
@@ -48,10 +44,7 @@ namespace MileEyes.CustomControls
 
             if (!Services.Host.Backgrounded)
             {
-                Device.BeginInvokeOnMainThread(() =>
-                {
-                    FireAnimation?.Invoke(this, EventArgs.Empty);
-                });
+                Device.BeginInvokeOnMainThread(() => { FireAnimation?.Invoke(this, EventArgs.Empty); });
             }
             return true;
         }

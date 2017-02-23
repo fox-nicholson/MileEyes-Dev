@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using MileEyes.CustomControls;
 using MileEyes.Services.Helpers;
-using MileEyes.Services.Models;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 
 namespace MileEyes.ViewModels
 {
-    class JourneyCurrentViewModel : ViewModel
+    internal class JourneyCurrentViewModel : ViewModel
     {
         private bool _hasLocation;
 
@@ -88,7 +84,7 @@ namespace MileEyes.ViewModels
             Refresh();
         }
 
-        public override async void Refresh()
+        public override void Refresh()
         {
             base.Refresh();
 
@@ -145,10 +141,7 @@ namespace MileEyes.ViewModels
 
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         public ICommand StopCommand { get; set; }

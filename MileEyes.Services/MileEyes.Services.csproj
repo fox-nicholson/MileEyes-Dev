@@ -41,6 +41,7 @@
     <Compile Include="EngineTypeService.cs" />
     <Compile Include="Extensions\CoordinatesExtensions.cs" />
     <Compile Include="Extensions\JourneyExtensions.cs" />
+    <Compile Include="Extensions\writeLog.cs" />
     <Compile Include="GeocodingService.cs" />
     <Compile Include="Helpers\TrigHelpers.cs" />
     <Compile Include="Helpers\Units.cs" />
@@ -84,6 +85,9 @@
     <Reference Include="DotNetCross.Memory.Unsafe, Version=0.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DotNetCross.Memory.Unsafe.0.2.3.4\lib\netstandard1.0\DotNetCross.Memory.Unsafe.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Mono.Android">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\MonoAndroid\v7.0\Mono.Android.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>

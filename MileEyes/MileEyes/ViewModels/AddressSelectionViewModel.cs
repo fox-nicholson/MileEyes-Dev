@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
 using MileEyes.Services.Models;
 using Xamarin.Forms;
 
 namespace MileEyes.ViewModels
 {
-    class AddressSelectionViewModel : ViewModel
+    internal class AddressSelectionViewModel : ViewModel
     {
         public ICommand SearchCommand { get; set; }
 

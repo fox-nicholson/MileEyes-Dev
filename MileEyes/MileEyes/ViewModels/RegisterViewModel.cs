@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using MileEyes.Services.Models;
 using Xamarin.Forms;
 
 namespace MileEyes.ViewModels
 {
-    class RegisterViewModel : ViewModel
+    internal class RegisterViewModel : ViewModel
     {
         private string _firstName;
 
@@ -174,21 +171,21 @@ namespace MileEyes.ViewModels
                     var emailTaken = result.ModelState._?.FirstOrDefault();
 
                     var errorMessage = result.ModelState.FirstName?.Aggregate("",
-                        (current, s) => current + (s + Environment.NewLine));
+                        (current, s) => current + s + Environment.NewLine);
 
                     errorMessage = result.ModelState.LastName?.Aggregate(errorMessage,
-                        (current, s) => current + (s + Environment.NewLine));
+                        (current, s) => current + s + Environment.NewLine);
 
                     errorMessage = result.ModelState.Email?.Aggregate(errorMessage,
-                        (current, s) => current + (s + Environment.NewLine));
+                        (current, s) => current + s + Environment.NewLine);
 
                     errorMessage = result.ModelState.Password?.Aggregate(errorMessage,
-                        (current, s) => current + (s + Environment.NewLine));
+                        (current, s) => current + s + Environment.NewLine);
 
                     if (!string.IsNullOrEmpty(emailTaken))
                     {
                         errorMessage = result.ModelState.PlaceId?.Aggregate(errorMessage,
-                            (current, s) => current + ("Address is required." + Environment.NewLine));
+                            (current, s) => current + "Address is required." + Environment.NewLine);
                         errorMessage += emailTaken + Environment.NewLine;
                     }
                     else
@@ -198,10 +195,10 @@ namespace MileEyes.ViewModels
                     }
 
                     errorMessage = result.ModelState.Password?.Aggregate(errorMessage,
-                        (current, s) => current + (s + Environment.NewLine));
+                        (current, s) => current + s + Environment.NewLine);
 
                     errorMessage = result.ModelState._?.Aggregate(errorMessage,
-                        (current, s) => current + (s + Environment.NewLine));
+                        (current, s) => current + s + Environment.NewLine);
 
                     RegisterFailed?.Invoke(this, errorMessage?.Trim());
 

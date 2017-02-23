@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using MileEyes.Services.Models;
 using Xamarin.Forms;
 
 namespace MileEyes.ViewModels
 {
-    class ReasonsViewModel : ViewModel
+    internal class ReasonsViewModel : ViewModel
     {
         private ReasonViewModel _selectedReason;
 
@@ -27,7 +24,8 @@ namespace MileEyes.ViewModels
             }
         }
 
-        public ObservableCollection<ReasonViewModel> Reasons { get; set; } = new ObservableCollection<ReasonViewModel>();
+        public ObservableCollection<ReasonViewModel> Reasons { get; set; } = new ObservableCollection<ReasonViewModel>()
+            ;
 
         public ReasonsViewModel()
         {
@@ -63,7 +61,7 @@ namespace MileEyes.ViewModels
             {
                 foreach (var reason in enumerable)
                 {
-                    if (reason.Default == true)
+                    if (reason.Default)
                     {
                         defaultReason = reason;
                     }
@@ -117,7 +115,7 @@ namespace MileEyes.ViewModels
 
             Busy = false;
         }
-        
+
         public ICommand SelectCommand { get; set; }
 
         public event EventHandler<string> Selected = delegate { };

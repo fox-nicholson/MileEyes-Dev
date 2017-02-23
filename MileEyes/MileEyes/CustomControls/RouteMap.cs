@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 
@@ -20,10 +15,9 @@ namespace MileEyes.CustomControls
             defaultBindingMode: BindingMode.TwoWay);
 
 
-
         public ObservableCollection<Position> RouteCoordinates
         {
-            get { return (ObservableCollection<Position>)GetValue(RouteCoordinatesProperty); }
+            get { return (ObservableCollection<Position>) GetValue(RouteCoordinatesProperty); }
             set { SetValue(RouteCoordinatesProperty, value); }
         }
 
@@ -36,7 +30,6 @@ namespace MileEyes.CustomControls
 
         private static void OnItemSourcePropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
-
         }
 
         public void Invalidate()

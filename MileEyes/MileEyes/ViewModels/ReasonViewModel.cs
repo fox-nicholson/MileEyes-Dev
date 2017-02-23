@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using MileEyes.Services.Models;
 using Xamarin.Forms;
 
 namespace MileEyes.ViewModels
 {
-    class ReasonViewModel : ViewModel
+    internal class ReasonViewModel : ViewModel
     {
         private string _id;
+
         public string Id
         {
             get { return _id; }
@@ -24,6 +21,7 @@ namespace MileEyes.ViewModels
         }
 
         private string _text;
+
         public string Text
         {
             get { return _text; }
@@ -36,6 +34,7 @@ namespace MileEyes.ViewModels
         }
 
         private bool _default;
+
         public bool Default
         {
             get { return _default; }
@@ -74,7 +73,7 @@ namespace MileEyes.ViewModels
         public async void Save()
         {
             if (Busy) return;
-            
+
             Busy = true;
 
             if (string.IsNullOrEmpty(Text))

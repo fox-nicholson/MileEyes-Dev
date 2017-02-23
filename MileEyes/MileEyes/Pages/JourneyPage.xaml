@@ -1,160 +1,169 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:customControls="clr-namespace:MileEyes.CustomControls;assembly=MileEyes"
              xmlns:viewModels="clr-namespace:MileEyes.ViewModels;assembly=MileEyes"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
              x:Class="MileEyes.Pages.JourneyPage">
-  <ContentPage.BackgroundColor>
-    <OnPlatform x:TypeArguments="Color"
-                iOS="{StaticResource primaryiOSBackgroundColor}"
-                Android="{StaticResource primaryAndroidBackgroundColor}" />
-  </ContentPage.BackgroundColor>
-  <ContentPage.BindingContext>
-    <viewModels:JourneyViewModel/>
-  </ContentPage.BindingContext>
+    <ContentPage.BackgroundColor>
+        <OnPlatform x:TypeArguments="Color"
+                    iOS="{StaticResource primaryiOSBackgroundColor}"
+                    Android="{StaticResource primaryAndroidBackgroundColor}" />
+    </ContentPage.BackgroundColor>
+    <ContentPage.BindingContext>
+        <viewModels:JourneyViewModel />
+    </ContentPage.BindingContext>
 
-  <ContentPage.ToolbarItems>
-    <ToolbarItem Text="Share" Command="{Binding ShareCommand}"/>
-  </ContentPage.ToolbarItems>
-  <StackLayout>
-    <customControls:SegmentedControl x:Name="SegmentedControl" ValueChanged="SegmentedControl_OnValueChanged" HorizontalOptions="CenterAndExpand" Margin="10,15,10,10">
-      <customControls:SegmentedControl.Children>
-        <customControls:SegmentedControlOption Text="Details" />
-        <customControls:SegmentedControlOption Text="Map" />
-      </customControls:SegmentedControl.Children>
-    </customControls:SegmentedControl>
-    
-    <AbsoluteLayout IsVisible="{Binding ShowMap}" VerticalOptions="FillAndExpand">
-      <customControls:RouteMap x:Name="map" RouteCoordinates="{Binding Route}" AbsoluteLayout.LayoutBounds="0 ,0 , 1, 1" AbsoluteLayout.LayoutFlags="All"/>
-    </AbsoluteLayout>
-    
-    <StackLayout BackgroundColor="Transparent" Orientation="Vertical" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" IsVisible="{Binding ShowDetails}">
-      <StackLayout Padding="10" x:Name="instructionsTitleLayout" AbsoluteLayout.LayoutFlags="WidthProportional,PositionProportional" AbsoluteLayout.LayoutBounds="0,0,1,AutoSize">
-        <Grid>
-          <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-          </Grid.RowDefinitions>
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-          </Grid.ColumnDefinitions>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Share" Command="{Binding ShareCommand}" />
+    </ContentPage.ToolbarItems>
+    <StackLayout>
+        <customControls:SegmentedControl x:Name="SegmentedControl" ValueChanged="SegmentedControl_OnValueChanged"
+                                         HorizontalOptions="CenterAndExpand" Margin="10,15,10,10">
+            <customControls:SegmentedControl.Children>
+                <customControls:SegmentedControlOption Text="Details" />
+                <customControls:SegmentedControlOption Text="Map" />
+            </customControls:SegmentedControl.Children>
+        </customControls:SegmentedControl>
 
-          <StackLayout Grid.Column="0" Grid.Row="1" HorizontalOptions="Start">
-            <Label Text="Miles Tracked" FontSize="Medium">
-              <Label.TextColor>
-                <OnPlatform x:TypeArguments="Color"
-                            iOS="#80FFFFFF"
-                            Android="Gray" />
-              </Label.TextColor>
-            </Label>
-            <Label Text="{Binding Distance, StringFormat='{0:N2} miles'}" FontSize="25" FontAttributes="Bold">
-              <Label.TextColor>
-                <OnPlatform x:TypeArguments="Color"
-                            iOS="{StaticResource premiumTextColor}"
-                            Android="Black" />
-              </Label.TextColor>
-            </Label>
-          </StackLayout>
-          <StackLayout Grid.Column="1" Grid.Row="1" HorizontalOptions="End">
-            <Label Text="Expensable Value" IsVisible="{Binding Authenticated}" FontSize="Medium">
-              <Label.TextColor>
-                <OnPlatform x:TypeArguments="Color"
-                            iOS="#80FFFFFF"
-                            Android="Gray" />
-              </Label.TextColor>
-            </Label>
-            <Label Text="{Binding Cost, StringFormat='{0:C}'}" IsVisible="{Binding Authenticated}" FontSize="25" FontAttributes="Bold">
-              <Label.TextColor>
-                <OnPlatform x:TypeArguments="Color"
-                            iOS="Lime"
-                            Android="Black" />
-              </Label.TextColor>
-            </Label>
-          </StackLayout>
-        </Grid>
-      </StackLayout>
-      <StackLayout HorizontalOptions="Fill" VerticalOptions="FillAndExpand" Padding="10">
-        <Grid>
-          <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-          </Grid.RowDefinitions>
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-          </Grid.ColumnDefinitions>
+        <AbsoluteLayout IsVisible="{Binding ShowMap}" VerticalOptions="FillAndExpand">
+            <customControls:RouteMap x:Name="map" RouteCoordinates="{Binding Route}"
+                                     AbsoluteLayout.LayoutBounds="0 ,0 , 1, 1" AbsoluteLayout.LayoutFlags="All" />
+        </AbsoluteLayout>
 
-          <StackLayout Grid.Column="0" Grid.Row="0" HorizontalOptions="Fill">
-            <Label Text="Tracking Method" FontSize="Medium">
-              <Label.TextColor>
-                <OnPlatform x:TypeArguments="Color"
-                            iOS="#80FFFFFF"
-                            Android="Gray" />
-              </Label.TextColor>
-            </Label>
-            <StackLayout Orientation="Horizontal">
-              <Image Source="manual_record_icon.png" IsVisible="{Binding Manual}"/>
-              <Image Source="gps_icon.png" IsVisible="{Binding Gps}"/>
-              <Label Text="Manual Entry" IsVisible="{Binding Manual}" FontSize="Medium">
-                <Label.TextColor>
-                  <OnPlatform x:TypeArguments="Color"
-                              iOS="{StaticResource premiumTextColor}"
-                              Android="Black" />
-                </Label.TextColor>
-              </Label>
-              <Label Text="GPS Tracked" IsVisible="{Binding Gps}" FontSize="Medium">
-                <Label.TextColor>
-                  <OnPlatform x:TypeArguments="Color"
-                              iOS="{StaticResource premiumTextColor}"
-                              Android="Black" />
-                </Label.TextColor>
-              </Label>
+        <StackLayout BackgroundColor="Transparent" Orientation="Vertical" AbsoluteLayout.LayoutBounds="1,1,1,1"
+                     AbsoluteLayout.LayoutFlags="All" IsVisible="{Binding ShowDetails}">
+            <StackLayout Padding="10" x:Name="instructionsTitleLayout"
+                         AbsoluteLayout.LayoutFlags="WidthProportional,PositionProportional"
+                         AbsoluteLayout.LayoutBounds="0,0,1,AutoSize">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackLayout Grid.Column="0" Grid.Row="1" HorizontalOptions="Start">
+                        <Label Text="Miles Tracked" FontSize="Medium">
+                            <Label.TextColor>
+                                <OnPlatform x:TypeArguments="Color"
+                                            iOS="#80FFFFFF"
+                                            Android="Gray" />
+                            </Label.TextColor>
+                        </Label>
+                        <Label Text="{Binding Distance, StringFormat='{0:N2} miles'}" FontSize="25"
+                               FontAttributes="Bold">
+                            <Label.TextColor>
+                                <OnPlatform x:TypeArguments="Color"
+                                            iOS="{StaticResource premiumTextColor}"
+                                            Android="Black" />
+                            </Label.TextColor>
+                        </Label>
+                    </StackLayout>
+                    <StackLayout Grid.Column="1" Grid.Row="1" HorizontalOptions="End">
+                        <Label Text="Expensable Value" IsVisible="{Binding Authenticated}" FontSize="Medium">
+                            <Label.TextColor>
+                                <OnPlatform x:TypeArguments="Color"
+                                            iOS="#80FFFFFF"
+                                            Android="Gray" />
+                            </Label.TextColor>
+                        </Label>
+                        <Label Text="{Binding Cost, StringFormat='{0:C}'}" IsVisible="{Binding Authenticated}"
+                               FontSize="25" FontAttributes="Bold">
+                            <Label.TextColor>
+                                <OnPlatform x:TypeArguments="Color"
+                                            iOS="Lime"
+                                            Android="Black" />
+                            </Label.TextColor>
+                        </Label>
+                    </StackLayout>
+                </Grid>
             </StackLayout>
-          </StackLayout>
-          <StackLayout Grid.Column="1" Grid.Row="0" HorizontalOptions="Fill" IsVisible="{Binding NotAuthenticated}">
-            <Label Text="Cloud Syncing" HorizontalOptions="End">
-              <Label.TextColor>
-                <OnPlatform x:TypeArguments="Color"
-                            iOS="#80FFFFFF"
-                            Android="Gray" />
-              </Label.TextColor>
-            </Label>
-            <Switch BackgroundColor="Transparent" HorizontalOptions="End" Toggled="Switch_OnToggled" />
-          </StackLayout>
-          <StackLayout Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" HorizontalOptions="Fill">
-            <Label Text="From">
-              <Label.TextColor>
-                <OnPlatform x:TypeArguments="Color"
-                            iOS="#80FFFFFF"
-                            Android="Gray" />
-              </Label.TextColor>
-            </Label>
-            <Label Text="{Binding OriginAddress.Label}" LineBreakMode="TailTruncation">
-              <Label.TextColor>
-                <OnPlatform x:TypeArguments="Color"
-                            iOS="{StaticResource premiumTextColor}"
-                            Android="Black" />
-              </Label.TextColor>
-            </Label>
-            <Label Text="To">
-              <Label.TextColor>
-                <OnPlatform x:TypeArguments="Color"
-                            iOS="#80FFFFFF"
-                            Android="Gray" />
-              </Label.TextColor>
-            </Label>
-            <Label Text="{Binding DestinationAddress.Label}" LineBreakMode="TailTruncation">
-              <Label.TextColor>
-                <OnPlatform x:TypeArguments="Color"
-                            iOS="{StaticResource premiumTextColor}"
-                            Android="Black" />
-              </Label.TextColor>
-            </Label>
-          </StackLayout>
-        </Grid>
-      </StackLayout>
+            <StackLayout HorizontalOptions="Fill" VerticalOptions="FillAndExpand" Padding="10">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackLayout Grid.Column="0" Grid.Row="0" HorizontalOptions="Fill">
+                        <Label Text="Tracking Method" FontSize="Medium">
+                            <Label.TextColor>
+                                <OnPlatform x:TypeArguments="Color"
+                                            iOS="#80FFFFFF"
+                                            Android="Gray" />
+                            </Label.TextColor>
+                        </Label>
+                        <StackLayout Orientation="Horizontal">
+                            <Image Source="manual_record_icon.png" IsVisible="{Binding Manual}" />
+                            <Image Source="gps_icon.png" IsVisible="{Binding Gps}" />
+                            <Label Text="Manual Entry" IsVisible="{Binding Manual}" FontSize="Medium">
+                                <Label.TextColor>
+                                    <OnPlatform x:TypeArguments="Color"
+                                                iOS="{StaticResource premiumTextColor}"
+                                                Android="Black" />
+                                </Label.TextColor>
+                            </Label>
+                            <Label Text="GPS Tracked" IsVisible="{Binding Gps}" FontSize="Medium">
+                                <Label.TextColor>
+                                    <OnPlatform x:TypeArguments="Color"
+                                                iOS="{StaticResource premiumTextColor}"
+                                                Android="Black" />
+                                </Label.TextColor>
+                            </Label>
+                        </StackLayout>
+                    </StackLayout>
+                    <StackLayout Grid.Column="1" Grid.Row="0" HorizontalOptions="Fill"
+                                 IsVisible="{Binding NotAuthenticated}">
+                        <Label Text="Cloud Syncing" HorizontalOptions="End">
+                            <Label.TextColor>
+                                <OnPlatform x:TypeArguments="Color"
+                                            iOS="#80FFFFFF"
+                                            Android="Gray" />
+                            </Label.TextColor>
+                        </Label>
+                        <Switch BackgroundColor="Transparent" HorizontalOptions="End" Toggled="Switch_OnToggled" />
+                    </StackLayout>
+                    <StackLayout Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" HorizontalOptions="Fill">
+                        <Label Text="From">
+                            <Label.TextColor>
+                                <OnPlatform x:TypeArguments="Color"
+                                            iOS="#80FFFFFF"
+                                            Android="Gray" />
+                            </Label.TextColor>
+                        </Label>
+                        <Label Text="{Binding OriginAddress.Label}" LineBreakMode="TailTruncation">
+                            <Label.TextColor>
+                                <OnPlatform x:TypeArguments="Color"
+                                            iOS="{StaticResource premiumTextColor}"
+                                            Android="Black" />
+                            </Label.TextColor>
+                        </Label>
+                        <Label Text="To">
+                            <Label.TextColor>
+                                <OnPlatform x:TypeArguments="Color"
+                                            iOS="#80FFFFFF"
+                                            Android="Gray" />
+                            </Label.TextColor>
+                        </Label>
+                        <Label Text="{Binding DestinationAddress.Label}" LineBreakMode="TailTruncation">
+                            <Label.TextColor>
+                                <OnPlatform x:TypeArguments="Color"
+                                            iOS="{StaticResource premiumTextColor}"
+                                            Android="Black" />
+                            </Label.TextColor>
+                        </Label>
+                    </StackLayout>
+                </Grid>
+            </StackLayout>
+        </StackLayout>
     </StackLayout>
-  </StackLayout>
 </ContentPage>

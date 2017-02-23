@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MileEyes.ViewModels;
 using Xamarin.Forms;
 
@@ -20,18 +16,12 @@ namespace MileEyes.Pages
 
         private void ReasonAddPage_SaveFailed(object sender, string e)
         {
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                await DisplayAlert("Error", e, "Ok");
-            });
+            Device.BeginInvokeOnMainThread(async () => { await DisplayAlert("Error", e, "Ok"); });
         }
 
         private void ReasonAddPage_SaveComplete(object sender, EventArgs e)
         {
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                await Navigation.PopAsync();
-            });
+            Device.BeginInvokeOnMainThread(async () => { await Navigation.PopAsync(); });
         }
     }
 }

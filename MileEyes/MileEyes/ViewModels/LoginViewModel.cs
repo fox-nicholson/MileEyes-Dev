@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace MileEyes.ViewModels
 {
-    class LoginViewModel : ViewModel
+    internal class LoginViewModel : ViewModel
     {
         private string _email;
 
@@ -40,9 +36,6 @@ namespace MileEyes.ViewModels
 
         public LoginViewModel()
         {
-            //Email = "test@123.com";
-            //Password = "Ab.123";
-
             LoginCommand = new Command(Login);
         }
 
@@ -68,8 +61,6 @@ namespace MileEyes.ViewModels
             {
                 LoginSuccess?.Invoke(this, EventArgs.Empty);
 
-//                Device.StartTimer(TimeSpan.FromSeconds(30), waitLogin);
-
                 Busy = false;
 
                 return;
@@ -78,11 +69,6 @@ namespace MileEyes.ViewModels
             LoginFailed?.Invoke(this, result.error_description);
 
             Busy = false;
-        }
-
-        private bool waitLogin()
-        {
-            return false;
         }
     }
 }

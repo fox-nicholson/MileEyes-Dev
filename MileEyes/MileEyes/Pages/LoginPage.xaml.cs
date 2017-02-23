@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MileEyes.ViewModels;
 using Xamarin.Forms;
 
@@ -20,19 +16,13 @@ namespace MileEyes.Pages
         private void LoginPage_LoginSuccess(object sender, EventArgs e)
         {
             (BindingContext as LoginViewModel).Busy = true;
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                await Navigation.PopToRootAsync();
-            });
+            Device.BeginInvokeOnMainThread(async () => { await Navigation.PopToRootAsync(); });
             (BindingContext as LoginViewModel).Busy = false;
         }
 
         private void LoginPage_LoginFailed(object sender, string e)
         {
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                await DisplayAlert("Login Failed", e, "Ok");
-            });
+            Device.BeginInvokeOnMainThread(async () => { await DisplayAlert("Login Failed", e, "Ok"); });
         }
     }
 }

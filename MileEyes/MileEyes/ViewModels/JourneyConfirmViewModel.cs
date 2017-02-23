@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using MileEyes.Services.Extensions;
 using MileEyes.Services.Models;
@@ -12,7 +9,7 @@ using Xamarin.Forms.Maps;
 
 namespace MileEyes.ViewModels
 {
-    class JourneyConfirmViewModel : ViewModel
+    internal class JourneyConfirmViewModel : ViewModel
     {
         private DateTimeOffset _date;
 
@@ -123,7 +120,8 @@ namespace MileEyes.ViewModels
         {
             Date = Services.Host.TrackerService.CurrentWaypoints.OrderBy(w => w.Step).FirstOrDefault().Timestamp;
 
-            Route = new ObservableCollection<Position>(Services.Host.TrackerService.CurrentWaypoints.OrderBy(w => w.Step)
+            Route =
+                new ObservableCollection<Position>(Services.Host.TrackerService.CurrentWaypoints.OrderBy(w => w.Step)
                     .Select(w => new Position(w.Latitude, w.Longitude)));
 
             InitDefaults();
@@ -137,6 +135,9 @@ namespace MileEyes.ViewModels
             var defaultPassengers = Helpers.Settings.DefaultPassengers;
             var defaultReasons = (await Services.Host.ReasonService.GetReasons()).Where(r => r.Default);
             var defaultCompanies = (await Services.Host.CompanyService.GetCompanies()).Where(c => c.Default);
+            var defaultInvoiced = Helpers.Settings.InvoicedDefault;
+
+            Invoiced = defaultInvoiced;
 
             if (defaultVehicles.Any())
             {
@@ -150,16 +151,10 @@ namespace MileEyes.ViewModels
                 };
             }
 
-            if (defaultReasons.Any())
-            {
-                Reason = defaultReasons.FirstOrDefault().Text;
-            }
-            else
-            {
-                Reason = "Required";
-            }
+            Reason = defaultReasons.Any() ? defaultReasons.FirstOrDefault().Text : "Required";
 
             #region Set Passengers
+
             switch (defaultPassengers)
             {
                 case 0:
@@ -170,7 +165,7 @@ namespace MileEyes.ViewModels
                     };
                     break;
                 case 1:
-                    new Passenger()
+                    Passenger = new Passenger()
                     {
                         Name = "One",
                         Number = 1
@@ -198,11 +193,11 @@ namespace MileEyes.ViewModels
                     };
                     break;
             }
+
             #endregion
 
             if (Authenticated)
             {
-
                 if (defaultCompanies.Any())
                 {
                     Company = defaultCompanies.FirstOrDefault();
@@ -280,6 +275,9 @@ namespace MileEyes.ViewModels
             var result = await Services.Host.JourneyService.SaveJourney(journey);
 
             Saved?.Invoke(this, EventArgs.Empty);
+
+            Services.Host.JourneyService.Sync();
+
             Busy = false;
         }
     }

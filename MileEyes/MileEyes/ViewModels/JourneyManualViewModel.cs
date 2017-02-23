@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using MileEyes.CustomControls;
 using MileEyes.Services.Extensions;
 using MileEyes.Services.Models;
 using Xamarin.Forms;
 
 namespace MileEyes.ViewModels
 {
-    class JourneyManualViewModel : ViewModel
+    internal class JourneyManualViewModel : ViewModel
     {
         private DateTime _date;
 
@@ -129,7 +125,7 @@ namespace MileEyes.ViewModels
                 OnPropertyChanged(nameof(Passengers));
             }
         }
-        
+
         private Passenger _passenger;
 
         public Passenger Passenger
@@ -141,7 +137,7 @@ namespace MileEyes.ViewModels
                 OnPropertyChanged(nameof(Passenger));
             }
         }
-        
+
         private bool _sync;
 
         public bool Sync
@@ -159,7 +155,7 @@ namespace MileEyes.ViewModels
         {
             Date = DateTime.UtcNow;
             MaxDate = DateTime.Now;
-            
+
             OriginAddress = new Address()
             {
                 Label = "Required"
@@ -197,16 +193,10 @@ namespace MileEyes.ViewModels
                 };
             }
 
-            if (defaultReasons.Any())
-            {
-                Reason = defaultReasons.FirstOrDefault().Text;
-            }
-            else
-            {
-                Reason = "Required";
-            }
+            Reason = defaultReasons.Any() ? defaultReasons.FirstOrDefault().Text : "Required";
 
             #region Set Passengers
+
             switch (defaultPassengers)
             {
                 case 0:
@@ -217,7 +207,7 @@ namespace MileEyes.ViewModels
                     };
                     break;
                 case 1:
-                    new Passenger()
+                    Passenger = new Passenger()
                     {
                         Name = "One",
                         Number = 1
@@ -245,11 +235,11 @@ namespace MileEyes.ViewModels
                     };
                     break;
             }
+
             #endregion
 
             if (Authenticated)
             {
-
                 if (defaultCompanies.Any())
                 {
                     Company = defaultCompanies.FirstOrDefault();
@@ -357,12 +347,15 @@ namespace MileEyes.ViewModels
             var result = await Services.Host.JourneyService.SaveJourney(journey);
 
             Saved?.Invoke(this, EventArgs.Empty);
+
+            Services.Host.JourneyService.Sync();
+
             Device.StartTimer(TimeSpan.FromSeconds(1), Wait);
         }
 
         public event EventHandler Cancelled = delegate { };
 
-        public async void Cancel()
+        public void Cancel()
         {
             if (Busy) return;
 

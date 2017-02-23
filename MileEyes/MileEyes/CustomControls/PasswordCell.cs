@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 
 namespace MileEyes.CustomControls
 {
@@ -18,7 +13,7 @@ namespace MileEyes.CustomControls
 
         public bool IsPassword
         {
-            get { return (bool)GetValue(IsPasswordProperty); }
+            get { return (bool) GetValue(IsPasswordProperty); }
             set { SetValue(IsPasswordProperty, value); }
         }
     }

@@ -2,20 +2,17 @@
 
 namespace MileEyes.CustomControls
 {
-    class DoubleComparison
+    internal class DoubleComparison
     {
         public static bool isEqual(double double1, double double2)
         {
             // Define the tolerance for variation in their values
-            double difference = Math.Abs(double1 * .00001);
+            var difference = Math.Abs(double1 * .00001);
 
             // Compare the values
-            
-            if (Math.Abs(double1 - double2) <= difference)
-                // The two values are equal
-                return true;
+
+            return Math.Abs(double1 - double2) <= difference;
             // The two values are inequal
-                return false;
         }
     }
 }

@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MileEyes.Services.Models;
+﻿using MileEyes.Services.Models;
 
 namespace MileEyes.ViewModels
 {
-    class CompanyViewModel : ViewModel
+    internal class CompanyViewModel : ViewModel
     {
         private Company _company;
 
@@ -25,7 +20,7 @@ namespace MileEyes.ViewModels
                 OnPropertyChanged(nameof(Id));
             }
         }
-        
+
         private string _cloudId;
 
         public string CloudId
@@ -77,7 +72,7 @@ namespace MileEyes.ViewModels
                 OnPropertyChanged(nameof(Default));
             }
         }
-        
+
         public CompanyViewModel(Company company)
         {
             _company = company;

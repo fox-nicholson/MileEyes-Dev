@@ -1,21 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using MileEyes.Services.Models;
 using Xamarin.Forms;
 
 namespace MileEyes.ViewModels
 {
-    class PassengersSelectionViewModel : ViewModel
+    internal class PassengersSelectionViewModel : ViewModel
     {
         public List<Passenger> Passengers { get; set; } = new List<Passenger>(new[]
         {
             #region Passengers List
-		new Passenger()
+            new Passenger()
             {
                 Name = "Just Me",
                 Number = 0
@@ -24,7 +19,8 @@ namespace MileEyes.ViewModels
             {
                 Name = "One",
                 Number = 1
-            },new Passenger()
+            },
+            new Passenger()
             {
                 Name = "Two",
                 Number = 2
@@ -39,7 +35,7 @@ namespace MileEyes.ViewModels
                 Name = "Four",
                 Number = 4
             } 
-	#endregion
+            #endregion
         });
 
         private Passenger _selectedPassenger;
@@ -81,7 +77,7 @@ namespace MileEyes.ViewModels
         }
     }
 
-    class Passenger : ViewModel
+    internal class Passenger : ViewModel
     {
         private string _name;
 
@@ -97,7 +93,9 @@ namespace MileEyes.ViewModels
         }
 
         private int _number;
-        public int Number {
+
+        public int Number
+        {
             get { return _number; }
             set
             {

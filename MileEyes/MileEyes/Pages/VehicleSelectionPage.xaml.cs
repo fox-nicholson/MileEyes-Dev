@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MileEyes.ViewModels;
 using Xamarin.Forms;
 
@@ -27,12 +23,10 @@ namespace MileEyes.Pages
                 if (choice)
                 {
                     var addVehiclePage = new VehicleAddPage();
-                    (addVehiclePage.BindingContext as VehicleViewModel).VehicleSaved += VehicleSelectionPage_VehicleSaved;
+                    (addVehiclePage.BindingContext as VehicleViewModel).VehicleSaved +=
+                        VehicleSelectionPage_VehicleSaved;
 
-                    Device.BeginInvokeOnMainThread(async () =>
-                    {
-                        await Navigation.PushAsync(addVehiclePage);
-                    });
+                    Device.BeginInvokeOnMainThread(async () => { await Navigation.PushAsync(addVehiclePage); });
                 }
                 else
                 {

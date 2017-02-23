@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MileEyes.Services.Models;
+﻿using MileEyes.Services.Models;
 
 namespace MileEyes.ViewModels
 {
-    class EngineTypeViewModel : ViewModel
+    internal class EngineTypeViewModel : ViewModel
     {
         private EngineType _engineType;
 

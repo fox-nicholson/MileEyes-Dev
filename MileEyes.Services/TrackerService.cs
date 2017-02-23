@@ -143,7 +143,7 @@ namespace MileEyes.Services
 
         public async Task Cancel()
         {
-            await Plugin.Geolocator.CrossGeolocator.Current.StopListeningAsync();
+            Plugin.Geolocator.CrossGeolocator.Current.StopListeningAsync();
 
             await Reset();
 

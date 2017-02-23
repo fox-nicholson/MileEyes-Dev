@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Xamarin.Forms;
 
 namespace MileEyes.Pages
@@ -19,10 +14,11 @@ namespace MileEyes.Pages
 
         private void EngineTypeService_SyncFailed(object sender, EventArgs e)
         {
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                await DisplayAlert("Engine Types", "We had trouble retrieving the list of Engine types", "Ok");
-            });
+            Device.BeginInvokeOnMainThread(
+                async () =>
+                {
+                    await DisplayAlert("Engine Types", "We had trouble retrieving the list of Engine types", "Ok");
+                });
         }
     }
 }

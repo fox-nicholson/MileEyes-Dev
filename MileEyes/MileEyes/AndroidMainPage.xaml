@@ -1,24 +1,25 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:MileEyes"
-             xmlns:pages="clr-namespace:MileEyes.Pages;assembly=MileEyes"
-             x:Class="MileEyes.AndroidMainPage" BackgroundColor="#58C0EE" BarBackgroundColor="#58C0EE">
-  <NavigationPage Title="My Journeys" BarBackgroundColor="#53B5F0" BarTextColor="White" >
-    <x:Arguments>
-      <pages:JourneysPage/>
-    </x:Arguments>
-  </NavigationPage>
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            xmlns:local="clr-namespace:MileEyes"
+            xmlns:pages="clr-namespace:MileEyes.Pages;assembly=MileEyes"
+            x:Class="MileEyes.AndroidMainPage" BackgroundColor="#58C0EE" BarBackgroundColor="#58C0EE">
+    <NavigationPage Title="My Journeys" BarBackgroundColor="#53B5F0" BarTextColor="White">
+        <x:Arguments>
+            <pages:JourneysPage />
+        </x:Arguments>
+    </NavigationPage>
 
-  <NavigationPage Title="Track Journey" BarBackgroundColor="#53B5F0" BarTextColor="White">
-    <x:Arguments>
-      <pages:TrackPage/>
-    </x:Arguments>
-  </NavigationPage>
+    <NavigationPage Title="Track Journey" BarBackgroundColor="#53B5F0" BarTextColor="White">
+        <x:Arguments>
+            <pages:TrackPage />
+        </x:Arguments>
+    </NavigationPage>
 
-  <NavigationPage Title="My Settings" BarBackgroundColor="#53B5F0" BarTextColor="White">
-    <x:Arguments>
-      <pages:SettingsPage/>
-    </x:Arguments>
-  </NavigationPage>
+    <NavigationPage Title="My Settings" BarBackgroundColor="#53B5F0" BarTextColor="White">
+        <x:Arguments>
+            <pages:SettingsPage />
+        </x:Arguments>
+    </NavigationPage>
 </TabbedPage>

@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using MileEyes.Services.Models;
 using Xamarin.Forms;
 
 namespace MileEyes.ViewModels
 {
-    class CloudViewModel : ViewModel
+    internal class CloudViewModel : ViewModel
     {
         private string _firstName;
 
@@ -25,6 +21,7 @@ namespace MileEyes.ViewModels
         }
 
         private string _lastName;
+
         public string LastName
         {
             get { return _lastName; }
@@ -37,6 +34,7 @@ namespace MileEyes.ViewModels
         }
 
         private string _email;
+
         public string Email
         {
             get { return _email; }
@@ -49,6 +47,7 @@ namespace MileEyes.ViewModels
         }
 
         private Address _address;
+
         public Address Address
         {
             get { return _address; }
@@ -135,7 +134,9 @@ namespace MileEyes.ViewModels
             Busy = true;
 
             Services.Host.AuthService.Logout();
-            Busy = false;
+
+            var model = new SettingsViewModel();
+            model.InvoicedDefault = false;
 
             LoggedOut?.Invoke(this, EventArgs.Empty);
             Busy = false;
