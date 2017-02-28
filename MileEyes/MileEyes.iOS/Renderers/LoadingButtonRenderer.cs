@@ -20,20 +20,12 @@ namespace MileEyes.iOS.Renderers
 
             var elementHeight = 0.00;
 
-            if (Element.MinimumHeightRequest > 1)
-                elementHeight = Element.MinimumHeightRequest;
-            else
-                elementHeight = 125.00;
+            elementHeight = Element.MinimumHeightRequest > 1 ? Element.MinimumHeightRequest : 125.00;
 
             // Adjust frame size to make it perfectly square
             Control.Layer.Frame = new CGRect(0, 0, elementHeight, elementHeight);
             Control.Superview.Bounds = Control.Layer.Frame;
-
-            // Align Control in Superview
-            //Control.VerticalAlignment = UIControlContentVerticalAlignment.Center;
-            //Control.HorizontalAlignment = UIControlContentHorizontalAlignment.Center;
-
-
+            
             // Make longer labels break on to multiple lines
             Control.TitleLabel.LineBreakMode = UILineBreakMode.WordWrap;
             Control.TitleLabel.TextAlignment = UITextAlignment.Center;
@@ -53,7 +45,6 @@ namespace MileEyes.iOS.Renderers
             // Create circle background color
             var textColor = Element.TextColor.ToUIColor();
             var backgroundColor = textColor.ColorWithAlpha(0.5f);
-            //Control.Layer.BackgroundColor = new CGColor(0.0f, 0.0f, 0.0f, 0.2f);
 
 
             if (circleLayer != null) return;
@@ -80,16 +71,16 @@ namespace MileEyes.iOS.Renderers
             Control.Layer.InsertSublayer(staticCircleLayer, 0);
         }
 
-        private CAShapeLayer createOuterCircle(CGRect circleSize, UIColor color)
+        private static CAShapeLayer createOuterCircle(CGRect circleSize, UIColor color)
         {
-            var circleConstructor = new CAShapeLayer();
-
-            circleConstructor.Path = UIBezierPath.FromOval(circleSize).CGPath;
-
-            circleConstructor.Frame = circleSize;
-
-            var circleAnchorPoint = new CGPoint(circleConstructor.Frame.GetMidX()/circleConstructor.Frame.GetMaxX(),
-                circleConstructor.Frame.GetMidY()/circleConstructor.Frame.GetMaxY());
+            var circleConstructor = new CAShapeLayer
+            {
+                Path = UIBezierPath.FromOval(circleSize).CGPath,
+                Frame = circleSize
+            };
+            
+            var circleAnchorPoint = new CGPoint(circleConstructor.Frame.GetMidX() / circleConstructor.Frame.GetMaxX(),
+                circleConstructor.Frame.GetMidY() / circleConstructor.Frame.GetMaxY());
 
             circleConstructor.AnchorPoint = circleAnchorPoint;
 

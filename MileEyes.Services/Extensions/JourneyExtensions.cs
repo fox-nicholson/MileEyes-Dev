@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿ using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using MileEyes.Services.Models;
-using Xamarin.Forms;
 
 namespace MileEyes.Services.Extensions
 {
@@ -64,8 +61,8 @@ namespace MileEyes.Services.Extensions
                 if (string.IsNullOrEmpty(start.PlaceId) && string.IsNullOrEmpty(end.PlaceId))
                 {
                     d = await Host.GeocodingService.GetDistanceFromGoogle(
-                        new[] { start.Latitude, start.Longitude },
-                        new[] { end.Latitude, end.Longitude });
+                        new[] {start.Latitude, start.Longitude},
+                        new[] {end.Latitude, end.Longitude});
                 }
                 else
                 {
@@ -81,7 +78,6 @@ namespace MileEyes.Services.Extensions
 
             return d;
         }
-
 
 
         public static double CalculateBetweenLegs(Coordinates origin, Coordinates destination)

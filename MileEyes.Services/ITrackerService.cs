@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using MileEyes.Services.Models;
 using Plugin.Geolocator.Abstractions;
@@ -14,7 +12,7 @@ namespace MileEyes.Services
         double CurrentDistance { get; }
 
         IEnumerable<Waypoint> CurrentWaypoints { get; }
-        
+
         event EventHandler HasMoved;
         event EventHandler Started;
         event EventHandler Cancelled;

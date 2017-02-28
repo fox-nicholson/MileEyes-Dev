@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using MileEyes.Services.Models;
 using Newtonsoft.Json;
@@ -25,13 +23,13 @@ namespace MileEyes.Services
 
             if (string.IsNullOrEmpty(response))
             {
-                return new Address[1] {new Address() {PlaceId = "", Label = "Unknown Address"}};
+                return new[] {new Address() {PlaceId = "", Label = "Unknown Address"}};
             }
 
             var result = JsonConvert.DeserializeObject<ReverseGeocodeResult>(response);
 
             if (!result.results.Any())
-                return new Address[1] {new Address() {PlaceId = "", Label = "Unknown Address"}};
+                return new[] {new Address() {PlaceId = "", Label = "Unknown Address"}};
 
             return result.results.Select(a => new Address()
             {
@@ -144,19 +142,17 @@ namespace MileEyes.Services
                     };
                 }
             }
-            else
-            {
-                if (geocodeResult.results == null || geocodeResult.results.Length < 1) return null;
 
-                var geoResult = geocodeResult.results[0];
-                return new Address()
-                {
-                    PlaceId = geoResult.place_id,
-                    Label = geoResult.formatted_address,
-                    Latitude = geoResult.geometry.location.lat,
-                    Longitude = geoResult.geometry.location.lng
-                };
-            }
+            if (geocodeResult.results == null || geocodeResult.results.Length < 1) return null;
+
+            var geoResult = geocodeResult.results[0];
+            return new Address()
+            {
+                PlaceId = geoResult.place_id,
+                Label = geoResult.formatted_address,
+                Latitude = geoResult.geometry.location.lat,
+                Longitude = geoResult.geometry.location.lng
+            };
         }
 
         public async Task<double[]> GetCoordinates(string placeId)
@@ -201,33 +197,21 @@ namespace MileEyes.Services
             {
                 return "Unknown Location";
             }
-            else
-            {
-                var postalTown = result.address_components.FirstOrDefault(a => a.types.Contains("postal_town"));
 
-                if (postalTown == null)
-                {
-                    var locality = result.address_components.FirstOrDefault(a => a.types.Contains("locality"));
+            var postalTown = result.address_components.FirstOrDefault(a => a.types.Contains("postal_town"));
 
-                    if (locality == null)
-                    {
-                        var administrativeLevel =
-                            result.address_components.FirstOrDefault(
-                                a => a.types.Contains("administrative_area_level_2"));
+            if (postalTown != null)
+                return result.address_components.First(a => a.types.Contains("postal_town")).long_name;
 
-                        return administrativeLevel == null ? "Unknown Location" : administrativeLevel.long_name;
-                    }
-                    else
-                    {
-                        return locality.long_name;
-                    }
-                }
-                else
-                {
-                    return result.address_components.First(a => a.types.Contains("postal_town")).long_name;
-                }
-            }
-            ;
+            var locality = result.address_components.FirstOrDefault(a => a.types.Contains("locality"));
+
+            if (locality != null) return locality.long_name;
+
+            var administrativeLevel =
+                result.address_components.FirstOrDefault(
+                    a => a.types.Contains("administrative_area_level_2"));
+
+            return administrativeLevel == null ? "Unknown Location" : administrativeLevel.long_name;
         }
 
         public async Task<double> GetDistanceFromGoogle(double[] origin, double[] destination)

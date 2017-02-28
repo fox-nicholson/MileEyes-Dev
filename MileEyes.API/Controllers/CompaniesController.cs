@@ -182,6 +182,11 @@ namespace MileEyes.API.Controllers
             newCompany.Profiles.Add(manager);
             newCompany.Profiles.Add(accountant);
 
+            user.Profiles.Add(owner);
+            user.Profiles.Add(driver);
+            user.Profiles.Add(manager);
+            user.Profiles.Add(accountant);
+
             db.Companies.Add(newCompany);
 
             // Save the changes

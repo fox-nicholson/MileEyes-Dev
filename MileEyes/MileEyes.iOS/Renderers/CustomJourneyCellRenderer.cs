@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using MileEyes.CustomControls;
+using MileEyes.iOS.Renderers;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
-using MileEyes.iOS.Renderers;
-using MileEyes.CustomControls;
 
 [assembly: ExportRenderer(typeof(CustomJourneyCell), typeof(CustomJourneyCellRenderer))]
+
 namespace MileEyes.iOS.Renderers
 {
     public class CustomJourneyCellRenderer : ViewCellRenderer

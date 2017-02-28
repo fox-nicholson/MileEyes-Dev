@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using MileEyes.Services.Models;
 
@@ -13,12 +11,7 @@ namespace MileEyes.Services
         {
             return DatabaseService.Realm.All<Reason>();
         }
-
-        public ReasonService()
-        {
-
-        }
-
+        
         public async Task<Reason> GetReason(string id)
         {
             return DatabaseService.Realm.ObjectForPrimaryKey<Reason>(id);

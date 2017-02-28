@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CoreGraphics;
-using MileEyes.CustomControls;
+﻿using MileEyes.CustomControls;
 using MileEyes.iOS.Renderers;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
-[assembly:ExportRenderer(typeof(BlurStackLayout), typeof(BlurStackLayoutRenderer))]
+[assembly: ExportRenderer(typeof(BlurStackLayout), typeof(BlurStackLayoutRenderer))]
+
 namespace MileEyes.iOS.Renderers
 {
     class BlurStackLayoutRenderer : ViewRenderer<BlurStackLayout, UIView>
@@ -16,23 +13,20 @@ namespace MileEyes.iOS.Renderers
         protected override void OnElementChanged(ElementChangedEventArgs<BlurStackLayout> e)
         {
             base.OnElementChanged(e);
-            
-            if (Control != null)
-            {
-                Control.BackgroundColor = UIColor.Clear;
 
-                var blur = UIBlurEffect.FromStyle(UIBlurEffectStyle.ExtraDark);
-                var blurView = new UIVisualEffectView(blur);
+            if (Control == null) return;
+            Control.BackgroundColor = UIColor.Clear;
 
-                blurView.Frame = Control.Frame;
+            var blur = UIBlurEffect.FromStyle(UIBlurEffectStyle.ExtraDark);
+            var blurView = new UIVisualEffectView(blur) {Frame = Control.Frame};
 
-                blurView.Layer.CornerRadius = e.NewElement.CornerRadius;
-                blurView.Layer.MasksToBounds = true;
 
-                Control.InsertSubview(blurView, 0);
+            blurView.Layer.CornerRadius = e.NewElement.CornerRadius;
+            blurView.Layer.MasksToBounds = true;
 
-                SetNeedsDisplay();
-            }
+            Control.InsertSubview(blurView, 0);
+
+            SetNeedsDisplay();
         }
     }
 }

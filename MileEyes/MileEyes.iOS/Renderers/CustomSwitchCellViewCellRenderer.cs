@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MileEyes.CustomControls;
+﻿using MileEyes.CustomControls;
 using MileEyes.iOS.Renderers;
 using UIKit;
 using Xamarin.Forms;
@@ -9,8 +6,8 @@ using Xamarin.Forms.Platform.iOS;
 
 [assembly: ExportRenderer(typeof(DefaultInvoicedViewCell), typeof(CustomSwitchCellViewCellRenderer))]
 [assembly: ExportRenderer(typeof(InvoicedViewCell), typeof(CustomSwitchCellViewCellRenderer))]
-
 [assembly: ExportRenderer(typeof(CloudSyncViewCell), typeof(CustomSwitchCellViewCellRenderer))]
+
 namespace MileEyes.iOS.Renderers
 {
     class CustomSwitchCellViewCellRenderer : ViewCellRenderer

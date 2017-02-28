@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+﻿using System.ComponentModel;
 using MileEyes.CustomControls;
 using MileEyes.iOS.Renderers;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
-[assembly:ExportRenderer(typeof(ManualButton),typeof(ManualButtonRenderer))]
+[assembly: ExportRenderer(typeof(ManualButton), typeof(ManualButtonRenderer))]
+
 namespace MileEyes.iOS.Renderers
 {
     class ManualButtonRenderer : ButtonRenderer
@@ -17,7 +15,7 @@ namespace MileEyes.iOS.Renderers
         {
             base.OnElementPropertyChanged(sender, e);
 
-            Control.ContentEdgeInsets = new UIEdgeInsets(10,15,10,15);
+            Control.ContentEdgeInsets = new UIEdgeInsets(10, 15, 10, 15);
         }
     }
 }

@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CoreGraphics;
+﻿using System.Collections.Generic;
 using MileEyes.iOS.Renderers;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
 [assembly: ExportRenderer(typeof(ContentPage), typeof(ContentPageRenderer))]
+
 namespace MileEyes.iOS.Renderers
 {
     class ContentPageRenderer : PageRenderer
     {
-        public new ContentPage Element => (ContentPage)base.Element;
+        public new ContentPage Element => (ContentPage) base.Element;
 
         private List<UIBarButtonItem> leftNavList;
         private List<UIBarButtonItem> rightNavList;
@@ -34,7 +31,7 @@ namespace MileEyes.iOS.Renderers
 
                 for (var i = 0; i < Element.ToolbarItems.Count; i++)
                 {
-                    var reorder = (Element.ToolbarItems.Count - 1);
+                    var reorder = Element.ToolbarItems.Count - 1;
                     var itemPriority = Element.ToolbarItems[reorder - i].Priority;
 
                     var toolbatItem = Element.ToolbarItems[i];
@@ -54,41 +51,41 @@ namespace MileEyes.iOS.Renderers
                             switch (rightNavItems.Title)
                             {
                                 case "Share":
+                                {
+                                    var newItem = new UIBarButtonItem(UIBarButtonSystemItem.Action)
                                     {
-                                        var newItem = new UIBarButtonItem(UIBarButtonSystemItem.Action)
-                                        {
-                                            Action = rightNavItems.Action,
-                                            Target = rightNavItems.Target,
-                                            TintColor = UIColor.Green
-                                        };
-                                        rightNavList.Add(newItem);
-                                    }
+                                        Action = rightNavItems.Action,
+                                        Target = rightNavItems.Target,
+                                        TintColor = UIColor.Green
+                                    };
+                                    rightNavList.Add(newItem);
+                                }
                                     break;
                                 case "Save":
+                                {
+                                    var newItem = new UIBarButtonItem(UIBarButtonSystemItem.Save)
                                     {
-                                        var newItem = new UIBarButtonItem(UIBarButtonSystemItem.Save)
-                                        {
-                                            Action = rightNavItems.Action,
-                                            Target = rightNavItems.Target,
-                                            TintColor = UIColor.Green
-                                        };
-                                        rightNavList.Add(newItem);
-                                    }
+                                        Action = rightNavItems.Action,
+                                        Target = rightNavItems.Target,
+                                        TintColor = UIColor.Green
+                                    };
+                                    rightNavList.Add(newItem);
+                                }
                                     break;
                                 case "Done":
                                     rightNavItems.TintColor = UIColor.Green;
                                     rightNavList.Add(rightNavItems);
                                     break;
                                 case "Add":
+                                {
+                                    var newItem = new UIBarButtonItem(UIBarButtonSystemItem.Add)
                                     {
-                                        var newItem = new UIBarButtonItem(UIBarButtonSystemItem.Add)
-                                        {
-                                            Action = rightNavItems.Action,
-                                            Target = rightNavItems.Target,
-                                            TintColor = UIColor.Green
-                                        };
-                                        rightNavList.Add(newItem);
-                                    }
+                                        Action = rightNavItems.Action,
+                                        Target = rightNavItems.Target,
+                                        TintColor = UIColor.Green
+                                    };
+                                    rightNavList.Add(newItem);
+                                }
                                     break;
                                 default:
                                     rightNavList.Add(rightNavItems);
@@ -101,11 +98,6 @@ namespace MileEyes.iOS.Renderers
 
             navigationItem.SetLeftBarButtonItems(leftNavList.ToArray(), false);
             navigationItem.SetRightBarButtonItems(rightNavList.ToArray(), false);
-        }
-
-        public override void ViewDidAppear(bool animated)
-        {
-            base.ViewDidAppear(animated);
         }
     }
 }

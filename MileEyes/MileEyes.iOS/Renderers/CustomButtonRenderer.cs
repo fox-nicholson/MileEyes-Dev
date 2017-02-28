@@ -24,10 +24,7 @@ namespace MileEyes.iOS.Renderers
             base.OnElementChanged(e);
             if (e.NewElement != null)
             {
-                if (Element.HeightRequest > 1)
-                    elementHeight = Element.HeightRequest;
-                else
-                    elementHeight = 125.00;
+                elementHeight = Element.HeightRequest > 1 ? Element.HeightRequest : 125.00;
 
                 textColor = Element.TextColor.ToUIColor();
                 backgroundColor = textColor.ColorWithAlpha(0.5f);
@@ -41,14 +38,14 @@ namespace MileEyes.iOS.Renderers
             {
                 if (Element == null) return;
 
-                    // Create ripple 1 circle
-                    outerCircleLayer = createOuterCircle(Control.Layer.Frame, backgroundColor);
+                // Create ripple 1 circle
+                outerCircleLayer = createOuterCircle(Control.Layer.Frame, backgroundColor);
 
                 Control.Layer.InsertSublayer(outerCircleLayer, 0);
 
 
-                    // Create ripple 2 circle
-                    rippleCircleLayer = createOuterCircle(Control.Layer.Frame, backgroundColor);
+                // Create ripple 2 circle
+                rippleCircleLayer = createOuterCircle(Control.Layer.Frame, backgroundColor);
 
                 Control.Layer.InsertSublayer(rippleCircleLayer, 0);
 
@@ -62,7 +59,6 @@ namespace MileEyes.iOS.Renderers
         public override void LayoutSubviews()
         {
             base.LayoutSubviews();
-
 
 
             // Adjust frame size to make it perfectly square
@@ -83,32 +79,30 @@ namespace MileEyes.iOS.Renderers
 
             //Control.Layer.BackgroundColor = new CGColor(0.0f, 0.0f, 0.0f, 0.2f);
 
-            if (circleLayer == null)
+            if (circleLayer != null) return;
+            // Create inner circle
+            circleLayer = new CAShapeLayer
             {
-                // Create inner circle
-                circleLayer = new CAShapeLayer
-                {
-                    Path =
-                        UIBezierPath.FromOval(new CGRect(3, 3, Control.Layer.Frame.Width - 6,
-                                Control.Layer.Frame.Height - 6))
-                            .CGPath,
-                    FillColor = backgroundColor.CGColor,
-                    Position = new CGPoint(0, 0)
-                };
+                Path =
+                    UIBezierPath.FromOval(new CGRect(3, 3, Control.Layer.Frame.Width - 6,
+                            Control.Layer.Frame.Height - 6))
+                        .CGPath,
+                FillColor = backgroundColor.CGColor,
+                Position = new CGPoint(0, 0)
+            };
 
-                Control.Layer.InsertSublayer(circleLayer, 0);
+            Control.Layer.InsertSublayer(circleLayer, 0);
 
 
-                // Creater static outer circle
-                var staticCircleLayer = createOuterCircle(Control.Layer.Frame, backgroundColor);
+            // Creater static outer circle
+            var staticCircleLayer = createOuterCircle(Control.Layer.Frame, backgroundColor);
 
-                staticCircleLayer.Opacity = 1;
+            staticCircleLayer.Opacity = 1;
 
-                Control.Layer.InsertSublayer(staticCircleLayer, 0);
-            }
+            Control.Layer.InsertSublayer(staticCircleLayer, 0);
         }
 
-        private CAShapeLayer createOuterCircle(CGRect circleSize, UIColor color)
+        private static CAShapeLayer createOuterCircle(CGRect circleSize, UIColor color)
         {
             var circleConstructor = new CAShapeLayer
             {
@@ -154,7 +148,7 @@ namespace MileEyes.iOS.Renderers
                 RemovedOnCompletion = true,
                 FillMode = CAFillMode.Both,
                 TimingFunction = CAMediaTimingFunction.FromName(CAMediaTimingFunction.EaseOut),
-                Animations = new CAAnimation[] { scaleAnimation, opacityAnimation }
+                Animations = new CAAnimation[] {scaleAnimation, opacityAnimation}
             };
 
 
@@ -181,7 +175,7 @@ namespace MileEyes.iOS.Renderers
                 RemovedOnCompletion = true,
                 FillMode = CAFillMode.Both,
                 TimingFunction = CAMediaTimingFunction.FromName(CAMediaTimingFunction.EaseOut),
-                Animations = new CAAnimation[] { scaleAnimation, opacityAnimation }
+                Animations = new CAAnimation[] {scaleAnimation, opacityAnimation}
             };
 
 

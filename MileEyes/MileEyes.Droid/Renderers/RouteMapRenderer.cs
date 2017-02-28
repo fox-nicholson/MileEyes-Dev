@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Android.Gms.Maps;
@@ -11,30 +10,30 @@ using Xamarin.Forms.Maps.Android;
 using Xamarin.Forms.Platform.Android;
 
 [assembly: ExportRenderer(typeof(RouteMap), typeof(RouteMapRenderer))]
+
 namespace MileEyes.Droid.Renderers
 {
     public class RouteMapRenderer : MapRenderer, IOnMapReadyCallback
     {
-        GoogleMap map;
-        ObservableCollection<Position> routeCoordinates;
+        private GoogleMap _map;
+        private ObservableCollection<Position> _routeCoordinates;
         private Polyline polyline;
 
         protected override void OnElementChanged(ElementChangedEventArgs<Map> e)
         {
             base.OnElementChanged(e);
-            
+
             if (e.OldElement != null)
             {
                 // Unsubscribe
             }
 
-            if (e.NewElement != null)
-            {
-                var formsMap = (RouteMap)e.NewElement;
-                routeCoordinates = formsMap.RouteCoordinates;
+            if (e.NewElement == null) return;
 
-                ((MapView)Control).GetMapAsync(this);
-            }
+            var formsMap = (RouteMap) e.NewElement;
+            _routeCoordinates = formsMap.RouteCoordinates;
+
+            ((MapView) Control).GetMapAsync(this);
         }
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -54,27 +53,27 @@ namespace MileEyes.Droid.Renderers
             var polylineOptions = new PolylineOptions();
             polylineOptions.InvokeColor(0x66FF0000);
 
-            foreach (var position in routeCoordinates)
+            foreach (var position in _routeCoordinates)
             {
                 polylineOptions.Add(new LatLng(position.Latitude, position.Longitude));
             }
 
-            polyline = map.AddPolyline(polylineOptions);
+            polyline = _map.AddPolyline(polylineOptions);
         }
 
         public void OnMapReady(GoogleMap googleMap)
         {
-            map = googleMap;
+            _map = googleMap;
 
             var polylineOptions = new PolylineOptions();
             polylineOptions.InvokeColor(0x66FF0000);
 
-            foreach (var position in routeCoordinates)
+            foreach (var position in _routeCoordinates)
             {
                 polylineOptions.Add(new LatLng(position.Latitude, position.Longitude));
             }
 
-            polyline = map.AddPolyline(polylineOptions);
+            polyline = _map.AddPolyline(polylineOptions);
         }
     }
 }

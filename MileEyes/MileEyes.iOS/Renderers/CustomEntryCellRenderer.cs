@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using Foundation;
 using MileEyes.CustomControls;
 using MileEyes.iOS.Renderers;
@@ -10,6 +7,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
 [assembly: ExportRenderer(typeof(CustomEntryCell), typeof(CustomEntryCellRenderer))]
+
 namespace MileEyes.iOS.Renderers
 {
     class CustomEntryCellRenderer : EntryCellRenderer
@@ -24,18 +22,21 @@ namespace MileEyes.iOS.Renderers
 
             var subviews = cell.Subviews;
 
-            if (textCell != null)
-            {
-                (subviews.FirstOrDefault().Subviews.FirstOrDefault(sv => sv is UILabel)).BackgroundColor = UIColor.Clear;
+            if (textCell == null) return cell;
 
-                var inputColor = textCell.LabelColor.ToUIColor().ColorWithAlpha(0.7f);
-                (subviews.FirstOrDefault().Subviews.FirstOrDefault(sv => sv is UITextField) as UITextField).TextColor = inputColor;
-                (subviews.FirstOrDefault().Subviews.FirstOrDefault(sv => sv is UITextField) as UITextField).AttributedPlaceholder = new NSAttributedString(textCell.Placeholder, null, inputColor.ColorWithAlpha(0.5f));
-                
-                if (textCell.IsPassword)
-                {
-                    (subviews.FirstOrDefault().Subviews.FirstOrDefault(sv => sv is UITextField) as UITextField).SecureTextEntry = true;
-                }
+            subviews.FirstOrDefault().Subviews.FirstOrDefault(sv => sv is UILabel).BackgroundColor = UIColor.Clear;
+
+            var inputColor = textCell.LabelColor.ToUIColor().ColorWithAlpha(0.7f);
+            (subviews.FirstOrDefault().Subviews.FirstOrDefault(sv => sv is UITextField) as UITextField).TextColor =
+                inputColor;
+            (subviews.FirstOrDefault().Subviews.FirstOrDefault(sv => sv is UITextField) as UITextField)
+                .AttributedPlaceholder = new NSAttributedString(textCell.Placeholder, null,
+                    inputColor.ColorWithAlpha(0.5f));
+
+            if (textCell.IsPassword)
+            {
+                (subviews.FirstOrDefault().Subviews.FirstOrDefault(sv => sv is UITextField) as UITextField)
+                    .SecureTextEntry = true;
             }
 
 

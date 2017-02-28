@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using MileEyes.PublicModels;
 using MileEyes.Services.Models;
 
 namespace MileEyes.Services

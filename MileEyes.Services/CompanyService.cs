@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using MileEyes.PublicModels.Company;
 using MileEyes.Services.Models;
@@ -36,7 +35,8 @@ namespace MileEyes.Services
                 }
 
                 var result =
-                    JsonConvert.DeserializeObject<IEnumerable<CompanyViewModel>>(await response.Content.ReadAsStringAsync()).Select(c => new Company()
+                    JsonConvert.DeserializeObject<IEnumerable<CompanyViewModel>>(
+                        await response.Content.ReadAsStringAsync()).Select(c => new Company()
                     {
                         CloudId = c.Id.ToString(),
                         Name = c.Name,
@@ -73,7 +73,7 @@ namespace MileEyes.Services
                         using (var transaction = DatabaseService.Realm.BeginWrite())
                         {
                             var existingCompany = DatabaseService.Realm.ObjectForPrimaryKey<Company>(currentCompany.Id);
-                            
+
                             existingCompany.Name = company.Name;
                             existingCompany.Personal = company.Personal;
 

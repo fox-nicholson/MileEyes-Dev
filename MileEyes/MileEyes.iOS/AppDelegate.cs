@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
 using Foundation;
 using MileEyes.Services.Models;
 using UIKit;
@@ -13,7 +10,7 @@ namespace MileEyes.iOS
     // User Interface of the application, as well as listening (and optionally responding) to 
     // application events from iOS.
     [Register("AppDelegate")]
-    public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
+    public class AppDelegate : Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
     {
         //
         // This method is invoked when the application has loaded and is ready to run. In this 
@@ -24,16 +21,16 @@ namespace MileEyes.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
-            global::Xamarin.Forms.Forms.Init();
-            global::Xamarin.FormsMaps.Init();
+            Forms.Init();
+            Xamarin.FormsMaps.Init();
             LoadApplication(new App());
 
-            MessagingCenter.Subscribe<SharedJourney>(this, "Share", Share, null);
+            MessagingCenter.Subscribe<SharedJourney>(this, "Share", Share);
 
             return base.FinishedLaunching(app, options);
         }
 
-        private void Share(SharedJourney journey)
+        private static void Share(SharedJourney journey)
         {
             //var item = new Models.SharedJourney()
             //{
@@ -68,7 +65,7 @@ namespace MileEyes.iOS
                 "Passengers: " + journey.Passengers + Environment.NewLine +
                 "Invoiced: " + invoiced);
 
-            var activityItems = new[] { item };
+            var activityItems = new[] {item};
             var activityController = new UIActivityViewController(activityItems, null);
 
             var topController = UIApplication.SharedApplication.KeyWindow.RootViewController;

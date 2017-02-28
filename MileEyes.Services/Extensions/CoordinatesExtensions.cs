@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MileEyes.Services.Models;
 
 namespace MileEyes.Services.Extensions
@@ -14,14 +10,15 @@ namespace MileEyes.Services.Extensions
             return DistanceTo(baseCoordinates, targetCoordinates, UnitOfLength.Meters);
         }
 
-        public static double DistanceTo(this Coordinates baseCoordinates, Coordinates targetCoordinates, UnitOfLength unitOfLength)
+        public static double DistanceTo(this Coordinates baseCoordinates, Coordinates targetCoordinates,
+            UnitOfLength unitOfLength)
         {
             var baseRad = Math.PI * baseCoordinates.Latitude / 180;
             var targetRad = Math.PI * targetCoordinates.Latitude / 180;
             var theta = baseCoordinates.Longitude - targetCoordinates.Longitude;
             var thetaRad = Math.PI * theta / 180;
 
-            double dist =
+            var dist =
                 Math.Sin(baseRad) * Math.Sin(targetRad) + Math.Cos(baseRad) *
                 Math.Cos(targetRad) * Math.Cos(thetaRad);
             dist = Math.Acos(dist);
@@ -40,10 +37,17 @@ namespace MileEyes.Services.Extensions
             var bx = Math.Cos(Helpers.TrigHelpers.Deg2Rad(posB.Latitude)) * Math.Cos(dLon);
             var by = Math.Cos(Helpers.TrigHelpers.Deg2Rad(posB.Latitude)) * Math.Sin(dLon);
 
-            midPoint.Latitude = Helpers.TrigHelpers.Rad2Deg(Math.Atan2(Math.Sin(Helpers.TrigHelpers.Deg2Rad(posA.Latitude)) + Math.Sin(Helpers.TrigHelpers.Deg2Rad(posB.Latitude)),
-                         Math.Sqrt((Math.Cos(Helpers.TrigHelpers.Deg2Rad(posA.Latitude)) + bx) * (Math.Cos(Helpers.TrigHelpers.Deg2Rad(posA.Latitude))) + bx) + by * by));
+            midPoint.Latitude =
+                Helpers.TrigHelpers.Rad2Deg(
+                    Math.Atan2(
+                        Math.Sin(Helpers.TrigHelpers.Deg2Rad(posA.Latitude)) +
+                        Math.Sin(Helpers.TrigHelpers.Deg2Rad(posB.Latitude)),
+                        Math.Sqrt((Math.Cos(Helpers.TrigHelpers.Deg2Rad(posA.Latitude)) + bx) *
+                                  Math.Cos(Helpers.TrigHelpers.Deg2Rad(posA.Latitude)) + bx) + by * by));
 
-            midPoint.Longitude = posA.Longitude + Helpers.TrigHelpers.Rad2Deg(Math.Atan2(by, Math.Cos(Helpers.TrigHelpers.Deg2Rad(posA.Latitude)) + bx));
+            midPoint.Longitude = posA.Longitude +
+                                 Helpers.TrigHelpers.Rad2Deg(Math.Atan2(by,
+                                     Math.Cos(Helpers.TrigHelpers.Deg2Rad(posA.Latitude)) + bx));
 
             return midPoint;
         }

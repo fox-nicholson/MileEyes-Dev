@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,19 +25,13 @@ namespace MileEyes.Services
             {
                 var response = await RestService.Client.PostAsync("account/userinfo", data);
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    var errorResult =
-                        JsonConvert.DeserializeObject<UserInfoResponse>(await response.Content.ReadAsStringAsync());
+                if (response.IsSuccessStatusCode) return new UserInfoResponse();
+                var errorResult =
+                    JsonConvert.DeserializeObject<UserInfoResponse>(await response.Content.ReadAsStringAsync());
 
-                    errorResult.Error = true;
+                errorResult.Error = true;
 
-                    return errorResult;
-                }
-                else
-                {
-                    return new UserInfoResponse();
-                }
+                return errorResult;
             }
 
             catch (Exception ex)

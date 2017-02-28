@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CoreGraphics;
 using Foundation;
 using MileEyes.CustomControls;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
-[assembly: ExportRenderer(typeof(MileEyes.CustomControls.CustomDatePicker), typeof(MileEyes.iOS.Renderers.CustomDatePickerRenderer))]
+[assembly:
+    ExportRenderer(typeof(MileEyes.CustomControls.CustomDatePicker),
+        typeof(MileEyes.iOS.Renderers.CustomDatePickerRenderer))]
+
 namespace MileEyes.iOS.Renderers
 {
     class CustomDatePickerRenderer : ViewRenderer<CustomDatePicker, UIDatePicker>
@@ -24,11 +24,10 @@ namespace MileEyes.iOS.Renderers
             if (Control == null)
             {
                 var frame = e.NewElement.Bounds;
-                uiDatePicker = new UIDatePicker(frame.ToRectangleF());
-                uiDatePicker.Mode = UIDatePickerMode.Date;
+                uiDatePicker = new UIDatePicker(frame.ToRectangleF()) {Mode = UIDatePickerMode.Date};
 
-                uiDatePicker.SetValueForKey(e.NewElement.TextColor.ToUIColor(), (NSString)"textColor");
-                
+                uiDatePicker.SetValueForKey(e.NewElement.TextColor.ToUIColor(), (NSString) "textColor");
+
 
                 SetNativeControl(uiDatePicker);
             }
@@ -40,13 +39,11 @@ namespace MileEyes.iOS.Renderers
 
                 Control.ValueChanged -= Control_ValueChanged;
             }
-            if (e.NewElement != null)
-            {
-                // Subscribe
-                dp = e.NewElement;
+            if (e.NewElement == null) return;
+            // Subscribe
+            dp = e.NewElement;
 
-                Control.ValueChanged += Control_ValueChanged;
-            }
+            Control.ValueChanged += Control_ValueChanged;
         }
 
         private void Control_ValueChanged(object sender, EventArgs e)

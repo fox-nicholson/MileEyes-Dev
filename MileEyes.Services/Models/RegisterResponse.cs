@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace MileEyes.Services.Models
 {
@@ -16,14 +11,19 @@ namespace MileEyes.Services.Models
     {
         [JsonProperty("")]
         public string[] _ { get; set; }
+
         [JsonProperty("model.FirstName")]
         public string[] FirstName { get; set; }
+
         [JsonProperty("model.LastName")]
         public string[] LastName { get; set; }
+
         [JsonProperty("model.Email")]
         public string[] Email { get; set; }
+
         [JsonProperty("model.Password")]
         public string[] Password { get; set; }
+
         [JsonProperty("model.PlaceId")]
         public string[] PlaceId { get; set; }
     }

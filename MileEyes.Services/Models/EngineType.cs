@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Realms;
+﻿using Realms;
 
 namespace MileEyes.Services.Models
 {
@@ -11,6 +6,7 @@ namespace MileEyes.Services.Models
     {
         [PrimaryKey]
         public string Id { get; set; }
+
         public string CloudId { get; set; }
         public string Name { get; set; }
     }

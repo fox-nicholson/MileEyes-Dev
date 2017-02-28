@@ -457,6 +457,10 @@
       <Project>{5792f6ee-d9c2-40a0-bb1a-e3a2c1b81a01}</Project>
       <Name>MileEyes.PublicModels</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MileEyes.Services\MileEyes.Services.csproj">
+      <Project>{67f9d3a8-f71e-4428-913f-c37ae82cdb24}</Project>
+      <Name>MileEyes.Services</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201612141400324_Initial.resx">
@@ -486,7 +490,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>52548</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

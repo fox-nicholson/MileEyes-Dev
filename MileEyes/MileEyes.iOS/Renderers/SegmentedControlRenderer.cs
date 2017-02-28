@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MileEyes.CustomControls;
+﻿using MileEyes.CustomControls;
 using MileEyes.iOS.Renderers;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
-[assembly:ExportRenderer(typeof(SegmentedControl), typeof(SegmentedControlRenderer))]
+[assembly: ExportRenderer(typeof(SegmentedControl), typeof(SegmentedControlRenderer))]
+
 namespace MileEyes.iOS.Renderers
 {
     public class SegmentedControlRenderer : ViewRenderer<SegmentedControl, UISegmentedControl>
@@ -23,9 +21,11 @@ namespace MileEyes.iOS.Renderers
                 segmentedControl.InsertSegment(e.NewElement.Children[i].Text, i, false);
             }
 
-            segmentedControl.ValueChanged += (sender, eventArgs) => {
-                e.NewElement.SelectedValue = segmentedControl.TitleAt(segmentedControl.SelectedSegment);
-            };
+            segmentedControl.ValueChanged +=
+                (sender, eventArgs) =>
+                {
+                    e.NewElement.SelectedValue = segmentedControl.TitleAt(segmentedControl.SelectedSegment);
+                };
 
             segmentedControl.TintColor = UIColor.Green;
 

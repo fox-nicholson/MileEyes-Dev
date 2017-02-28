@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MileEyes.Services.Extensions;
@@ -29,9 +28,13 @@ namespace MileEyes.Services
         public event EventHandler<Journey> Stopped;
         public event EventHandler<string> StartFailed;
 
+        public static bool IsTracking;
+
         public async Task Reset()
         {
             if (_currentWaypoints == null) _currentWaypoints = new List<Waypoint>();
+
+            await Plugin.Geolocator.CrossGeolocator.Current.StopListeningAsync();
 
             _currentWaypoints.Clear();
 
@@ -50,33 +53,43 @@ namespace MileEyes.Services
 
         public async Task Start()
         {
-            await Reset();
-
-            if (!Plugin.Geolocator.CrossGeolocator.Current.IsGeolocationAvailable)
+            try
             {
-                StartFailed?.Invoke(this, "GPS is not available on this device.");
-                return;
+                IsTracking = true;
+                await Reset();
+                
+                if (!Plugin.Geolocator.CrossGeolocator.Current.IsGeolocationAvailable)
+                {
+                    IsTracking = false;
+                    StartFailed?.Invoke(this, "GPS is not available on this device.");
+                    return;
+                }
+
+                if (!Plugin.Geolocator.CrossGeolocator.Current.IsGeolocationEnabled)
+                {
+                    IsTracking = false;
+                    StartFailed?.Invoke(this, "GPS is not enabled on this device.");
+                    return;
+                }
+                Plugin.Geolocator.CrossGeolocator.Current.GetPositionAsync();
+                Plugin.Geolocator.CrossGeolocator.Current.PositionChanged += Current_PositionChanged;
+
+                Plugin.Geolocator.CrossGeolocator.Current.AllowsBackgroundUpdates = true;
+                Plugin.Geolocator.CrossGeolocator.Current.DesiredAccuracy = 5;
+                var started = await Plugin.Geolocator.CrossGeolocator.Current.StartListeningAsync(5000, 50);
+
+                if (started)
+                {
+                    Started?.Invoke(this, EventArgs.Empty);
+                }
+                else
+                {
+                    IsTracking = false;
+                    StartFailed?.Invoke(this, "There was a problem starting GPS Services on your device.");
+                }
             }
-
-            if (!Plugin.Geolocator.CrossGeolocator.Current.IsGeolocationEnabled)
+            catch (Exception ex)
             {
-                StartFailed?.Invoke(this, "GPS is not enabled on this device.");
-                return;
-            }
-
-            Plugin.Geolocator.CrossGeolocator.Current.PositionChanged += Current_PositionChanged;
-
-            Plugin.Geolocator.CrossGeolocator.Current.AllowsBackgroundUpdates = true;
-            Plugin.Geolocator.CrossGeolocator.Current.DesiredAccuracy = 5;
-            var started = await Plugin.Geolocator.CrossGeolocator.Current.StartListeningAsync(5000, 50, false);
-
-            if (started)
-            {
-                Started?.Invoke(this, EventArgs.Empty);
-            }
-            else
-            {
-                StartFailed?.Invoke(this, "There was a problem starting GPS Services on your device.");
             }
         }
 
@@ -84,7 +97,7 @@ namespace MileEyes.Services
         {
             CurrentLocation = e.Position;
 
-            var nextStep = _currentWaypoints.OrderBy(w => w.Step).Last().Step + 1;
+            var nextStep = _currentWaypoints.Count + 1;
 
             _currentWaypoints.Add(new Waypoint
             {
@@ -97,7 +110,7 @@ namespace MileEyes.Services
             if (CurrentWaypoints.Any())
             {
                 var j = new Journey();
-                foreach (var w in CurrentWaypoints.OrderBy(w => w.Step).ToList())
+                foreach (var w in CurrentWaypoints)
                 {
                     j.Waypoints.Add(w);
                 }
@@ -116,9 +129,10 @@ namespace MileEyes.Services
         {
             await Plugin.Geolocator.CrossGeolocator.Current.StopListeningAsync();
 
-            CurrentLocation = await Plugin.Geolocator.CrossGeolocator.Current.GetPositionAsync(5000, CancellationToken.None, true);
+            CurrentLocation = await Plugin.Geolocator.CrossGeolocator.Current.GetPositionAsync(5000,
+                CancellationToken.None, true);
 
-            var nextStep = _currentWaypoints.OrderBy(w => w.Step).Last().Step + 1;
+            var nextStep = _currentWaypoints.Count + 1;
 
             _currentWaypoints.Add(new Waypoint
             {
@@ -133,11 +147,11 @@ namespace MileEyes.Services
                 Date = _currentWaypoints.OrderBy(w => w.Step).FirstOrDefault().Timestamp
             };
 
-            foreach (var w in _currentWaypoints.OrderBy(w => w.Step))
+            foreach (var w in _currentWaypoints)
             {
                 j.Waypoints.Add(w);
             }
-
+            IsTracking = false;
             Stopped?.Invoke(this, j);
         }
 
@@ -147,6 +161,7 @@ namespace MileEyes.Services
 
             await Reset();
 
+            IsTracking = false;
             Cancelled?.Invoke(this, EventArgs.Empty);
         }
     }

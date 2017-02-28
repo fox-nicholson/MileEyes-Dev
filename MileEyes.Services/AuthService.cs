@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using MileEyes.PublicModels;
 using MileEyes.Services.Models;
 using Newtonsoft.Json;
-using Xamarin.Forms;
 
 namespace MileEyes.Services
 {
@@ -37,7 +36,8 @@ namespace MileEyes.Services
             if (authTokens.Any())
             {
                 var authToken = authTokens.FirstOrDefault();
-                RestService.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken.access_token);
+                RestService.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
+                    authToken.access_token);
 
                 Authenticated = true;
             }
@@ -53,7 +53,7 @@ namespace MileEyes.Services
             {
                 new KeyValuePair<string, string>("grant_type", "password"),
                 new KeyValuePair<string, string>("username", email),
-                new KeyValuePair<string, string>("password", password),
+                new KeyValuePair<string, string>("password", password)
             });
 
             try
@@ -68,7 +68,7 @@ namespace MileEyes.Services
                 }
 
                 var tokenResult = JsonConvert.DeserializeObject<AuthResponse>(await response.Content.ReadAsStringAsync());
-                
+
                 // Write the access token to the database for use in future
                 using (var transaction = DatabaseService.Realm.BeginWrite())
                 {
@@ -91,14 +91,15 @@ namespace MileEyes.Services
                 }
 
                 // Set the request headers bearer token to the access token.
-                RestService.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResult.access_token);
+                RestService.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
+                    tokenResult.access_token);
 
                 // Obvious
                 Authenticated = true;
 
                 // Set the token to successful
                 tokenResult.Success = true;
-                
+
                 await Host.EngineTypeService.Sync();
                 await Host.VehicleService.Sync();
                 await Host.CompanyService.Sync();
@@ -146,7 +147,7 @@ namespace MileEyes.Services
 
                 var temp = result.ModelState._[0];
 
-                result.ModelState._ = new[] { temp };
+                result.ModelState._ = new[] {temp};
 
                 return result;
             }

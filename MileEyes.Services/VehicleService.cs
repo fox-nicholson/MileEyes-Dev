@@ -56,23 +56,20 @@ namespace MileEyes.Services
                 var journeys = (await Host.JourneyService.GetJourneys()).ToArray();
                 var vehiclesJourneys = journeys.Where(j => j.Vehicle.Id == vehicle.Id);
 
-                if (!vehiclesJourneys.Any())
+                if (vehiclesJourneys.Any()) return null;
+
+                if (!string.IsNullOrEmpty(vehicle.CloudId))
                 {
-                    if (!string.IsNullOrEmpty(vehicle.CloudId))
-                    {
-                        vehicle.MarkedForDeletion = true;
-                    }
-                    else
-                    {
-                        DatabaseService.Realm.Remove(vehicle);
-                    }
-
-                    transaction.Commit();
-
-                    return vehicle;
+                    vehicle.MarkedForDeletion = true;
+                }
+                else
+                {
+                    DatabaseService.Realm.Remove(vehicle);
                 }
 
-                return null;
+                transaction.Commit();
+
+                return vehicle;
             }
         }
 
@@ -102,20 +99,13 @@ namespace MileEyes.Services
         {
             var vehicles = await GetAllVehicles();
 
-            var temp = vehicles;
-
-            foreach (var v in vehicles.Where(v => v.MarkedForDeletion == true))
+            foreach (var v in vehicles.Where(v => v.MarkedForDeletion))
             {
                 try
                 {
                     var response = await RestService.Client.DeleteAsync("/api/Vehicles/" + v.CloudId);
 
                     if (!response.IsSuccessStatusCode) continue;
-
-                    //var result =
-                    //    JsonConvert.DeserializeObject<VehicleViewModel>(await response.Content.ReadAsStringAsync());
-
-                    //if (result == null) continue;
 
                     using (var transaction = DatabaseService.Realm.BeginWrite())
                     {
@@ -141,7 +131,8 @@ namespace MileEyes.Services
                 if (!response.IsSuccessStatusCode) return;
 
                 var result =
-                    JsonConvert.DeserializeObject<ICollection<VehicleViewModel>>(await response.Content.ReadAsStringAsync());
+                    JsonConvert.DeserializeObject<ICollection<VehicleViewModel>>(
+                        await response.Content.ReadAsStringAsync());
 
                 foreach (var vehicleData in result)
                 {
@@ -177,7 +168,7 @@ namespace MileEyes.Services
                         var engineTypes = await Host.EngineTypeService.GetEngineTypes();
 
                         var engineType = engineTypes.FirstOrDefault(
-                                et => et.Id == vehicleData.EngineType.Id);
+                            et => et.Id == vehicleData.EngineType.Id);
 
                         var a = engineType;
 

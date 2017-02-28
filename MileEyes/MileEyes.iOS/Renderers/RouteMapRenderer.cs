@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using CoreGraphics;
 using CoreLocation;
 using Foundation;
@@ -14,6 +12,7 @@ using Xamarin.Forms.Maps.iOS;
 using Xamarin.Forms.Platform.iOS;
 
 [assembly: ExportRenderer(typeof(RouteMap), typeof(MileEyes.iOS.Renderers.RouteMapRenderer))]
+
 namespace MileEyes.iOS.Renderers
 {
     public class RouteMapRenderer : MapRenderer
@@ -43,7 +42,7 @@ namespace MileEyes.iOS.Renderers
 
             if (map == null) return;
 
-            formsMap = (RouteMap)e.NewElement;
+            formsMap = (RouteMap) e.NewElement;
 
             //formsMap.ClearRouteRequested += FormsMap_ClearRouteRequested;
         }
@@ -64,7 +63,7 @@ namespace MileEyes.iOS.Renderers
             UpdateRoute();
         }
 
-        void UpdateRoute()
+        private void UpdateRoute()
         {
             map.OverlayRenderer = GetOverlayRenderer;
 
@@ -95,14 +94,14 @@ namespace MileEyes.iOS.Renderers
 
         MKOverlayRenderer GetOverlayRenderer(MKMapView mapView, IMKOverlay overlayWrapper)
         {
-            IMKOverlay overlay = Runtime.GetNSObject(overlayWrapper.Handle) as IMKOverlay;
+            var overlay = Runtime.GetNSObject(overlayWrapper.Handle) as IMKOverlay;
             polylineRenderer = new MKPolylineRenderer(overlay as MKPolyline)
             {
                 FillColor = UIColor.FromRGB(22, 174, 231),
                 StrokeColor = UIColor.FromRGB(22, 174, 231),
                 LineWidth = 5,
                 Alpha = 1f,
-                LineDashPattern = new[] { new NSNumber(0.5), new NSNumber(12) },
+                LineDashPattern = new[] {new NSNumber(0.5), new NSNumber(12)},
                 LineCap = CGLineCap.Round,
                 LineJoin = CGLineJoin.Round
             };

@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MileEyes.CustomControls;
+﻿using MileEyes.CustomControls;
 using MileEyes.iOS.Renderers;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
 [assembly: ExportRenderer(typeof(CustomTextCell), typeof(CustomTextCellRenderer))]
+
 namespace MileEyes.iOS.Renderers
 {
     class CustomTextCellRenderer : TextCellRenderer

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Foundation;
 using MileEyes.CustomControls;
@@ -12,6 +8,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
 [assembly: ExportRenderer(typeof(CustomSwitchCell), typeof(CustomSwitchCellRenderer))]
+
 namespace MileEyes.iOS.Renderers
 {
     class CustomSwitchCellRenderer : SwitchCellRenderer
@@ -20,11 +17,12 @@ namespace MileEyes.iOS.Renderers
         {
             var customViewCell = item as CustomSwitchCell;
 
-            var cell = (CellTableViewCell)base.GetCell(item, reusableCell, tv);
+            var cell = (CellTableViewCell) base.GetCell(item, reusableCell, tv);
 
             cell.BackgroundColor = UIColor.FromRGBA(255, 255, 255, 25);
 
-            (cell.Subviews.FirstOrDefault().Subviews.FirstOrDefault() as UILabel).TextColor = customViewCell.TextColor.ToUIColor();
+            (cell.Subviews.FirstOrDefault().Subviews.FirstOrDefault() as UILabel).TextColor =
+                customViewCell.TextColor.ToUIColor();
 
             if (customViewCell.ShowDisclosure)
             {
@@ -38,13 +36,13 @@ namespace MileEyes.iOS.Renderers
             return cell;
         }
 
-        async void SetImage(CustomSwitchCell cell, CellTableViewCell target)
+        private static async void SetImage(CustomSwitchCell cell, CellTableViewCell target)
         {
             var source = cell.ImageSource;
 
             target.ImageView.Image = null;
 
-            IImageSourceHandler handler = GetHandler(source);
+            var handler = GetHandler(source);
 
             if (source != null && handler != null)
             {

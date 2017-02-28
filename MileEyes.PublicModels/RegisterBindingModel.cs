@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MileEyes.PublicModels
+﻿namespace MileEyes.PublicModels
 {
-
     public class RegisterBindingModel
     {
         public string FirstName { get; set; }
@@ -16,5 +9,4 @@ namespace MileEyes.PublicModels
         public string ConfirmPassword { get; set; }
         public string PlaceId { get; set; }
     }
-
 }

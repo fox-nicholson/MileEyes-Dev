@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using MileEyes.PublicModels.EngineTypes;
 using MileEyes.Services.Models;
@@ -42,7 +41,8 @@ namespace MileEyes.Services
                 }
 
                 var result =
-                    JsonConvert.DeserializeObject<IEnumerable<EngineTypeViewModel>>(await response.Content.ReadAsStringAsync());
+                    JsonConvert.DeserializeObject<IEnumerable<EngineTypeViewModel>>(
+                        await response.Content.ReadAsStringAsync());
 
                 using (var transaction = DatabaseService.Realm.BeginWrite())
                 {
@@ -51,7 +51,7 @@ namespace MileEyes.Services
                     foreach (var et in result)
                     {
                         var realmEt = DatabaseService.Realm.CreateObject<EngineType>();
-                        realmEt.Id = et.Id.ToString();
+                        realmEt.Id = et.Id;
                         realmEt.Name = et.Name;
                     }
 

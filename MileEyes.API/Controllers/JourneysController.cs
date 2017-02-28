@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,7 +26,8 @@ namespace MileEyes.API.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: api/Journeys
-        public IQueryable<JourneyViewModel> GetJourneys()
+        [Route("api/Journeys/{requestedDay}/{requestedMonth}")]
+        public IQueryable<JourneyViewModel> GetJourneys(int requestedDay, int requestedMonth)
         {
             var user = db.Users.Find(User.Identity.GetUserId());
 
@@ -33,46 +35,53 @@ namespace MileEyes.API.Controllers
 
             var result = new List<JourneyViewModel>();
 
+            var requestedWeek = new DateTime(DateTime.Today.Year, requestedMonth, requestedDay);
+            var weekStart = requestedWeek;
+            var weekEnd = requestedWeek.AddDays(7);
+
             try
             {
-                foreach (var j in driver.Journeys)
+                foreach (var j in driver.Journeys.OrderBy(dt => dt.Date))
                 {
-                    var waypoints = j.Waypoints.Select(w => new WaypointViewModel()
+                    if (j.Date > weekStart && j.Date < weekEnd)
                     {
-                        Latitude = w.Address.Coordinates.Latitude,
-                        Longitude = w.Address.Coordinates.Longitude,
-                        PlaceId = w.Address.PlaceId,
-                        Step = w.Step,
-                        Timestamp = w.Timestamp,
-                        Id = w.Id.ToString()
-                    }).ToList();
+                        var waypoints = j.Waypoints.Select(w => new WaypointViewModel()
+                        {
+                            Latitude = w.Address.Coordinates.Latitude,
+                            Longitude = w.Address.Coordinates.Longitude,
+                            PlaceId = w.Address.PlaceId,
+                            Step = w.Step,
+                            Timestamp = w.Timestamp,
+                            Id = w.Id.ToString()
+                        }).ToList();
 
-                    var company = new CompanyViewModel()
-                    {
-                        Id = j.Company.Id.ToString()
-                    };
+                        var company = new CompanyViewModel()
+                        {
+                            Id = j.Company.Id.ToString()
+                        };
 
-                    var vehicle = new VehicleViewModel()
-                    {
-                        Id = j.Vehicle.Id.ToString()
-                    };
+                        var vehicle = new VehicleViewModel()
+                        {
+                            Id = j.Vehicle.Id.ToString()
+                        };
 
-                    var journey = new JourneyViewModel()
-                    {
-                        Accepted = j.Accepted,
-                        Cost = Convert.ToDouble(j.Cost),
-                        Date = j.Date,
-                        Distance = j.Distance,
-                        Id = j.Id.ToString(),
-                        Invoiced = j.Invoiced,
-                        Passengers = j.Passengers,
-                        Reason = j.Reason,
-                        Rejected = j.Rejected,
-                        Company = company,
-                        Waypoints = waypoints,
-                        Vehicle = vehicle
-                    };
-                    result.Add(journey);
+                        var journey = new JourneyViewModel()
+                        {
+                            Accepted = j.Accepted,
+                            Cost = Convert.ToDouble(j.Cost),
+                            Date = j.Date,
+                            Distance = j.Distance,
+                            Id = j.Id.ToString(),
+                            Invoiced = j.Invoiced,
+                            Passengers = j.Passengers,
+                            Reason = j.Reason,
+                            Rejected = j.Rejected,
+                            Company = company,
+                            Waypoints = waypoints,
+                            Vehicle = vehicle
+                        };
+                        result.Add(journey);
+                    }
                 }
             }
             catch (NullReferenceException e)
@@ -438,6 +447,14 @@ namespace MileEyes.API.Controllers
 
         private static String GOOGLE_API_KEY = "AIzaSyArLAcqpQ1v_IxC_o0Qo41SYPUlGxKtMtI";
 
+        private static ArrayList PLACE_ID_CACHE = new ArrayList();
+
+        private static ArrayList RESULT_CACHE = new ArrayList();
+
+        private static ArrayList TIME_CACHE = new ArrayList();
+
+        private static long TIMEOUT = 2592000000;
+
         [HttpGet]
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
         [Route("api/Journeys/Address")]
@@ -445,7 +462,15 @@ namespace MileEyes.API.Controllers
         {
             try
             {
-                var url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&key=" + GOOGLE_API_KEY;
+                var index = -1;
+                if (PLACE_ID_CACHE.Contains(placeId))
+                {
+                    index = PLACE_ID_CACHE.IndexOf(placeId);
+                    return Ok(JsonConvert.DeserializeObject<GeocodeResult>((String) RESULT_CACHE[index]));
+                }
+
+                var url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&key=" +
+                          GOOGLE_API_KEY;
 
                 var response = await Helpers.HttpHelper.FileGetContents(url);
 
@@ -453,8 +478,41 @@ namespace MileEyes.API.Controllers
                 {
                     return BadRequest("Unknown address");
                 }
-
                 var result = JsonConvert.DeserializeObject<GeocodeResult>(response);
+                if (result.status == "OVER_QUERY_LIMIT")
+                {
+                    System.Threading.Thread.Sleep(300);
+                    response = await Helpers.HttpHelper.FileGetContents(url);
+
+                    if (string.IsNullOrEmpty(response))
+                    {
+                        return BadRequest("Unknown address");
+                    }
+                    result = JsonConvert.DeserializeObject<GeocodeResult>(response);
+                    if (result.status == "OVER_QUERY_LIMIT")
+                    {
+                        return BadRequest("Request limit!");
+                    }
+                }
+                PLACE_ID_CACHE.Add(placeId);
+                RESULT_CACHE.Add(result);
+                long currentTime = new DateTime().Ticks;
+                TIME_CACHE.Add(currentTime);
+                ArrayList toRemove = new ArrayList();
+                foreach (var id in PLACE_ID_CACHE)
+                {
+                    index = PLACE_ID_CACHE.IndexOf(id);
+                    if (currentTime - TIMEOUT > (long) TIME_CACHE[index])
+                    {
+                        toRemove.Add(index);
+                    }
+                }
+                foreach (var i in toRemove)
+                {
+                    PLACE_ID_CACHE.Remove((int) i);
+                    RESULT_CACHE.Remove((int) i);
+                    TIME_CACHE.Remove((int) i);
+                }
                 return Ok(result);
             }
             catch (NullReferenceException e)

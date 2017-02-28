@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using MileEyes.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
@@ -30,12 +31,27 @@ namespace MileEyes.Pages
 
             if (j != null)
             {
-                var midpoint =
-                    Services.Helpers.TrigHelpers.MidPoint(new[] {j.OriginAddress.Latitude, j.OriginAddress.Longitude},
-                        new[] {j.DestinationAddress.Latitude, j.DestinationAddress.Longitude});
+                if (j.Waypoints.Count > 2)
+                {
+                    int midpoint = j.Waypoints.OrderBy(w => w.Step).Count() / 2;
+                    map.MoveToRegion(
+                        MapSpan.FromCenterAndRadius(
+                            new Position(j.Waypoints.ElementAt(midpoint).Latitude,
+                                j.Waypoints.ElementAt(midpoint).Longitude),
+                            Distance.FromMiles(j.Distance * 0.08)));
+                }
+                else
+                {
+                    var midpoint =
+                        Services.Helpers.TrigHelpers.MidPoint(
+                            new[] {j.OriginAddress.Latitude, j.OriginAddress.Longitude},
+                            new[] {j.DestinationAddress.Latitude, j.DestinationAddress.Longitude});
+                    map.MoveToRegion(
+                        MapSpan.FromCenterAndRadius(
+                            new Position(midpoint[0], midpoint[1]),
+                            Distance.FromMiles(j.Distance * 0.08)));
+                }
 
-                map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(midpoint[0], midpoint[1]),
-                    Distance.FromMiles(j.Distance * 0.6)));
 
                 j.InitRoute();
             }
