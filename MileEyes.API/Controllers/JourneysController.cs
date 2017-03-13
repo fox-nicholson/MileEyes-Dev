@@ -29,71 +29,74 @@ namespace MileEyes.API.Controllers
         [Route("api/Journeys/{requestedDay}/{requestedMonth}")]
         public IQueryable<JourneyViewModel> GetJourneys(int requestedDay, int requestedMonth)
         {
-            var user = db.Users.Find(User.Identity.GetUserId());
+            try { 
+                var user = db.Users.Find(User.Identity.GetUserId());
 
-            var driver = user.Profiles.OfType<Driver>().FirstOrDefault();
+                var drivers = user.Profiles.OfType<Driver>();
 
-            var result = new List<JourneyViewModel>();
-
-            var requestedWeek = new DateTime(DateTime.Today.Year, requestedMonth, requestedDay);
-            var weekStart = requestedWeek;
-            var weekEnd = requestedWeek.AddDays(7);
-
-            try
-            {
-                foreach (var j in driver.Journeys.OrderBy(dt => dt.Date))
+                var result = new List<JourneyViewModel>();
+			    var requestedWeek = new DateTime(DateTime.Today.Year, requestedMonth, requestedDay);
+			    var weekStart = requestedWeek;
+			    var weekEnd = requestedWeek.AddDays(7);
+                foreach (var driver in drivers)
                 {
-                    if (j.Date > weekStart && j.Date < weekEnd)
+                    if (user.Email == driver.User.Email)
                     {
-                        var waypoints = j.Waypoints.Select(w => new WaypointViewModel()
-                        {
-                            Latitude = w.Address.Coordinates.Latitude,
-                            Longitude = w.Address.Coordinates.Longitude,
-                            PlaceId = w.Address.PlaceId,
-                            Step = w.Step,
-                            Timestamp = w.Timestamp,
-                            Id = w.Id.ToString()
-                        }).ToList();
+					    foreach (var j in driver.Journeys.OrderBy(dt => dt.Date))
+					    {
+						    if (j.Date == weekStart || j.Date > weekStart && j.Date < weekEnd || j.Date == weekEnd)
+						    {
+							    var waypoints = j.Waypoints.Select(w => new WaypointViewModel()
+							    {
+								    Latitude = w.Address.Coordinates.Latitude,
+								    Longitude = w.Address.Coordinates.Longitude,
+								    PlaceId = w.Address.PlaceId,
+								    Step = w.Step,
+								    Timestamp = w.Timestamp,
+								    Id = w.Id.ToString()
+							    }).ToList();
 
-                        var company = new CompanyViewModel()
-                        {
-                            Id = j.Company.Id.ToString()
-                        };
+							    var company = new CompanyViewModel()
+							    {
+								    Id = j.Company.Id.ToString()
+							    };
 
-                        var vehicle = new VehicleViewModel()
-                        {
-                            Id = j.Vehicle.Id.ToString()
-                        };
+							    var vehicle = new VehicleViewModel()
+							    {
+								    Id = j.Vehicle.Id.ToString()
+							    };
 
-                        var journey = new JourneyViewModel()
-                        {
-                            Accepted = j.Accepted,
-                            Cost = Convert.ToDouble(j.Cost),
-                            Date = j.Date,
-                            Distance = j.Distance,
-                            Id = j.Id.ToString(),
-                            Invoiced = j.Invoiced,
-                            Passengers = j.Passengers,
-                            Reason = j.Reason,
-                            Rejected = j.Rejected,
-                            Company = company,
-                            Waypoints = waypoints,
-                            Vehicle = vehicle
-                        };
-                        result.Add(journey);
+							    var journey = new JourneyViewModel()
+							    {
+								    Accepted = j.Accepted,
+								    Cost = Convert.ToDouble(j.Cost),
+								    Date = j.Date,
+								    Distance = j.Distance,
+								    Id = j.Id.ToString(),
+								    Invoiced = j.Invoiced,
+								    Passengers = j.Passengers,
+								    Reason = j.Reason,
+								    Rejected = j.Rejected,
+								    Company = company,
+								    Waypoints = waypoints,
+								    Vehicle = vehicle
+							    };
+							    result.Add(journey);
+						    }
+					    }
                     }
                 }
+                return result.AsQueryable();
             }
-            catch (NullReferenceException e)
+            catch (Exception e)
             {
                 Console.WriteLine("Caught exception in Journey Controller: " + e);
+                return null;
             }
-
-            return result.AsQueryable();
         }
 
         // GET: api/Journeys/5
-        [ResponseType(typeof(JourneyViewModel))]
+        /*[ResponseType(typeof(JourneyViewModel))]
         public async Task<IHttpActionResult> GetJourney(Guid id)
         {
             Journey j = await db.Journeys.FindAsync(id);
@@ -103,8 +106,23 @@ namespace MileEyes.API.Controllers
             }
 
             var user = db.Users.Find(User.Identity.GetUserId());
+            
+            var drivers = user.Profiles.OfType<Driver>();
 
-            var driver = user.Profiles.OfType<Driver>().FirstOrDefault();
+            Driver driver = null;
+            foreach (var d in drivers)
+            {
+                if (user.Email == d.User.Email)
+                {
+                    driver = d;
+                    break;
+                }
+            }
+
+			if (driver == null)
+			{
+				return BadRequest();
+			}
 
             try
             {
@@ -139,313 +157,241 @@ namespace MileEyes.API.Controllers
                     Id = w.Id.ToString()
                 }).ToList()
             });
-        }
+        }*/
 
 
         [ResponseType(typeof(JourneyViewModel))]
         public async Task<IHttpActionResult> PostJourney(JourneyBindingModel model)
         {
-            // Check Model State
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            // Get User
-            var user = db.Users.Find(User.Identity.GetUserId());
-
-            // Get Company
-            var company = db.Companies.Find(Guid.Parse(model.Company.CloudId));
-
-            if (company == null) return BadRequest();
-
-            var drivers = company.Profiles.OfType<Driver>();
-
-            Driver driver = null;
-            foreach (var d in drivers)
-            {
-                if (user.Email == d.User.Email)
+            try { 
+                // Check Model State
+                if (!ModelState.IsValid)
                 {
-                    driver = d;
-                    break;
+                    return BadRequest(ModelState);
                 }
-            }
 
-            // Get Vehicle
-            var vehicle = db.Vehicles.Find(Guid.Parse(model.Vehicle.CloudId));
+                // Get User
+                var user = db.Users.Find(User.Identity.GetUserId());
 
-            if (vehicle == null) return BadRequest();
+                // Get Company
+                var company = db.Companies.Find(Guid.Parse(model.Company.CloudId));
 
-            // Create new Journey
-            var j = new Journey()
-            {
-                Id = Guid.NewGuid(),
-                Driver = driver,
-                Accepted = false,
-                Rejected = false,
-                Company = company,
-                Vehicle = vehicle,
-                Date = model.Date,
-                Distance = model.Distance,
-                Reason = model.Reason,
-                Invoiced = model.Invoiced,
-                Passengers = model.Passengers
-            };
+                if (company == null) return BadRequest();
 
-//            // Loop through Waypoints in Model
-//            foreach (var w in model.Waypoints)
-//            {
-//                // Create new Waypoint
-//                var newWaypoint = new Waypoint()
-//                {
-//                    Id = Guid.NewGuid(),
-//                    Step = w.Step,
-//                    Timestamp = w.Timestamp
-//                };
-//
-//                // Check if Model Waypoint has a PlaceId
-//                if (!string.IsNullOrEmpty(w.PlaceId))
-//                {
-//                    // Get existing Addresses with PlaceId
-//                    var existingAddresses = db.Addresses.Where(a => a.PlaceId == w.PlaceId);
-//
-//                    //Check if weve already stored the Address
-//                    if (existingAddresses.Any())
-//                    {
-//                        newWaypoint.Address = existingAddresses.FirstOrDefault();
-//                    }
-//                    // Deal with us not having Address stored
-//                    else
-//                    {
-//                        var addressResult = await GeocodingService.GetAddress(w.PlaceId);
-//
-//                        // Create a new Address
-//                        newWaypoint.Address = new Address()
-//                        {
-//                            Id = Guid.NewGuid(),
-//                            PlaceId = addressResult.PlaceId,
-//                            Coordinates = new Coordinates()
-//                            {
-//                                Id = Guid.NewGuid(),
-//                                Latitude = addressResult.Latitude,
-//                                Longitude = addressResult.Longitude
-//                            }
-//                        };
-//                    }
-//                }
-//                // Deal with having no PlaceId
-//                else
-//                {
-//                    var existingAddresses =
-//                        db.Addresses.Where(
-//                            a =>
-//                                Math.Abs(a.Coordinates.Latitude - w.Latitude) < 0.0005 &&
-//                                Math.Abs(a.Coordinates.Longitude - w.Longitude) < 0.0005);
-//                    //Check if weve already stored the Address
-//                    if (existingAddresses.Any())
-//                    {
-//                        newWaypoint.Address = existingAddresses.FirstOrDefault();
-//                    }
-//                    // Deal with us not having Address stored
-//                    else
-//                    {
-//                        var addressResult = await GeocodingService.GetAddress(w.Latitude, w.Longitude);
-//                        if (addressResult == null) break;
-//
-//                        // Create a new Address
-//                        newWaypoint.Address = new Address()
-//                        {
-//                            Id = Guid.NewGuid(),
-//                            PlaceId = addressResult.PlaceId,
-//                            Coordinates = new Coordinates()
-//                            {
-//                                Id = Guid.NewGuid(),
-//                                Latitude = addressResult.Latitude,
-//                                Longitude = addressResult.Longitude
-//                            }
-//                        };
-//                    }
-//                }
-//                bool skipWaypoint = false;
-//                if (j.Waypoints.Count < 1) skipWaypoint = false;
-//                for (int i = 0; i < j.Waypoints.Count; i++)
-//                {
-//                    var waypoint = j.Waypoints.ElementAt(i);
-//                    if (newWaypoint.Address.Coordinates.Longitude == waypoint.Address.Coordinates.Longitude &&
-//                        newWaypoint.Address.Coordinates.Latitude == waypoint.Address.Coordinates.Latitude)
-//                        skipWaypoint = true;
-//                }
-//                if (skipWaypoint) continue;
-//                j.Waypoints.Add(newWaypoint);
-//            }
+                var drivers = company.Profiles.OfType<Driver>();
 
-            // If this is a GPS Journey, execute this code
-            if (model.Waypoints.Count > 2)
-            {
-                var firstWaypoint = model.Waypoints.First();
-                var lastWaypoint = model.Waypoints.Last();
+                Driver driver = null;
+                foreach (var d in drivers)
+                {
+                    if (user.Email == d.User.Email)
+                    {
+                        driver = d;
+                        break;
+                    }
+                }
 
-                var addressResult = await GeocodingService.GetAddress(firstWaypoint.Latitude, firstWaypoint.Longitude);
+			    if (driver == null)
+			    {
+				    return BadRequest();
+			    }
+                // Get Vehicle
+                var vehicle = db.Vehicles.Find(Guid.Parse(model.Vehicle.CloudId));
 
-                // Create a new Address
-                var firstWp = new Waypoint();
-                firstWp.Id = Guid.NewGuid();
-                firstWp.Step = firstWaypoint.Step;
-                firstWp.Timestamp = firstWaypoint.Timestamp;
-                firstWp.Journey = j;
-                firstWp.Address = new Address()
+                if (vehicle == null) return BadRequest();
+
+                // Create new Journey
+                var j = new Journey()
                 {
                     Id = Guid.NewGuid(),
-                    PlaceId = addressResult.PlaceId,
-                    Coordinates = new Coordinates()
-                    {
-                        Id = Guid.NewGuid(),
-                        Latitude = firstWaypoint.Latitude,
-                        Longitude = firstWaypoint.Longitude
-                    }
+                    Driver = driver,
+                    Accepted = false,
+                    Rejected = false,
+                    Company = company,
+                    Vehicle = vehicle,
+                    Date = model.Date,
+                    Distance = model.Distance,
+                    Reason = model.Reason,
+                    Invoiced = model.Invoiced,
+                    Passengers = model.Passengers,
+                    Modified = DateTimeOffset.UtcNow
                 };
 
-                j.Waypoints.Add(firstWp);
-
-                for (int i = 1; i < model.Waypoints.Count - 1; i++)
+                // If this is a GPS Journey, execute this code
+                if (model.Waypoints.Count > 2)
                 {
-                    var currentWaypoint = model.Waypoints.ElementAt(i);
-                    var newWaypoint = new Waypoint();
-                    newWaypoint.Id = Guid.NewGuid();
+                    var firstWaypoint = model.Waypoints.First();
+                    var lastWaypoint = model.Waypoints.Last();
 
-                    newWaypoint.Address = new Address()
+                    var addressResult = await GeocodingService.GetAddress(firstWaypoint.Latitude, firstWaypoint.Longitude);
+
+                    // Create a new Address
+                    var firstWp = new Waypoint();
+                    firstWp.Id = Guid.NewGuid();
+                    firstWp.Step = firstWaypoint.Step;
+                    firstWp.Timestamp = firstWaypoint.Timestamp;
+                    firstWp.Journey = j;
+                    firstWp.Address = new Address()
                     {
                         Id = Guid.NewGuid(),
-                        PlaceId = "     ",
+                        PlaceId = addressResult.PlaceId,
                         Coordinates = new Coordinates()
                         {
                             Id = Guid.NewGuid(),
-                            Latitude = currentWaypoint.Latitude,
-                            Longitude = currentWaypoint.Longitude
+                            Latitude = firstWaypoint.Latitude,
+                            Longitude = firstWaypoint.Longitude
                         }
                     };
-                    newWaypoint.Step = currentWaypoint.Step;
-                    newWaypoint.Timestamp = currentWaypoint.Timestamp;
-                    newWaypoint.Journey = j;
-                    j.Waypoints.Add(newWaypoint);
+
+                    j.Waypoints.Add(firstWp);
+
+                    for (int i = 1; i < model.Waypoints.Count - 1; i++)
+                    {
+                        var currentWaypoint = model.Waypoints.ElementAt(i);
+                        var newWaypoint = new Waypoint();
+                        newWaypoint.Id = Guid.NewGuid();
+
+                        newWaypoint.Address = new Address()
+                        {
+                            Id = Guid.NewGuid(),
+                            PlaceId = "     ",
+                            Coordinates = new Coordinates()
+                            {
+                                Id = Guid.NewGuid(),
+                                Latitude = currentWaypoint.Latitude,
+                                Longitude = currentWaypoint.Longitude
+                            }
+                        };
+                        newWaypoint.Step = currentWaypoint.Step;
+                        newWaypoint.Timestamp = currentWaypoint.Timestamp;
+                        newWaypoint.Journey = j;
+                        j.Waypoints.Add(newWaypoint);
+                    }
+                    
+                    addressResult = await GeocodingService.GetAddress(lastWaypoint.Latitude, lastWaypoint.Longitude);
+
+                    // Create a new Address
+                    var lastWp = new Waypoint();
+                    lastWp.Id = Guid.NewGuid();
+                    lastWp.Step = lastWaypoint.Step;
+                    lastWp.Timestamp = lastWaypoint.Timestamp;
+                    lastWp.Journey = j;
+                    lastWp.Address = new Address()
+                    {
+                        Id = Guid.NewGuid(),
+                        PlaceId = addressResult.PlaceId,
+                        Coordinates = new Coordinates()
+                        {
+                            Id = Guid.NewGuid(),
+                            Latitude = lastWaypoint.Latitude,
+                            Longitude = lastWaypoint.Longitude
+                        }
+                    };
+
+                    j.Waypoints.Add(lastWp);
+                }
+                // Else, use a cut down version for only 2 Waypoints
+                else
+                {
+                    var newOrigin = new Waypoint();
+                    var newDestination = new Waypoint();
+                    var origin = model.Waypoints[0];
+                    var destination = model.Waypoints[1];
+
+                    newOrigin.Id = Guid.NewGuid();
+                    newDestination.Id = Guid.NewGuid();
+
+                    newOrigin.Step = origin.Step;
+                    newDestination.Step = destination.Step;
+
+                    newOrigin.Timestamp = origin.Timestamp;
+                    newDestination.Timestamp = destination.Timestamp;
+
+                    newOrigin.Journey = j;
+                    newDestination.Journey = j;
+
+                    newOrigin.Address = new Address()
+                    {
+                        Id = Guid.NewGuid(),
+                        PlaceId = origin.PlaceId,
+                        Coordinates = new Coordinates()
+                        {
+                            Id = Guid.NewGuid(),
+                            Latitude = origin.Latitude,
+                            Longitude = origin.Longitude
+                        }
+                    };
+                    newDestination.Address = new Address()
+                    {
+                        Id = Guid.NewGuid(),
+                        PlaceId = destination.PlaceId,
+                        Coordinates = new Coordinates()
+                        {
+                            Id = Guid.NewGuid(),
+                            Latitude = destination.Latitude,
+                            Longitude = destination.Longitude
+                        }
+                    };
+
+                    j.Waypoints.Add(newOrigin);
+                    j.Waypoints.Add(newDestination);
                 }
 
+                // Calculate Cost and VAT
+                j.Cost = j.CalculateCost();
+                j.FuelVat = j.CalculateFuelVat();
 
-                addressResult = await GeocodingService.GetAddress(lastWaypoint.Latitude, lastWaypoint.Longitude);
+                j.Cost = Math.Round(j.Cost, 2);
 
-                // Create a new Address
-                var lastWp = new Waypoint();
-                lastWp.Id = Guid.NewGuid();
-                lastWp.Step = lastWaypoint.Step;
-                lastWp.Timestamp = lastWaypoint.Timestamp;
-                lastWp.Journey = j;
-                lastWp.Address = new Address()
+                // Add Journey to the Database
+                j = db.Journeys.Add(j);
+
+//                try
+//                {
+                    // Save Changes
+                 await db.SaveChangesAsync();
+//                }
+//                catch (Exception ex)
+//                {
+//                    Console.WriteLine(ex);
+//                }
+
+                // Return Journey with new Id
+                return Ok(new JourneyViewModel()
                 {
-                    Id = Guid.NewGuid(),
-                    PlaceId = addressResult.PlaceId,
-                    Coordinates = new Coordinates()
+                    Accepted = j.Accepted,
+                    Company = new CompanyViewModel()
                     {
-                        Id = Guid.NewGuid(),
-                        Latitude = lastWaypoint.Latitude,
-                        Longitude = lastWaypoint.Longitude
-                    }
-                };
-
-                j.Waypoints.Add(lastWp);
-            }
-            // Else, use a cut down version for only 2 Waypoints
-            else
-            {
-                var newOrigin = new Waypoint();
-                var newDestination = new Waypoint();
-                var origin = model.Waypoints[0];
-                var destination = model.Waypoints[1];
-
-                newOrigin.Id = Guid.NewGuid();
-                newDestination.Id = Guid.NewGuid();
-
-                newOrigin.Step = origin.Step;
-                newDestination.Step = destination.Step;
-
-                newOrigin.Timestamp = origin.Timestamp;
-                newDestination.Timestamp = destination.Timestamp;
-
-                newOrigin.Journey = j;
-                newDestination.Journey = j;
-
-                newOrigin.Address = new Address()
-                {
-                    Id = Guid.NewGuid(),
-                    PlaceId = origin.PlaceId,
-                    Coordinates = new Coordinates()
+                        Id = j.Company.Id.ToString()
+                    },
+                    Cost = Convert.ToDouble(j.Cost),
+                    Date = j.Date,
+                    Distance = j.Distance,
+                    Id = j.Id.ToString(),
+                    Invoiced = j.Invoiced,
+                    Passengers = j.Passengers,
+                    Reason = j.Reason,
+                    Rejected = j.Rejected,
+                    Waypoints = j.Waypoints.Select(w => new WaypointViewModel()
                     {
-                        Id = Guid.NewGuid(),
-                        Latitude = origin.Latitude,
-                        Longitude = origin.Longitude
-                    }
-                };
-                newDestination.Address = new Address()
-                {
-                    Id = Guid.NewGuid(),
-                    PlaceId = destination.PlaceId,
-                    Coordinates = new Coordinates()
-                    {
-                        Id = Guid.NewGuid(),
-                        Latitude = destination.Latitude,
-                        Longitude = destination.Longitude
-                    }
-                };
-
-                j.Waypoints.Add(newOrigin);
-                j.Waypoints.Add(newDestination);
+                        Latitude = w.Address.Coordinates.Latitude,
+                        Longitude = w.Address.Coordinates.Longitude,
+                        PlaceId = w.Address.PlaceId,
+                        Step = w.Step,
+                        Timestamp = w.Timestamp,
+                        Id = w.Id.ToString()
+                    }).ToList()
+                });
             }
-
-            // Calculate Cost and VAT
-            j.Cost = j.CalculateCost();
-            j.FuelVat = j.CalculateFuelVat();
-
-            // Add Journey to the Database
-            j = db.Journeys.Add(j);
-
-            try
+            catch (Exception e)
             {
-                // Save Changes
-                await db.SaveChangesAsync();
+                Console.WriteLine("Caught exception in Journey Controller: " + e);
+                return null;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
-
-            // Return Journey with new Id
-            return Ok(new JourneyViewModel()
-            {
-                Accepted = j.Accepted,
-                Company = new CompanyViewModel()
-                {
-                    Id = j.Company.Id.ToString()
-                },
-                Cost = Convert.ToDouble(j.Cost),
-                Date = j.Date,
-                Distance = j.Distance,
-                Id = j.Id.ToString(),
-                Invoiced = j.Invoiced,
-                Passengers = j.Passengers,
-                Reason = j.Reason,
-                Rejected = j.Rejected,
-                Waypoints = j.Waypoints.Select(w => new WaypointViewModel()
-                {
-                    Latitude = w.Address.Coordinates.Latitude,
-                    Longitude = w.Address.Coordinates.Longitude,
-                    PlaceId = w.Address.PlaceId,
-                    Step = w.Step,
-                    Timestamp = w.Timestamp,
-                    Id = w.Id.ToString()
-                }).ToList()
-            });
         }
 
-        private static String GOOGLE_API_KEY = "AIzaSyArLAcqpQ1v_IxC_o0Qo41SYPUlGxKtMtI";
+		//TODO Redo the catching and use the database to store address for a month
+
+		private static String GOOGLE_API_KEY = "AIzaSyArLAcqpQ1v_IxC_o0Qo41SYPUlGxKtMtI";
 
         private static ArrayList PLACE_ID_CACHE = new ArrayList();
 

@@ -93,9 +93,10 @@ namespace MileEyes.API.Controllers
                     });
                 }
             }
-            catch (NullReferenceException e)
+            catch (Exception e)
             {
                 Console.WriteLine(e);
+                return null;
             }
             return result.AsQueryable();
         }
@@ -146,19 +147,23 @@ namespace MileEyes.API.Controllers
 
             var owner = new Owner
             {
-                Id = Guid.NewGuid()
+                Id = Guid.NewGuid(),
+                User = user
             };
             var accountant = new Accountant
             {
-                Id = Guid.NewGuid()
+                Id = Guid.NewGuid(),
+                User = user
             };
             var manager = new Manager
             {
-                Id = Guid.NewGuid()
+                Id = Guid.NewGuid(),
+                User = user
             };
             var driver = new Driver
             {
-                Id = Guid.NewGuid()
+                Id = Guid.NewGuid(),
+                User = user
             };
 
             // Setup the new company
@@ -177,15 +182,15 @@ namespace MileEyes.API.Controllers
                 Personal = false
             };
 
-            newCompany.Profiles.Add(owner);
-            newCompany.Profiles.Add(driver);
-            newCompany.Profiles.Add(manager);
-            newCompany.Profiles.Add(accountant);
-
             user.Profiles.Add(owner);
             user.Profiles.Add(driver);
             user.Profiles.Add(manager);
             user.Profiles.Add(accountant);
+
+            newCompany.Profiles.Add(owner);
+            newCompany.Profiles.Add(driver);
+            newCompany.Profiles.Add(manager);
+            newCompany.Profiles.Add(accountant);
 
             db.Companies.Add(newCompany);
 
@@ -209,21 +214,15 @@ namespace MileEyes.API.Controllers
             var result = new List<JourneyViewModel>();
 
             var user = db.Users.Find(User.Identity.GetUserId());
-
-            var owner = user.Profiles.OfType<Owner>().FirstOrDefault();
-            var manager = user.Profiles.OfType<Manager>().FirstOrDefault();
-            var accountant = user.Profiles.OfType<Accountant>().FirstOrDefault();
-
             try
             {
                 var company = db.Companies.Find(companyId);
 
-                var companyOwners = company.Profiles.OfType<Owner>();
-                var companyManagers = company.Profiles.OfType<Manager>();
-                var companyAccountants = company.Profiles.OfType<Accountant>();
+                var owner = company.Profiles.OfType<Owner>().FirstOrDefault(query => query.User.Email == user.Email);
+				var manager = company.Profiles.OfType<Manager>().FirstOrDefault(query => query.User.Email == user.Email);
+				var accountant = company.Profiles.OfType<Accountant>().FirstOrDefault(query => query.User.Email == user.Email);
 
-                if (companyOwners.Contains(owner) || companyManagers.Contains(manager) ||
-                    companyAccountants.Contains(accountant))
+                if (owner != null || manager != null || accountant != null)
                 {
                     var journeys = company.Journeys;
 
@@ -340,22 +339,17 @@ namespace MileEyes.API.Controllers
         {
             // Get the current User
             var user = db.Users.Find(User.Identity.GetUserId());
-
-            // Get the users owner and manager profiles
-            var manager = user.Profiles.OfType<Manager>().FirstOrDefault();
-            var owner = user.Profiles.OfType<Owner>().FirstOrDefault();
-
+            
             try
             {
                 // get the company
                 var company = db.Companies.Find(companyId);
 
-                // get the company owners and managers
-                var companyOwners = company.Profiles.OfType<Owner>();
-                var companyManagers = company.Profiles.OfType<Manager>();
+                var owner = company.Profiles.OfType<Owner>().FirstOrDefault(query => query.User.Email == user.Email);
+				var manager = company.Profiles.OfType<Manager>().FirstOrDefault(query => query.User.Email == user.Email);
 
                 // Check if the current users has rights, if not respond with bad request
-                if (!companyManagers.Contains(manager) && !companyOwners.Contains(owner)) return BadRequest();
+                if (owner == null && manager == null) return BadRequest();
 
                 var journey = db.Journeys.Find(journeyId);
 
@@ -386,21 +380,16 @@ namespace MileEyes.API.Controllers
             // Get the current User
             var user = db.Users.Find(User.Identity.GetUserId());
 
-            // Get the users owner and manager profiles
-            var manager = user.Profiles.OfType<Manager>().FirstOrDefault();
-            var owner = user.Profiles.OfType<Owner>().FirstOrDefault();
-
             try
             {
                 // get the company
                 var company = db.Companies.Find(companyId);
 
-                // get the company owners and managers
-                var companyOwners = company.Profiles.OfType<Owner>();
-                var companyManagers = company.Profiles.OfType<Manager>();
-
+                var owner = company.Profiles.OfType<Owner>().FirstOrDefault(query => query.User.Email == user.Email);
+				var manager = company.Profiles.OfType<Manager>().FirstOrDefault(query => query.User.Email == user.Email);
+                
                 // Check if the current users has rights, if not respond with bad request
-                if (!companyManagers.Contains(manager) && !companyOwners.Contains(owner)) return BadRequest();
+                if (owner == null && manager == null) return BadRequest();
 
                 var journey = db.Journeys.Find(journeyId);
 
@@ -432,21 +421,16 @@ namespace MileEyes.API.Controllers
             // Get the current User
             var user = db.Users.Find(User.Identity.GetUserId());
 
-            // Get the users owner and manager profiles
-            var manager = user.Profiles.OfType<Manager>().FirstOrDefault();
-            var owner = user.Profiles.OfType<Owner>().FirstOrDefault();
-
             try
             {
                 // get the company
                 var company = db.Companies.Find(companyId);
 
-                // get the company owners and managers
-                var companyOwners = company.Profiles.OfType<Owner>();
-                var companyManagers = company.Profiles.OfType<Manager>();
-
+				var owner = company.Profiles.OfType<Owner>().FirstOrDefault(query => query.User.Email == user.Email);
+				var manager = company.Profiles.OfType<Manager>().FirstOrDefault(query => query.User.Email == user.Email);
+                
                 // Check if the current users has rights, if not respond with bad request
-                if (!companyManagers.Contains(manager) && !companyOwners.Contains(owner)) return BadRequest();
+				if (owner == null && manager == null) return BadRequest();
             }
             catch (NullReferenceException e)
             {
@@ -471,64 +455,61 @@ namespace MileEyes.API.Controllers
 
             var user = db.Users.Find(User.Identity.GetUserId());
 
-            var owner = user.Profiles.OfType<Owner>().FirstOrDefault();
-            var manager = user.Profiles.OfType<Manager>().FirstOrDefault();
-            var accountant = user.Profiles.OfType<Accountant>().FirstOrDefault();
-
             try
             {
-                // get the company
-                var company = db.Companies.Find(companyId);
 
-                // get the company owners and managers
-                var companyOwners = company.Profiles.OfType<Owner>();
-                var companyManagers = company.Profiles.OfType<Manager>();
-                var companyAccountants = company.Profiles.OfType<Accountant>();
+				// get the company
+				var company = db.Companies.Find(companyId);
+
+				var owner = company.Profiles.OfType<Owner>().FirstOrDefault(query => query.User.Email == user.Email);
+				var manager = company.Profiles.OfType<Manager>().FirstOrDefault(query => query.User.Email == user.Email);
+				var accountant = company.Profiles.OfType<Accountant>().FirstOrDefault(query => query.User.Email == user.Email);
+				var driver = company.Profiles.OfType<Driver>().FirstOrDefault(query => query.User.Email == user.Email);
+
 
                 // Check if the current users has rights, if not respond with bad request
-                if (companyOwners.Contains(owner) || companyManagers.Contains(manager) ||
-                    companyAccountants.Contains(accountant))
+                if (owner != null || manager != null || accountant != null)
                 {
                     var drivers = company.Profiles.OfType<Driver>();
                     foreach (var d in drivers)
                     {
-                        result.Add(new DriverViewModel()
+                        Company personal = db.Companies.FirstOrDefault(c => c.Personal && c.Owner.User.Email == d.User.Email);
+                        if (personal != null)
                         {
-                            Id = d.Id.ToString(),
-                            LastActiveVehicle = d.LastActiveVehicle,
-                            FirstName = d.User.FirstName,
-                            LastName = d.User.LastName,
-                            Email = d.User.Email,
-                            Vehicles = d.Vehicles.Select(v => new VehicleViewModel()
+                            result.Add(new DriverViewModel()
                             {
-                                Id = v.Id.ToString(),
-                                Registration = v.Registration,
-                                EngineType = new EngineTypeViewModel()
+                                Id = d.Id.ToString(),
+                                LastActiveVehicle = d.LastActiveVehicle,
+                                FirstName = d.User.FirstName,
+                                LastName = d.User.LastName,
+                                Email = d.User.Email,
+                                Vehicles = personal.Profiles.OfType<Driver>().FirstOrDefault().Vehicles.Select(v => new VehicleViewModel()
                                 {
-                                    Id = v.EngineType.Id.ToString(),
-                                    Name = v.EngineType.Name
-                                }
-                            }).ToList()
-                        });
+                                    Id = v.Id.ToString(),
+                                    Registration = v.Registration,
+                                    EngineType = new EngineTypeViewModel()
+                                    {
+                                        Id = v.EngineType.Id.ToString(),
+                                        Name = v.EngineType.Name
+                                    }
+                                }).ToList()
+                            });
+                        }
                     }
                 }
-                else
+				else if (driver != null)
                 {
-                    var drivers = company.Profiles.OfType<Driver>();
-                    foreach (var d in drivers)
+                    Company personal = db.Companies.FirstOrDefault(c => c.Personal && c.Owner.User.Email == driver.User.Email);
+                    if (personal != null)
                     {
-                        if (d.User.Email != user.Email)
-                        {
-                            continue;
-                        }
                         result.Add(new DriverViewModel()
                         {
-                            Id = d.Id.ToString(),
-                            LastActiveVehicle = d.LastActiveVehicle,
-                            FirstName = d.User.FirstName,
-                            LastName = d.User.LastName,
-                            Email = d.User.Email,
-                            Vehicles = d.Vehicles.Select(v => new VehicleViewModel()
+                            Id = driver.Id.ToString(),
+                            LastActiveVehicle = driver.LastActiveVehicle,
+                            FirstName = driver.User.FirstName,
+                            LastName = driver.User.LastName,
+                            Email = driver.User.Email,
+                            Vehicles = personal.Profiles.OfType<Driver>().FirstOrDefault().Vehicles.Select(v => new VehicleViewModel()
                             {
                                 Id = v.Id.ToString(),
                                 Registration = v.Registration,
@@ -542,9 +523,10 @@ namespace MileEyes.API.Controllers
                     }
                 }
             }
-            catch (NullReferenceException e)
+            catch (Exception e)
             {
                 //return BadRequest(e.ToString());
+                return null;
             }
             return result.AsQueryable();
         }
@@ -557,21 +539,17 @@ namespace MileEyes.API.Controllers
             // Get the current User
             var user = db.Users.Find(User.Identity.GetUserId());
 
-            // Get the users owner and manager profiles
-            var manager = user.Profiles.OfType<Manager>().FirstOrDefault();
-            var owner = user.Profiles.OfType<Owner>().FirstOrDefault();
-
             // get the company
             var company = db.Companies.Find(companyId);
 
             try
             {
-                // get the company owners and managers
-                var companyOwners = company.Profiles.OfType<Owner>();
-                var companyManagers = company.Profiles.OfType<Manager>();
+				// get the company owners and managers
+				var owner = company.Profiles.OfType<Owner>().FirstOrDefault(query => query.User.Email == user.Email);
+				var manager = company.Profiles.OfType<Manager>().FirstOrDefault(query => query.User.Email == user.Email);
 
                 // Check if the current users has rights, if not respond with bad request
-                if (!companyManagers.Contains(manager) && !companyOwners.Contains(owner)) return BadRequest();
+                if (manager == null && owner == null) return BadRequest();
             }
             catch (NullReferenceException e)
             {
@@ -610,21 +588,16 @@ namespace MileEyes.API.Controllers
             // Get the current User
             var user = db.Users.Find(User.Identity.GetUserId());
 
-            // Get the users owner and manager profiles
-            var manager = user.Profiles.OfType<Manager>().FirstOrDefault();
-            var owner = user.Profiles.OfType<Owner>().FirstOrDefault();
-
             // get the company
             var company = db.Companies.Find(companyId);
 
             try
             {
-                // get the company owners and managers
-                var companyOwners = company.Profiles.OfType<Owner>();
-                var companyManagers = company.Profiles.OfType<Manager>();
+                var owner = company.Profiles.OfType<Owner>().FirstOrDefault(query => query.User.Email == user.Email);
+				var manager = company.Profiles.OfType<Manager>().FirstOrDefault(query => query.User.Email == user.Email);
 
                 // Check if the current users has rights, if not respond with bad request
-                if (!companyManagers.Contains(manager) && !companyOwners.Contains(owner)) return BadRequest();
+                if (manager == null && owner == null) return BadRequest();
             }
             catch (NullReferenceException e)
             {
@@ -661,6 +634,302 @@ namespace MileEyes.API.Controllers
                 return null;
             }
         }
+
+		[HttpGet]
+		[HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
+		[Route("api/Companies/{companyId}/JourneysInfo")]
+		public IQueryable<JourneyInfoViewModel> getJourneysInfo(Guid companyId, long start, long end)
+		{
+			var result = new List<JourneyInfoViewModel>();
+			DateTime startDate = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+			startDate = startDate.AddMilliseconds(start).ToLocalTime();
+			DateTime endDate = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+			endDate = endDate.AddMilliseconds(end).ToLocalTime();
+
+			try
+			{
+				Company company = db.Companies.Find(companyId);
+
+				if (company != null)
+				{
+					var user = db.Users.Find(User.Identity.GetUserId());
+
+					var owner = company.Profiles.OfType<Owner>().FirstOrDefault(query => query.User.Email == user.Email);
+					var manager = company.Profiles.OfType<Manager>().FirstOrDefault(query => query.User.Email == user.Email);
+					var accountant = company.Profiles.OfType<Accountant>().FirstOrDefault(query => query.User.Email == user.Email);
+					var driver = company.Profiles.OfType<Driver>().FirstOrDefault(query => query.User.Email == user.Email);
+
+					if (owner != null || manager != null || accountant != null)
+					{
+						var journeys = company.Journeys.Where(journey => journey.Company.Id == company.Id && journey.Date >= startDate && journey.Date <= endDate);
+						foreach (var journey in journeys)
+						{
+							result.Add(new JourneyInfoViewModel()
+							{
+								Id = journey.Id,
+								Date = journey.Date
+							});
+						}
+					}
+					else if (driver != null)
+					{
+						var journeys = company.Journeys.Where(journey => journey.Company.Id == company.Id && journey.Driver.Id == driver.Id && journey.Date >= startDate && journey.Date <= endDate);
+						foreach (var journey in journeys)
+						{
+							result.Add(new JourneyInfoViewModel()
+							{
+								Id = journey.Id,
+								Date = journey.Date
+							});
+						}
+					}
+				}
+			} catch (NullReferenceException e)
+			{
+				Console.WriteLine(e);
+			}
+			return result.AsQueryable();
+		}
+
+		[HttpGet]
+		[HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
+		[Route("api/Companies/{companyId}/LazyJourneys")]
+		public IQueryable<JourneyViewModel> getJourneys(Guid companyId, String info)
+		{
+			var result = new List<JourneyViewModel>();
+			try {
+				Company company = db.Companies.Find(companyId);
+
+				if (company != null)
+				{
+					var user = db.Users.Find(User.Identity.GetUserId());
+
+					var owner = company.Profiles.OfType<Owner>().FirstOrDefault(query => query.User.Email == user.Email);
+					var manager = company.Profiles.OfType<Manager>().FirstOrDefault(query => query.User.Email == user.Email);
+					var accountant = company.Profiles.OfType<Accountant>().FirstOrDefault(query => query.User.Email == user.Email);
+					var driver = company.Profiles.OfType<Driver>().FirstOrDefault(query => query.User.Email == user.Email);
+
+					if (owner != null || manager != null || accountant != null || driver != null)
+					{
+						if (info.IndexOf(',') == -1)
+						{
+							if (owner == null && manager == null && accountant == null && driver != null)
+							{
+								var journey = company.Journeys.FirstOrDefault(query => query.Id.ToString() == info && query.Company.Id == company.Id && query.Driver.Id == driver.Id);
+								if (journey != null)
+								{
+									result.Add(new JourneyViewModel()
+									{
+										Accepted = journey.Accepted,
+										Company = new CompanyViewModel()
+										{
+											Id = journey.Company.Id.ToString()
+										},
+										Cost = Convert.ToDouble(journey.Cost),
+										Date = journey.Date,
+										Driver = new DriverViewModel()
+										{
+											Id = journey.Driver.Id.ToString(),
+											Email = journey.Driver.User.Email,
+											FirstName = journey.Driver.User.FirstName,
+											LastName = journey.Driver.User.LastName
+										},
+										Vehicle = new VehicleViewModel()
+										{
+											Id = journey.Vehicle.Id.ToString(),
+											Registration = journey.Vehicle.Registration,
+											EngineType = new EngineTypeViewModel()
+											{
+												Id = journey.Vehicle.EngineType.Id.ToString(),
+												Name = journey.Vehicle.EngineType.Name
+											}
+										},
+										Distance = journey.Distance,
+										Id = journey.Id.ToString(),
+										Invoiced = journey.Invoiced,
+										Passengers = journey.Passengers,
+										Reason = journey.Reason,
+										Rejected = journey.Rejected,
+										Waypoints = journey.Waypoints.Select(w => new WaypointViewModel()
+										{
+											Latitude = w.Address.Coordinates.Latitude,
+											Longitude = w.Address.Coordinates.Longitude,
+											PlaceId = w.Address.PlaceId,
+											Step = w.Step,
+											Timestamp = w.Timestamp,
+											Id = w.Id.ToString()
+										}).ToList()
+									});
+								}
+							}
+							else
+							{
+								var journey = company.Journeys.FirstOrDefault(query => query.Id.ToString() == info && query.Company.Id == company.Id);
+								if (journey != null)
+								{
+									result.Add(new JourneyViewModel()
+									{
+										Accepted = journey.Accepted,
+										Company = new CompanyViewModel()
+										{
+											Id = journey.Company.Id.ToString()
+										},
+										Cost = Convert.ToDouble(journey.Cost),
+										Date = journey.Date,
+										Driver = new DriverViewModel()
+										{
+											Id = journey.Driver.Id.ToString(),
+											Email = journey.Driver.User.Email,
+											FirstName = journey.Driver.User.FirstName,
+											LastName = journey.Driver.User.LastName
+										},
+										Vehicle = new VehicleViewModel()
+										{
+											Id = journey.Vehicle.Id.ToString(),
+											Registration = journey.Vehicle.Registration,
+											EngineType = new EngineTypeViewModel()
+											{
+												Id = journey.Vehicle.EngineType.Id.ToString(),
+												Name = journey.Vehicle.EngineType.Name
+											}
+										},
+										Distance = journey.Distance,
+										Id = journey.Id.ToString(),
+										Invoiced = journey.Invoiced,
+										Passengers = journey.Passengers,
+										Reason = journey.Reason,
+										Rejected = journey.Rejected,
+										Waypoints = journey.Waypoints.Select(w => new WaypointViewModel()
+										{
+											Latitude = w.Address.Coordinates.Latitude,
+											Longitude = w.Address.Coordinates.Longitude,
+											PlaceId = w.Address.PlaceId,
+											Step = w.Step,
+											Timestamp = w.Timestamp,
+											Id = w.Id.ToString()
+										}).ToList()
+									});
+								}
+							}
+						}
+						else
+						{
+							var ids = info.Split(',');
+						    if (owner == null && manager == null && accountant == null && driver != null)
+						    {
+								foreach (var id in ids)
+								{
+									var journey = company.Journeys.FirstOrDefault(query => query.Id.ToString() == id && query.Company.Id == company.Id && query.Driver.Id == driver.Id);
+									if (journey != null)
+									{
+										result.Add(new JourneyViewModel()
+										{
+											Accepted = journey.Accepted,
+											Company = new CompanyViewModel()
+											{
+												Id = journey.Company.Id.ToString()
+											},
+											Cost = Convert.ToDouble(journey.Cost),
+											Date = journey.Date,
+											Driver = new DriverViewModel()
+											{
+												Id = journey.Driver.Id.ToString(),
+												Email = journey.Driver.User.Email,
+												FirstName = journey.Driver.User.FirstName,
+												LastName = journey.Driver.User.LastName
+											},
+											Vehicle = new VehicleViewModel()
+											{
+												Id = journey.Vehicle.Id.ToString(),
+												Registration = journey.Vehicle.Registration,
+												EngineType = new EngineTypeViewModel()
+												{
+													Id = journey.Vehicle.EngineType.Id.ToString(),
+													Name = journey.Vehicle.EngineType.Name
+												}
+											},
+											Distance = journey.Distance,
+											Id = journey.Id.ToString(),
+											Invoiced = journey.Invoiced,
+											Passengers = journey.Passengers,
+											Reason = journey.Reason,
+											Rejected = journey.Rejected,
+											Waypoints = journey.Waypoints.Select(w => new WaypointViewModel()
+											{
+												Latitude = w.Address.Coordinates.Latitude,
+												Longitude = w.Address.Coordinates.Longitude,
+												PlaceId = w.Address.PlaceId,
+												Step = w.Step,
+												Timestamp = w.Timestamp,
+												Id = w.Id.ToString()
+											}).ToList()
+										});
+									}
+								}
+							}
+							else
+							{
+							    foreach (var id in ids)
+							    {
+							        var journey =
+							            company.Journeys.FirstOrDefault(query => query.Id.ToString() == id && query.Company.Id == company.Id);
+							        if (journey != null)
+							        {
+							            result.Add(new JourneyViewModel()
+							            {
+							                Accepted = journey.Accepted,
+							                Company = new CompanyViewModel()
+							                {
+							                    Id = journey.Company.Id.ToString()
+							                },
+							                Cost = Convert.ToDouble(journey.Cost),
+							                Date = journey.Date,
+							                Driver = new DriverViewModel()
+							                {
+							                    Id = journey.Driver.Id.ToString(),
+							                    Email = journey.Driver.User.Email,
+							                    FirstName = journey.Driver.User.FirstName,
+							                    LastName = journey.Driver.User.LastName
+							                },
+							                Vehicle = new VehicleViewModel()
+							                {
+							                    Id = journey.Vehicle.Id.ToString(),
+							                    Registration = journey.Vehicle.Registration,
+							                    EngineType = new EngineTypeViewModel()
+							                    {
+							                        Id = journey.Vehicle.EngineType.Id.ToString(),
+							                        Name = journey.Vehicle.EngineType.Name
+							                    }
+							                },
+							                Distance = journey.Distance,
+							                Id = journey.Id.ToString(),
+							                Invoiced = journey.Invoiced,
+							                Passengers = journey.Passengers,
+							                Reason = journey.Reason,
+							                Rejected = journey.Rejected,
+							                Waypoints = journey.Waypoints.Select(w => new WaypointViewModel()
+							                {
+							                    Latitude = w.Address.Coordinates.Latitude,
+							                    Longitude = w.Address.Coordinates.Longitude,
+							                    PlaceId = w.Address.PlaceId,
+							                    Step = w.Step,
+							                    Timestamp = w.Timestamp,
+							                    Id = w.Id.ToString()
+							                }).ToList()
+							            });
+							        }
+							    }
+							}
+						}
+					}
+				}
+			}
+			catch (NullReferenceException e)
+			{
+				Console.WriteLine(e);
+			}
+			return result.AsQueryable();
+		}
 
         protected override void Dispose(bool disposing)
         {

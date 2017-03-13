@@ -12,17 +12,11 @@ namespace MileEyes.Services
         {
             _client = new HttpClient();
             var uri = new Uri(url);
+            
+            var response = await _client.GetAsync(uri);
 
-            try
-            {
-                var response = await _client.GetAsync(uri);
-
-                if (response.IsSuccessStatusCode) return await response.Content.ReadAsStringAsync();
-            }
-            catch
-            {
-                return null;
-            }
+            if (response.IsSuccessStatusCode) return await response.Content.ReadAsStringAsync();
+            
 
             return null;
         }

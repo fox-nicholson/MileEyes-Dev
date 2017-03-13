@@ -11,10 +11,10 @@ namespace MileEyes.Services
         {
             return DatabaseService.Realm.All<Reason>();
         }
-        
+
         public async Task<Reason> GetReason(string id)
         {
-            return DatabaseService.Realm.ObjectForPrimaryKey<Reason>(id);
+            return DatabaseService.Realm.ObjectForPrimaryKey<Reason>(id);            
         }
 
         public async Task<Reason> SaveReason(Reason r)
@@ -27,6 +27,7 @@ namespace MileEyes.Services
                 reason.Text = r.Text;
 
                 transaction.Commit();
+                transaction.Dispose();
 
                 return reason;
             }
@@ -41,6 +42,7 @@ namespace MileEyes.Services
                 DatabaseService.Realm.Remove(reason);
 
                 transaction.Commit();
+                transaction.Dispose();
 
                 return reason;
             }
@@ -58,6 +60,7 @@ namespace MileEyes.Services
                 }
 
                 transaction.Commit();
+                transaction.Dispose();
             }
         }
     }

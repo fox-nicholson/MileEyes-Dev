@@ -71,7 +71,7 @@ namespace MileEyes.ViewModels
                 PlaceId = destinationWaypoint.PlaceId
             };
 
-            if (Waypoints.Count() > 2)
+            if (Waypoints.Count > 2)
                 Gps = true;
             else
                 Manual = true;
@@ -248,7 +248,7 @@ namespace MileEyes.ViewModels
         public async void InitRoute()
         {
             ShowDetails = true;
-            if (Waypoints.Count() > 2)
+            if (Waypoints.Count > 2)
             {
                 Route.Clear();
                 var orderedWaypoints = Waypoints.OrderBy(wp => wp.Step);

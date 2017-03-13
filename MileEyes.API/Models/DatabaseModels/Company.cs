@@ -36,5 +36,7 @@ namespace MileEyes.API.Models.DatabaseModels
         public DateTimeOffset Modified { get; set; }
 
         public string SubscriptionId { get; set; }
+
+        public DateTimeOffset StartOfTaxYear { get; set; }
     }
 }

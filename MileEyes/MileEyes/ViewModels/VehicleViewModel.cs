@@ -15,6 +15,45 @@ namespace MileEyes.ViewModels
 
         public string Id => _id;
 
+        private DateTime _regDate;
+
+        public DateTime RegDate
+        {
+            get { return _regDate; }
+            set
+            {
+                if (_regDate == value) return;
+                _regDate = value;
+                OnPropertyChanged(nameof(RegDate));
+            }
+        }
+
+        private DateTime _maxDate;
+
+        public DateTime MaxDate
+        {
+            get { return _maxDate; }
+            set
+            {
+                if (_maxDate == value) return;
+                _maxDate = value;
+                OnPropertyChanged(nameof(MaxDate));
+            }
+        }
+
+        private DateTime _minDate;
+
+        public DateTime MinDate
+        {
+            get { return _minDate; }
+            set
+            {
+                if (_minDate == value) return;
+                _minDate = value;
+                OnPropertyChanged(nameof(MinDate));
+            }
+        }
+
         private string _registration;
 
         public string Registration
@@ -37,6 +76,18 @@ namespace MileEyes.ViewModels
             {
                 _engineType = value;
                 OnPropertyChanged(nameof(EngineType));
+            }
+        }
+
+        private VehicleType _vehicleType;
+
+        public VehicleType VehicleType
+        {
+            get { return _vehicleType; }
+            set
+            {
+                _vehicleType = value;
+                OnPropertyChanged(nameof(VehicleType));
             }
         }
 
@@ -69,9 +120,18 @@ namespace MileEyes.ViewModels
         {
             Busy = true;
 
-            _vehicle = new Vehicle()
+            RegDate = DateTime.UtcNow;
+            MaxDate = DateTime.UtcNow;
+            MinDate = new DateTime(1970, 1, 1);
+
+            _vehicle = new Vehicle
             {
-                EngineType = new EngineType()
+                EngineType = new EngineType
+                {
+                    Name = "Required"
+                },
+
+                VehicleType = new VehicleType
                 {
                     Name = "Required"
                 }
@@ -94,6 +154,8 @@ namespace MileEyes.ViewModels
             _id = _vehicle.Id;
             Registration = _vehicle.Registration;
             EngineType = _vehicle.EngineType;
+            VehicleType = _vehicle.VehicleType;
+            RegDate = _vehicle.RegDate;
 
             Refreshing = false;
         }
@@ -132,6 +194,7 @@ namespace MileEyes.ViewModels
 
             _vehicle.Registration = Registration;
             _vehicle.EngineType = EngineType;
+            _vehicle.VehicleType = VehicleType;
 
             _vehicle = await Services.Host.VehicleService.AddVehicle(_vehicle);
 

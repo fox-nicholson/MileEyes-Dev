@@ -1,4 +1,6 @@
-﻿namespace MileEyes.PublicModels.Company
+﻿using System;
+
+namespace MileEyes.PublicModels.Company
 {
     public class CompanyBindingModel
     {
@@ -15,5 +17,6 @@
         public decimal HighRate { get; set; }
         public double CurrentMileage { get; set; }
         public decimal CurrentExpenses { get; set; }
+        public DateTimeOffset StartOfTaxYear { get; set; }
     }
 }

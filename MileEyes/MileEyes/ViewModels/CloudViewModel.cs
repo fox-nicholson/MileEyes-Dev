@@ -135,8 +135,7 @@ namespace MileEyes.ViewModels
 
             Services.Host.AuthService.Logout();
 
-            var model = new SettingsViewModel();
-            model.InvoicedDefault = false;
+//            var model = new SettingsViewModel {InvoicedDefault = false};
 
             LoggedOut?.Invoke(this, EventArgs.Empty);
             Busy = false;

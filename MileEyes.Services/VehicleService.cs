@@ -24,9 +24,12 @@ namespace MileEyes.Services
                 vehicle.Id = Guid.NewGuid().ToString();
                 vehicle.CloudId = v.CloudId;
                 vehicle.Registration = v.Registration.ToUpper();
-                vehicle.EngineType = engineType;
+                vehicle.EngineType = v.EngineType;
+                vehicle.VehicleType = v.VehicleType;
+                vehicle.RegDate = v.RegDate;
 
                 transaction.Commit();
+                transaction.Dispose();
 
                 return vehicle;
             }
@@ -39,12 +42,12 @@ namespace MileEyes.Services
 
         public async Task<IQueryable<Vehicle>> GetVehicles()
         {
-            return DatabaseService.Realm.All<Vehicle>().Where(v => v.MarkedForDeletion == false);
+            return DatabaseService.Realm.All<Vehicle>().Where(v => v.MarkedForDeletion == false);            
         }
 
         public async Task<IQueryable<Vehicle>> GetAllVehicles()
         {
-            return DatabaseService.Realm.All<Vehicle>();
+            return DatabaseService.Realm.All<Vehicle>();            
         }
 
         public async Task<Vehicle> RemoveVehicle(string id)
@@ -68,6 +71,7 @@ namespace MileEyes.Services
                 }
 
                 transaction.Commit();
+                transaction.Dispose();
 
                 return vehicle;
             }
@@ -85,14 +89,18 @@ namespace MileEyes.Services
                 }
 
                 transaction.Commit();
+                transaction.Dispose();
             }
         }
 
         public async Task Sync()
         {
-            await PushNew();
-            await PullUpdate();
-            await DeleteMarked();
+            if (!TrackerService.IsTracking)
+            {
+                await PushNew();
+                await PullUpdate();
+                await DeleteMarked();
+            }
         }
 
         private async Task DeleteMarked()
@@ -113,6 +121,7 @@ namespace MileEyes.Services
                         DatabaseService.Realm.Remove(vehicleToRemove);
 
                         transaction.Commit();
+                        transaction.Dispose();
                     }
                 }
                 catch (Exception ex)
@@ -124,65 +133,76 @@ namespace MileEyes.Services
 
         private async Task PullUpdate()
         {
-            try
+            var response = await RestService.Client.GetAsync("/api/Vehicles/");
+
+            if (response == null) return;
+
+            if (!response.IsSuccessStatusCode) return;
+
+            var result =
+                JsonConvert.DeserializeObject<ICollection<VehicleViewModel>>(
+                    await response.Content.ReadAsStringAsync());
+
+            foreach (var vehicleData in result)
             {
-                var response = await RestService.Client.GetAsync("/api/Vehicles/");
+                var vehicles = await GetVehicles();
 
-                if (!response.IsSuccessStatusCode) return;
+                var vehiclesEnumerable = vehicles.ToArray();
 
-                var result =
-                    JsonConvert.DeserializeObject<ICollection<VehicleViewModel>>(
-                        await response.Content.ReadAsStringAsync());
+                var existingVehicles = vehiclesEnumerable.Where(v => v.CloudId == vehicleData.Id);
 
-                foreach (var vehicleData in result)
+                var existingVehiclesEnumerable = existingVehicles as Vehicle[] ?? existingVehicles.ToArray();
+
+                if (!existingVehiclesEnumerable.Any())
                 {
-                    var vehicles = await GetVehicles();
+                    var vehicle = new Vehicle();
 
-                    var vehiclesEnumerable = vehicles.ToArray();
+                    var engineTypes = await Host.EngineTypeService.GetEngineTypes();
 
-                    var existingVehicles = vehiclesEnumerable.Where(v => v.CloudId == vehicleData.Id);
+                    var engineType = engineTypes.FirstOrDefault(et => et.Id == vehicleData.EngineType.Id);
 
-                    var existingVehiclesEnumerable = existingVehicles as Vehicle[] ?? existingVehicles.ToArray();
+                    var vehicleTypes = await Host.VehicleTypeService.GetVehicleTypes();
 
-                    if (!existingVehiclesEnumerable.Any())
-                    {
-                        var vehicle = new Vehicle();
+                    var vehicleType = vehicleTypes.FirstOrDefault(vt => vt.Id == vehicleData.VehicleType.Id);
 
-                        var engineTypes = await Host.EngineTypeService.GetEngineTypes();
+                    vehicle.CloudId = vehicleData.Id;
+                    vehicle.Registration = vehicleData.Registration;
+                    vehicle.EngineType = engineType;
+                    vehicle.VehicleType = vehicleType;
 
-                        var engineType = engineTypes.FirstOrDefault(et => et.Id == vehicleData.EngineType.Id);
+                    await AddVehicle(vehicle);
 
-                        vehicle.CloudId = vehicleData.Id;
-                        vehicle.Registration = vehicleData.Registration;
-                        vehicle.EngineType = engineType;
-
-                        await AddVehicle(vehicle);
-
-                        return;
-                    }
-
-                    var existingVehicle = await GetVehicle(existingVehiclesEnumerable.FirstOrDefault().Id);
-
-                    using (var transaction = DatabaseService.Realm.BeginWrite())
-                    {
-                        var engineTypes = await Host.EngineTypeService.GetEngineTypes();
-
-                        var engineType = engineTypes.FirstOrDefault(
-                            et => et.Id == vehicleData.EngineType.Id);
-
-                        var a = engineType;
-
-                        existingVehicle.EngineType = engineType;
-                        existingVehicle.Registration = vehicleData.Registration;
-
-                        transaction.Commit();
-                    }
+                    return;
                 }
-            }
-            catch (Exception ex)
-            {
-                var message = ex.Message;
-            }
+
+                var existingVehicle = await GetVehicle(existingVehiclesEnumerable.FirstOrDefault().Id);
+
+                using (var transaction = DatabaseService.Realm.BeginWrite())
+                {
+                    var engineTypes = await Host.EngineTypeService.GetEngineTypes();
+
+                    var engineType = engineTypes.FirstOrDefault(
+                        et => et.Id == vehicleData.EngineType.Id);
+
+                    var a = engineType;
+
+                    existingVehicle.EngineType = engineType;
+
+                    var vehicleTypes = await Host.VehicleTypeService.GetVehicleTypes();
+
+                    var vehicleType = vehicleTypes.FirstOrDefault(
+                        vt => vt.Id == vehicleData.VehicleType.Id);
+
+                    var t = vehicleType;
+
+                    existingVehicle.VehicleType = vehicleType;
+
+                    existingVehicle.Registration = vehicleData.Registration;
+
+                    transaction.Commit();
+                    transaction.Dispose();
+                }
+             }
         }
 
         private async Task PushNew()
@@ -200,6 +220,8 @@ namespace MileEyes.Services
                     var data = new StringContent(JsonConvert.SerializeObject(v), Encoding.UTF8, "application/json");
 
                     var response = await RestService.Client.PostAsync("/api/Vehicles/", data);
+
+                    if (response == null) return;
 
                     if (!response.IsSuccessStatusCode)
                     {
@@ -222,6 +244,7 @@ namespace MileEyes.Services
                         vehicle.CloudId = result.Id;
 
                         transaction.Commit();
+                        transaction.Dispose();
                     }
                 }
                 catch (Exception ex)

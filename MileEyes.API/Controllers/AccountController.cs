@@ -54,14 +54,14 @@ namespace MileEyes.API.Controllers
         [Route("UserInfo")]
         public UserInfoViewModel GetUserInfo()
         {
-            var externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
-
-            var userId = User.Identity.GetUserId();
-
-            var user = db.Users.FirstOrDefault(u => u.Id == userId);
-
             try
-            {
+            { 
+                var externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
+
+                var userId = User.Identity.GetUserId();
+
+                var user = db.Users.FirstOrDefault(u => u.Id == userId);
+                
                 return new UserInfoViewModel
                 {
                     Email = User.Identity.GetUserName(),
@@ -73,9 +73,9 @@ namespace MileEyes.API.Controllers
                     PlaceId = user.Address.PlaceId
                 };
             }
-            catch (NullReferenceException e)
+            catch (Exception e)
             {
-                Console.WriteLine(e);
+                Console.WriteLine("Caught exception in Account Controller: " + e);
                 return null;
             }
         }
@@ -84,35 +84,42 @@ namespace MileEyes.API.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> UpdateUserInfo(UserInfoBindingModel model)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-
-            var userId = User.Identity.GetUserId();
-
-            var user = db.Users.FirstOrDefault(u => u.Id == userId);
-
             try
-            {
+            { 
+                if (!ModelState.IsValid) return BadRequest(ModelState);
+
+                var userId = User.Identity.GetUserId();
+
+                var user = db.Users.FirstOrDefault(u => u.Id == userId);
+
+                if (user == null)
+                {
+                    return BadRequest();
+                }
+                
                 user.Email = model.Email;
                 user.FirstName = model.FirstName;
                 user.LastName = model.LastName;
 
-                var existingAddresses = db.Addresses.Where(a => a.PlaceId == model.PlaceId);
+                var existingAddresses = db.Addresses.FirstOrDefault(a => a.PlaceId == model.PlaceId);
 
-                if (existingAddresses.Any())
-                    user.Address = existingAddresses.FirstOrDefault();
+                if (existingAddresses != null)
+                    user.Address = existingAddresses;
                 else
                     user.Address = new Address
                     {
+                        Id = Guid.NewGuid(),
                         PlaceId = model.PlaceId
                     };
-            }
-            catch (NullReferenceException e)
-            {
-                Console.WriteLine(e);
-            }
-            await db.SaveChangesAsync();
+                await db.SaveChangesAsync();
 
-            return Ok();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Caught exception in Account Controller: " + e);
+                return null;
+            }
         }
 
         // POST api/Account/Logout
@@ -336,106 +343,117 @@ namespace MileEyes.API.Controllers
         [Route("Register")]
         public async Task<IHttpActionResult> Register(RegisterBindingModel model)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var existingAddress = db.Addresses.FirstOrDefault(a => a.PlaceId == model.PlaceId);
-
-            Address address;
-
-            if (existingAddress == null)
-            {
-                var addressResult = await GeocodingService.GetAddress(model.PlaceId);
-
-                address = new Address
-                {
-                    Id = Guid.NewGuid(),
-                    PlaceId = addressResult.PlaceId,
-                    Coordinates = new Coordinates
-                    {
-                        Id = Guid.NewGuid(),
-                        Latitude = addressResult.Latitude,
-                        Longitude = addressResult.Longitude
-                    }
-                };
-            }
-            else
-            {
-                address = existingAddress;
-            }
-
-            var user = new ApplicationUser
-            {
-                UserName = model.Email,
-                Email = model.Email,
-                FirstName = model.FirstName,
-                LastName = model.LastName
-            };
-
-            var result = await UserManager.CreateAsync(user, model.Password);
-
-            if (!result.Succeeded)
-                return GetErrorResult(result);
-
-            var dbuser = db.Users.Find(user.Id);
-
-            dbuser.Address = address;
-
-            var owner = new Owner
-            {
-                Id = Guid.NewGuid()
-            };
-            var accountant = new Accountant
-            {
-                Id = Guid.NewGuid()
-            };
-            var manager = new Manager
-            {
-                Id = Guid.NewGuid()
-            };
-            var driver = new Driver
-            {
-                Id = Guid.NewGuid()
-            };
-
-            var personalCompany = new Company
-            {
-                Id = Guid.NewGuid(),
-                Name = "Personal",
-                AutoAccept = true,
-                HighRate = 0.45M,
-                LowRate = 0.25M,
-                Address = address,
-                AutoAcceptDistance = 160934,
-                Personal = true,
-                Vat = false
-            };
-
-            personalCompany.Profiles.Add(driver);
-
-            owner.Companies.Add(personalCompany);
-
-            dbuser.Profiles.Add(owner);
-            dbuser.Profiles.Add(accountant);
-            dbuser.Profiles.Add(manager);
-            dbuser.Profiles.Add(driver);
             try
             {
-                await db.SaveChangesAsync();
-            }
-            catch (Exception ex)
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                var existingAddress = db.Addresses.FirstOrDefault(a => a.PlaceId == model.PlaceId);
+
+                Address address;
+
+                if (existingAddress == null)
+                {
+                    var addressResult = await GeocodingService.GetAddress(model.PlaceId);
+
+                    address = new Address
+                    {
+                        Id = Guid.NewGuid(),
+                        PlaceId = addressResult.PlaceId,
+                        Coordinates = new Coordinates
+                        {
+                            Id = Guid.NewGuid(),
+                            Latitude = addressResult.Latitude,
+                            Longitude = addressResult.Longitude
+                        }
+                    };
+                }
+                else
+                {
+                    address = existingAddress;
+                }
+
+                var user = new ApplicationUser
+                {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName
+                };
+
+                var result = await UserManager.CreateAsync(user, model.Password);
+
+                if (!result.Succeeded)
+                    return GetErrorResult(result);
+
+                var dbuser = db.Users.Find(user.Id);
+
+                dbuser.Address = address;
+
+                var owner = new Owner
+                {
+                    Id = Guid.NewGuid(),
+                    User = dbuser
+                };
+                var accountant = new Accountant
+                {
+                    Id = Guid.NewGuid(),
+                    User = dbuser
+                };
+                var manager = new Manager
+                {
+                    Id = Guid.NewGuid(),
+                    User = dbuser
+                };
+                var driver = new Driver
+                {
+                    Id = Guid.NewGuid(),
+                    User = dbuser
+                };
+
+                var personalCompany = new Company
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Personal",
+                    AutoAccept = true,
+                    HighRate = 0.45M,
+                    LowRate = 0.25M,
+                    Address = address,
+                    AutoAcceptDistance = 160934,
+                    Personal = true,
+                    Vat = false,
+                    Owner = owner
+                };
+
+                personalCompany.Profiles.Add(driver);
+
+                owner.Companies.Add(personalCompany);
+
+                dbuser.Profiles.Add(owner);
+                dbuser.Profiles.Add(accountant);
+                dbuser.Profiles.Add(manager);
+                dbuser.Profiles.Add(driver);
+                try
+                {
+                    await db.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    var m = ex.Message;
+                }
+                var hostname = Request.RequestUri.Host;
+
+                //var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                //var callbackUrl = "http://" + hostname + "/Account/ConfirmEmail?userId=" + user.Id +
+                // "&code=" + code;
+
+                //await UserManager.SendEmailAsync(user.Id, "Welcome to MileEyes", callbackUrl);
+
+                return Ok();
+            } catch (Exception)
             {
-                var m = ex.Message;
+                return null;
             }
-            var hostname = Request.RequestUri.Host;
-
-            //var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-            //var callbackUrl = "http://" + hostname + "/Account/ConfirmEmail?userId=" + user.Id +
-            // "&code=" + code;
-
-            //await UserManager.SendEmailAsync(user.Id, "Welcome to MileEyes", callbackUrl);
-
-            return Ok();
         }
 
         // GET api/Account/CheckEmail
@@ -571,12 +589,33 @@ namespace MileEyes.API.Controllers
                 return BadRequest("Unable to find company!");
             }
             var user = db.Users.Find(User.Identity.GetUserId());
-            var owner = user.Profiles.OfType<Owner>().FirstOrDefault();
-            var manager = user.Profiles.OfType<Manager>().FirstOrDefault();
+
 
             var companyOwners = company.Profiles.OfType<Owner>();
             var companyManagers = company.Profiles.OfType<Manager>();
 
+            //Get the users owner profile
+            Owner owner = null;
+            foreach (var o in companyOwners)
+            {
+                if (user.Email == o.User.Email)
+                {
+                    owner = o;
+                    break;
+                }
+            }
+
+            //Get the users manager profile
+            Manager manager = null;
+            foreach (var m in companyManagers)
+            {
+                if (user.Email == m.User.Email)
+                {
+                    manager = m;
+                    break;
+                }
+            }
+            
             if (!companyOwners.Contains(owner) && !companyManagers.Contains(manager))
             {
                 return BadRequest("You don't have the rights to do this.");
@@ -658,7 +697,7 @@ namespace MileEyes.API.Controllers
                 company.Name + ". Simply choose " + company.Name +
                 " from the list of companies at the end of your journey and we'll do the rest. </p> <p>What's more, it won't cost you anything more to track mileage for " +
                 company.Name +
-                                   ".</p> <table class='callout'> <tr> <td class='callout-inner primary button-row'> <br/> <a href='http://localhost:4000/#/invite?type=driver&invite=" + invite.Id + "&email=" + email + "&companyId=" + companyId + "&companyName=" + company.Name + "' class='button'>Join</a> </td> <td class='expander'></td> </tr>								</table> </th> </tr> </table> </th> </tr> </tbody> </table> </td> </tr> <tr class='transparent'>				 <th>					 <br/>					 <br/>					 <p>&copy; Powerhouse Software</p>					 <br/>					 <br/>				 </th>			 </tr> </tbody> </table> </center> </td> </tr> </table> </body></html>");
+                                   ".</p> <table class='callout'> <tr> <td class='callout-inner primary button-row'> <br/> <a href='http://mileeyes-portal.azurewebsites.net/#/invite?type=driver&invite=" + invite.Id + "&email=" + email + "&companyId=" + companyId + "&companyName=" + company.Name + "' class='button'>Join</a> </td> <td class='expander'></td> </tr>								</table> </th> </tr> </table> </th> </tr> </tbody> </table> </td> </tr> <tr class='transparent'>				 <th>					 <br/>					 <br/>					 <p>&copy; Powerhouse Software</p>					 <br/>					 <br/>				 </th>			 </tr> </tbody> </table> </center> </td> </tr> </table> </body></html>");
 
             return Ok("Email has been sent!");
         }

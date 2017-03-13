@@ -17,14 +17,14 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Save" Command="{Binding SaveCommand}" />
     </ContentPage.ToolbarItems>
-    <customControls:CustomTableView Intent="Form">
+    <customControls:CustomTableView Intent="Form" HasUnevenRows="True"> 
         <customControls:CustomTableView.BackgroundColor>
             <OnPlatform x:TypeArguments="Color"
                         iOS="{StaticResource primaryiOSBackgroundColor}"
                         Android="{StaticResource primaryAndroidBackgroundColor}" />
         </customControls:CustomTableView.BackgroundColor>
         <TableRoot>
-            <TableSection>
+            <TableSection Title="Personal Details">
                 <customControls:CustomEntryCell Label="Email" Placeholder="Required" Text="{Binding Email}">
                     <customControls:CustomEntryCell.LabelColor>
                         <OnPlatform x:TypeArguments="Color"
@@ -47,13 +47,12 @@
                     </customControls:CustomEntryCell.LabelColor>
                 </customControls:CustomEntryCell>
 
-                <customControls:CloudAddressViewCell Tapped="AddressCell_OnTapped" />
-            </TableSection>
-            <TableSection>
-                <ViewCell>
-                    <StackLayout HorizontalOptions="Center">
+                <customControls:CloudAddressViewCell Tapped="AddressCell_OnTapped" Height="50"/>
+            
+                <ViewCell Height="60">
+                    <StackLayout HorizontalOptions="FillAndExpand" Padding="0, 5, 0, 0">
                         <Button Text="Logout" FontSize="Large" TextColor="Red" HorizontalOptions="Center"
-                                VerticalOptions="Center" Command="{Binding LogoutCommand}" />
+                                VerticalOptions="Center" Command="{Binding LogoutCommand}"/>
                     </StackLayout>
                 </ViewCell>
             </TableSection>

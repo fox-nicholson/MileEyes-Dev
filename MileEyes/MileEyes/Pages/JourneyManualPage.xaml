@@ -20,6 +20,7 @@
     </ContentPage.ToolbarItems>
     <StackLayout VerticalOptions="FillAndExpand">
         <customControls:CustomDatePicker Date="{Binding Date}" MaximumDate="{Binding MaxDate}"
+                                         MinimumDate="{Binding MinDate}"
                                          HorizontalOptions="Center" TextColor="Gray" />
         <customControls:CustomTableView Intent="Settings">
             <customControls:CustomTableView.BackgroundColor>

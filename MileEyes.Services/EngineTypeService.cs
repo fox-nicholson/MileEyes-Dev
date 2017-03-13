@@ -30,37 +30,33 @@ namespace MileEyes.Services
 
         public async Task Sync()
         {
-            try
-            {
-                var response = await RestService.Client.GetAsync("api/EngineTypes/");
+            var response = await RestService.Client.GetAsync("api/EngineTypes/");
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    SyncFailed?.Invoke(this, EventArgs.Empty);
-                    return;
-                }
+            if (response == null) { SyncFailed?.Invoke(this, EventArgs.Empty); return; }
 
-                var result =
-                    JsonConvert.DeserializeObject<IEnumerable<EngineTypeViewModel>>(
-                        await response.Content.ReadAsStringAsync());
-
-                using (var transaction = DatabaseService.Realm.BeginWrite())
-                {
-                    DatabaseService.Realm.RemoveAll<EngineType>();
-
-                    foreach (var et in result)
-                    {
-                        var realmEt = DatabaseService.Realm.CreateObject<EngineType>();
-                        realmEt.Id = et.Id;
-                        realmEt.Name = et.Name;
-                    }
-
-                    transaction.Commit();
-                }
-            }
-            catch
+            if (!response.IsSuccessStatusCode)
             {
                 SyncFailed?.Invoke(this, EventArgs.Empty);
+                return;
+            }
+
+            var result =
+                JsonConvert.DeserializeObject<IEnumerable<EngineTypeViewModel>>(
+                    await response.Content.ReadAsStringAsync());
+
+            using (var transaction = DatabaseService.Realm.BeginWrite())
+            {
+                DatabaseService.Realm.RemoveAll<EngineType>();
+
+                foreach (var et in result)
+                {
+                    var realmEt = DatabaseService.Realm.CreateObject<EngineType>();
+                    realmEt.Id = et.Id;
+                    realmEt.Name = et.Name;
+                }
+
+                transaction.Commit();
+                transaction.Dispose();
             }
         }
     }

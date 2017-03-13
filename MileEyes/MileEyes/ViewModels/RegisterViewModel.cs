@@ -97,7 +97,7 @@ namespace MileEyes.ViewModels
             //Password = "Ab.123";
             //ConfirmPassword = "Ab.123";
 
-            Address = new Address()
+            Address = new Address
             {
                 Label = "Required"
             };

@@ -5,7 +5,6 @@ namespace MileEyes
 {
     public partial class App : Application
     {
-
         public App()
         {
             InitializeComponent();
@@ -27,16 +26,14 @@ namespace MileEyes
         /// Triggers Sync of Data for Authenticated Users
         /// </summary>
         /// <returns></returns>
-        
         private static bool SyncTimer()
         {
-            if (Services.Host.AuthService.Authenticated)
-            {
-                Services.Host.EngineTypeService.Sync();
-                Services.Host.VehicleService.Sync();
-                Services.Host.CompanyService.Sync();
-                Services.Host.JourneyService.Sync();
-            }
+            if (!Services.Host.AuthService.Authenticated) return true;
+            Services.Host.EngineTypeService.Sync();
+            Services.Host.VehicleTypeService.Sync();
+            Services.Host.VehicleService.Sync();
+            Services.Host.CompanyService.Sync();
+            Services.Host.JourneyService.Sync();
 
             return true;
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Input;
+using MileEyes.Services;
 using Xamarin.Forms;
 
 namespace MileEyes.ViewModels
@@ -51,31 +52,28 @@ namespace MileEyes.ViewModels
         public override void Refresh()
         {
             GPSAvailable = Plugin.Geolocator.CrossGeolocator.Current.IsGeolocationAvailable &&
-                           Plugin.Geolocator.CrossGeolocator.Current.IsGeolocationEnabled;
+                            Plugin.Geolocator.CrossGeolocator.Current.IsGeolocationEnabled;            
         }
 
         public bool GpsPingCallback()
         {
-            if (!Services.Host.Backgrounded)
+            if (!Host.Backgrounded)
             {
                 UpdateLocation();
             }
 
-            return true;
+            return true;            
         }
 
         private async void UpdateLocation()
         {
             if (GPSAvailable)
             {
-                var real = Plugin.Geolocator.CrossGeolocator.Current.IsGeolocationAvailable;
-                var real2 = Plugin.Geolocator.CrossGeolocator.Current.IsGeolocationEnabled;
-
                 var position = await Plugin.Geolocator.CrossGeolocator.Current.GetPositionAsync();
 
-                var loc = await Services.Host.GeocodingService.GetWeather(position.Latitude, position.Longitude);
+                var loc = await Host.GeocodingService.GetWeather(position.Latitude, position.Longitude);
 
-                CurrentLocation = loc.name != "Unknown Location" ? loc.name : "Searching...";
+                CurrentLocation = loc != "Unknown Location" ? loc : "Searching...";
             }
             else
             {
@@ -87,7 +85,8 @@ namespace MileEyes.ViewModels
 
         public void StartJourney()
         {
-            Services.Host.TrackerService.Start();
+            if (!TrackerService.IsTracking)
+            Host.TrackerService.Start();
         }
     }
 }

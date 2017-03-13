@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using MileEyes.Services;
 using MileEyes.Services.Models;
 
@@ -112,20 +113,7 @@ namespace MileEyes.ViewModels
                 OnPropertyChanged(nameof(ReasonsCountString));
             }
         }
-
-        private string _companyCountString;
-
-        public string CompanyCountString
-        {
-            get { return _companyCountString; }
-            set
-            {
-                if (_companyCountString == value) return;
-                _companyCountString = value;
-                OnPropertyChanged(nameof(CompanyCountString));
-            }
-        }
-
+        
         public SettingsViewModel()
         {
             Refresh();
@@ -139,7 +127,7 @@ namespace MileEyes.ViewModels
             {
                 var userDetails = await Host.UserService.GetDetails();
 
-                if (!string.IsNullOrEmpty(userDetails?.Result.Email))
+                if (!string.IsNullOrEmpty(userDetails?.Result?.Email))
                 {
                     MileEyesConnectDetail = userDetails.Result.Email;
                 }
@@ -172,27 +160,13 @@ namespace MileEyes.ViewModels
                     ReasonsCountString = "No reasons saved";
                     break;
                 case 1:
-                    ReasonsCountString = vcount + " reason saved";
+                    ReasonsCountString = rcount + " reason saved";
                     break;
                 default:
-                    ReasonsCountString = vcount + " reasons saved";
+                    ReasonsCountString = rcount + " reasons saved";
                     break;
             }
-
-            var ccount = (await Host.CompanyService.GetCompanies()).Count();
-            switch (ccount)
-            {
-                case 0:
-                    CompanyCountString = "No companies available";
-                    break;
-                case 1:
-                    CompanyCountString = vcount + " company available";
-                    break;
-                default:
-                    CompanyCountString = vcount + " companies available";
-                    break;
-            }
-
+            
             if (Helpers.Settings.DefaultPassengers > 0)
             {
                 DefaultPassenger =
@@ -201,7 +175,7 @@ namespace MileEyes.ViewModels
             }
             else
             {
-                DefaultPassenger = new Passenger()
+                DefaultPassenger = new Passenger
                 {
                     Name = "Just Me",
                     Number = 0
@@ -218,13 +192,12 @@ namespace MileEyes.ViewModels
 
             DefaultReason = defaultReason;
 
-            if (Authenticated)
-            {
-                var defaultCompany =
-                    (await Host.CompanyService.GetCompanies()).FirstOrDefault(v => v.Default);
+            if (!Authenticated) return;
 
-                DefaultCompany = defaultCompany;
-            }
+            var defaultCompany =
+                (await Host.CompanyService.GetCompanies()).FirstOrDefault(v => v.Default);
+
+            DefaultCompany = defaultCompany;
         }
     }
 }

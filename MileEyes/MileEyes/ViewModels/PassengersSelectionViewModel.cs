@@ -10,27 +10,27 @@ namespace MileEyes.ViewModels
         public List<Passenger> Passengers { get; set; } = new List<Passenger>(new[]
         {
             #region Passengers List
-            new Passenger()
+            new Passenger
             {
                 Name = "Just Me",
                 Number = 0
             },
-            new Passenger()
+            new Passenger
             {
                 Name = "One",
                 Number = 1
             },
-            new Passenger()
+            new Passenger
             {
                 Name = "Two",
                 Number = 2
             },
-            new Passenger()
+            new Passenger
             {
                 Name = "Three",
                 Number = 3
             },
-            new Passenger()
+            new Passenger
             {
                 Name = "Four",
                 Number = 4

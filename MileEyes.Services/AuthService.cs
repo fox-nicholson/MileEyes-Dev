@@ -24,6 +24,7 @@ namespace MileEyes.Services
                 DatabaseService.Realm.RemoveAll();
 
                 transaction.Commit();
+                transaction.Dispose();
             }
 
             RestService.Client.DefaultRequestHeaders.Authorization = null;
@@ -62,12 +63,14 @@ namespace MileEyes.Services
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    var result = JsonConvert.DeserializeObject<AuthResponse>(await response.Content.ReadAsStringAsync());
+                    var result =
+                        JsonConvert.DeserializeObject<AuthResponse>(await response.Content.ReadAsStringAsync());
                     result.Success = false;
                     return result;
                 }
 
-                var tokenResult = JsonConvert.DeserializeObject<AuthResponse>(await response.Content.ReadAsStringAsync());
+                var tokenResult =
+                    JsonConvert.DeserializeObject<AuthResponse>(await response.Content.ReadAsStringAsync());
 
                 // Write the access token to the database for use in future
                 using (var transaction = DatabaseService.Realm.BeginWrite())
@@ -88,6 +91,7 @@ namespace MileEyes.Services
 
                     // Commit the transaction
                     transaction.Commit();
+                    transaction.Dispose();
                 }
 
                 // Set the request headers bearer token to the access token.
@@ -101,6 +105,7 @@ namespace MileEyes.Services
                 tokenResult.Success = true;
 
                 await Host.EngineTypeService.Sync();
+                await Host.VehicleTypeService.Sync();
                 await Host.VehicleService.Sync();
                 await Host.CompanyService.Sync();
                 Host.JourneyService.Sync();
@@ -134,6 +139,11 @@ namespace MileEyes.Services
             try
             {
                 var response = await RestService.Client.PostAsync("api/Account/Register", data);
+
+                if (response == null) return new RegisterResponse()
+                {
+                    Error = true
+                };
 
                 if (response.IsSuccessStatusCode) return new RegisterResponse();
 

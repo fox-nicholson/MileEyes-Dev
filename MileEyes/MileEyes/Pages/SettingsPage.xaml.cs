@@ -45,7 +45,8 @@ namespace MileEyes.Pages
             }
             else
             {
-                Device.BeginInvokeOnMainThread(async () => { await Navigation.PushAsync(new PremiumFeaturesPage()); });
+                Device.BeginInvokeOnMainThread(
+                    async () => { await Navigation.PushAsync(new PremiumFeaturesPage()); });
 
                 Device.StartTimer(TimeSpan.FromSeconds(1), Wait);
             }

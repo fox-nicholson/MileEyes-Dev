@@ -1,4 +1,5 @@
 ﻿using Realms;
+using System;
 
 namespace MileEyes.Services.Models
 {
@@ -13,5 +14,7 @@ namespace MileEyes.Services.Models
 
         public bool Personal { get; set; }
         public bool Default { get; set; }
+        
+        public DateTimeOffset StartOfTaxYear { get; set; }
     }
 }

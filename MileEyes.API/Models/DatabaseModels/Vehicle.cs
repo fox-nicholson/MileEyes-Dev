@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace MileEyes.API.Models.DatabaseModels
 {
@@ -13,8 +11,11 @@ namespace MileEyes.API.Models.DatabaseModels
 
         public DateTimeOffset Modified { get; set; }
 
+        public DateTimeOffset RegDate { get; set; }
+
         public virtual ICollection<Driver> Drivers { get; set; } = new HashSet<Driver>();
         public virtual ICollection<Journey> Journeys { get; set; } = new HashSet<Journey>();
         public virtual EngineType EngineType { get; set; }
+        public virtual VehicleType VehicleType { get; set; }
     }
 }

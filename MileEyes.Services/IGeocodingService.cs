@@ -23,6 +23,6 @@ namespace MileEyes.Services
 
         Task<Leg> GetDirectionsFromGoogle(double[] origin, double[] destination);
 
-        Task<WeatherResponse> GetWeather(double lat, double lng);
+        Task<string> GetWeather(double lat, double lng);
     }
 }

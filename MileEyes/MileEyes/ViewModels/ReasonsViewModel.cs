@@ -29,7 +29,7 @@ namespace MileEyes.ViewModels
 
         public ReasonsViewModel()
         {
-            SelectedReason = new ReasonViewModel(new Reason()
+            SelectedReason = new ReasonViewModel(new Reason
             {
                 Text = string.Empty
             });
@@ -76,17 +76,12 @@ namespace MileEyes.ViewModels
             }
             else
             {
-                SelectedReason = new ReasonViewModel(new Reason()
+                SelectedReason = new ReasonViewModel(new Reason
                 {
                     Text = ""
                 });
             }
-
-            //else
-            //{
-            //    NoReasons?.Invoke(this, EventArgs.Empty);
-            //}
-
+            
             Refreshing = false;
         }
 

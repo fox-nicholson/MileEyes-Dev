@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Description;
 using System.Web.Http.OData;
 using MileEyes.API.Models;
-using MileEyes.API.Models.DatabaseModels;
 using MileEyes.PublicModels.EngineTypes;
 
 namespace MileEyes.API.Controllers
@@ -24,11 +16,17 @@ namespace MileEyes.API.Controllers
         [EnableQuery]
         public IQueryable<EngineTypeViewModel> GetEngineTypes()
         {
-            return db.EngineTypes.Select(et => new EngineTypeViewModel()
+            try
             {
-                Id = et.Id.ToString(),
-                Name = et.Name,
-            });
+                return db.EngineTypes.Select(et => new EngineTypeViewModel()
+                {
+                    Id = et.Id.ToString(),
+                    Name = et.Name,
+                });
+            }catch (Exception)
+            {
+                return null;
+            }
         }
 
         protected override void Dispose(bool disposing)

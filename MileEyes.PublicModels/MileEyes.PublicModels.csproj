@@ -43,6 +43,7 @@
     <Compile Include="Driver\DriverViewModel.cs" />
     <Compile Include="EngineTypes\EngineTypeBindingModel.cs" />
     <Compile Include="EngineTypes\EngineTypeViewModel.cs" />
+    <Compile Include="Journey\JourneyInfoViewModel.cs" />
     <Compile Include="Journey\JourneyBindingModel.cs" />
     <Compile Include="Journey\JourneyViewModel.cs" />
     <Compile Include="Journey\WaypointBindingModel.cs" />
@@ -51,6 +52,8 @@
     <Compile Include="RegisterBindingModel.cs" />
     <Compile Include="Vehicles\VehicleBindingModel.cs" />
     <Compile Include="Vehicles\VehicleViewModel.cs" />
+    <Compile Include="VehicleTypes\VehicleTypeBindingModel.cs" />
+    <Compile Include="VehicleTypes\VehicleTypeViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">

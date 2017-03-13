@@ -25,6 +25,11 @@ namespace MileEyes.Services
             {
                 var response = await RestService.Client.PostAsync("account/userinfo", data);
 
+                if (response == null) return new UserInfoResponse()
+                {
+                    Error = true
+                };
+
                 if (response.IsSuccessStatusCode) return new UserInfoResponse();
                 var errorResult =
                     JsonConvert.DeserializeObject<UserInfoResponse>(await response.Content.ReadAsStringAsync());
@@ -33,7 +38,6 @@ namespace MileEyes.Services
 
                 return errorResult;
             }
-
             catch (Exception ex)
             {
                 return new UserInfoResponse()
@@ -46,35 +50,29 @@ namespace MileEyes.Services
 
         public async Task<UserInfoResponse> GetDetails()
         {
-            try
+            var response = await RestService.Client.GetAsync("api/account/userinfo");
+
+            if (response == null) return new UserInfoResponse()
             {
-                var response = await RestService.Client.GetAsync("api/account/userinfo");
+                Error = true
+            };
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    var errorResult =
-                        JsonConvert.DeserializeObject<UserInfoResponse>(await response.Content.ReadAsStringAsync());
-
-                    errorResult.Error = true;
-
-                    return errorResult;
-                }
-
-                var result = JsonConvert.DeserializeObject<UserInfoViewModel>(await response.Content.ReadAsStringAsync());
-
-                return new UserInfoResponse()
-                {
-                    Result = result
-                };
-            }
-            catch (Exception e)
+            if (!response.IsSuccessStatusCode)
             {
-                return new UserInfoResponse()
-                {
-                    Error = true,
-                    Message = e.Message
-                };
+                var errorResult =
+                    JsonConvert.DeserializeObject<UserInfoResponse>(await response.Content.ReadAsStringAsync());
+
+                errorResult.Error = true;
+
+                return errorResult;
             }
+
+            var result = JsonConvert.DeserializeObject<UserInfoViewModel>(await response.Content.ReadAsStringAsync());
+
+            return new UserInfoResponse()
+            {
+                Result = result
+            };
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using MileEyes.CustomControls;
+using MileEyes.Services;
 using MileEyes.ViewModels;
 using Xamarin.Forms;
 
@@ -13,12 +14,12 @@ namespace MileEyes.Pages
         {
             InitializeComponent();
 
-            Services.Host.TrackerService.Started += TrackerService_Started;
-            Services.Host.TrackerService.StartFailed += TrackerService_StartFailed;
-            Services.Host.TrackerService.Stopped += TrackerService_Stopped;
-            Services.Host.TrackerService.Cancelled += TrackerService_Cancelled;
+            Host.TrackerService.Started += TrackerService_Started;
+            Host.TrackerService.StartFailed += TrackerService_StartFailed;
+            Host.TrackerService.Stopped += TrackerService_Stopped;
+            Host.TrackerService.Cancelled += TrackerService_Cancelled;
 
-            Services.Host.JourneyService.JourneySaved += JourneyService_JourneySaved;
+            Host.JourneyService.JourneySaved += JourneyService_JourneySaved;
         }
 
         private void JourneyService_JourneySaved(object sender, EventArgs e)

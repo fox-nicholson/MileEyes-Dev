@@ -29,32 +29,30 @@ namespace MileEyes.Pages
 
             SegmentedControl.SelectedValue = "Details";
 
-            if (j != null)
+            if (j == null) return;
+            if (j.Waypoints.Count > 2)
             {
-                if (j.Waypoints.Count > 2)
-                {
-                    int midpoint = j.Waypoints.OrderBy(w => w.Step).Count() / 2;
-                    map.MoveToRegion(
-                        MapSpan.FromCenterAndRadius(
-                            new Position(j.Waypoints.ElementAt(midpoint).Latitude,
-                                j.Waypoints.ElementAt(midpoint).Longitude),
-                            Distance.FromMiles(j.Distance * 0.08)));
-                }
-                else
-                {
-                    var midpoint =
-                        Services.Helpers.TrigHelpers.MidPoint(
-                            new[] {j.OriginAddress.Latitude, j.OriginAddress.Longitude},
-                            new[] {j.DestinationAddress.Latitude, j.DestinationAddress.Longitude});
-                    map.MoveToRegion(
-                        MapSpan.FromCenterAndRadius(
-                            new Position(midpoint[0], midpoint[1]),
-                            Distance.FromMiles(j.Distance * 0.08)));
-                }
-
-
-                j.InitRoute();
+                int midpoint = j.Waypoints.OrderBy(w => w.Step).Count() / 2;
+                map.MoveToRegion(
+                    MapSpan.FromCenterAndRadius(
+                        new Position(j.Waypoints.ElementAt(midpoint).Latitude,
+                            j.Waypoints.ElementAt(midpoint).Longitude),
+                        Distance.FromMiles(j.Distance * 0.08)));
             }
+            else
+            {
+                var midpoint =
+                    Services.Helpers.TrigHelpers.MidPoint(
+                        new[] {j.OriginAddress.Latitude, j.OriginAddress.Longitude},
+                        new[] {j.DestinationAddress.Latitude, j.DestinationAddress.Longitude});
+                map.MoveToRegion(
+                    MapSpan.FromCenterAndRadius(
+                        new Position(midpoint[0], midpoint[1]),
+                        Distance.FromMiles(j.Distance * 0.08)));
+            }
+
+
+            j.InitRoute();
         }
 
         private void Switch_OnToggled(object sender, ToggledEventArgs e)

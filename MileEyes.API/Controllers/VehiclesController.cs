@@ -13,6 +13,7 @@ using Microsoft.AspNet.Identity;
 using MileEyes.API.Models;
 using MileEyes.API.Models.DatabaseModels;
 using MileEyes.PublicModels.EngineTypes;
+using MileEyes.PublicModels.VehicleTypes;
 using MileEyes.PublicModels.Vehicles;
 
 namespace MileEyes.API.Controllers
@@ -27,7 +28,29 @@ namespace MileEyes.API.Controllers
         {
             var user = db.Users.Find(User.Identity.GetUserId());
 
-            var driver = user.Profiles.OfType<Driver>().FirstOrDefault();
+            var drivers = user.Profiles.OfType<Driver>();
+
+            Driver driver = null;
+            foreach (var d in drivers)
+            {
+				if (user.Email == d.User.Email)
+				{
+					bool found = false;
+					foreach (var c in d.Companies)
+					{
+						if (c.Personal)
+						{
+							found = true;
+							break;
+						}
+					}
+					if (found)
+					{
+						driver = d;
+						break;
+					}
+                }
+            }
 
             if (driver != null)
             {
@@ -38,6 +61,10 @@ namespace MileEyes.API.Controllers
                     EngineType = new EngineTypeViewModel()
                     {
                         Id = v.EngineType.Id.ToString()
+                    },
+                    VehicleType = new VehicleTypeViewModel()
+                    {
+                        Id = v.VehicleType.Id.ToString()
                     }
                 }).AsQueryable();
             }
@@ -62,6 +89,10 @@ namespace MileEyes.API.Controllers
                 EngineType = new EngineTypeViewModel()
                 {
                     Id = vehicle.EngineType.Id.ToString()
+                },
+                VehicleType = new VehicleTypeViewModel()
+                {
+                    Id = vehicle.VehicleType.Id.ToString()
                 }
             });
         }
@@ -76,36 +107,91 @@ namespace MileEyes.API.Controllers
             }
             var user = db.Users.Find(User.Identity.GetUserId());
 
-            var driver = user.Profiles.OfType<Driver>().FirstOrDefault();
+            var drivers = user.Profiles.OfType<Driver>();
+            
+            Driver driver = null;
+			foreach (var d in drivers)
+			{
+				if (user.Email == d.User.Email)
+				{
+					bool found = false;
+					foreach (var c in d.Companies)
+					{
+						if (c.Personal)
+						{
+							found = true;
+							break;
+						}
+					}
+					if (found)
+					{
+						driver = d;
+						break;
+					}
+				}
+			}
 
-            var engineTypeGuid = Guid.Parse(model.EngineType.Id);
+			if (driver == null)
+			{
+				return BadRequest();
+			}
+            var engineType = new EngineType();
+            if (model.EngineType != null)
+            {
+                var engineTypeGuid = Guid.Parse(model.EngineType.Id);
 
-            var engineType = db.EngineTypes.FirstOrDefault(et => et.Id == engineTypeGuid);
+                engineType = db.EngineTypes.FirstOrDefault(et => et.Id == engineTypeGuid);
 
-            if (engineType == null)
+                if (engineType == null)
+                {
+                    return BadRequest();
+                }
+            }
+            else
             {
                 return BadRequest();
             }
+
+            var vehicleType = new VehicleType();
+            if (model.VehicleType != null)
+            {
+                var vehicleTypeGuid = Guid.Parse(model.VehicleType.Id);
+
+                vehicleType = db.VehicleTypes.FirstOrDefault(et => et.Id == vehicleTypeGuid);
+
+                if (vehicleType == null)
+                {
+                    return BadRequest();
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
+
+            var regDate = model.RegDate;
 
             var stripedRegistration = model.Registration.Trim(' ').ToUpper();
 
             Vehicle vehicle;
 
-            var existingVehicles = db.Vehicles.Where(v => v.Registration == stripedRegistration);
-
-            if (existingVehicles.Any())
-            {
-                vehicle = existingVehicles.FirstOrDefault();
-            }
-            else
-            {
+//            var existingVehicles = db.Vehicles.Where(v => v.Registration == stripedRegistration);
+//
+//            if (existingVehicles.Any())
+//            {
+//                vehicle = existingVehicles.FirstOrDefault();
+//            }
+//            else
+//            {
                 vehicle = new Vehicle
                 {
                     Id = Guid.NewGuid(),
                     Registration = model.Registration,
-                    EngineType = engineType
+                    EngineType = engineType,
+                    VehicleType = vehicleType,
+                    RegDate = regDate
                 };
-            }
+//            }
 
             try
             {
@@ -148,6 +234,10 @@ namespace MileEyes.API.Controllers
                     EngineType = new EngineTypeViewModel()
                     {
                         Id = vehicle.EngineType.Id.ToString()
+                    },
+                    VehicleType = new VehicleTypeViewModel()
+                    {
+                        Id = vehicle.VehicleType.Id.ToString()
                     }
                 });
             }
@@ -170,8 +260,33 @@ namespace MileEyes.API.Controllers
 
             var user = db.Users.Find(User.Identity.GetUserId());
 
-            var driver = user.Profiles.OfType<Driver>().FirstOrDefault();
+			var drivers = user.Profiles.OfType<Driver>();
 
+            Driver driver = null;
+			foreach (var d in drivers)
+			{
+				if (user.Email == d.User.Email)
+				{
+					bool found = false;
+					foreach (var c in d.Companies)
+					{
+						if (c.Personal)
+						{
+							found = true;
+							break;
+						}
+					}
+					if (found)
+					{
+						driver = d;
+						break;
+					}
+				}
+			}
+			if (driver == null)
+			{
+				return BadRequest();
+			}
             try
             {
                 driver.Vehicles.Remove(vehicle);

@@ -1,4 +1,6 @@
-﻿namespace MileEyes.PublicModels.Company
+﻿using System;
+
+namespace MileEyes.PublicModels.Company
 {
     public class CompanyViewModel
     {
@@ -11,5 +13,7 @@
         public decimal LowRate { get; set; }
 
         public decimal HighRate { get; set; }
+
+        public DateTimeOffset StartOfTaxYear { get; set; }
     }
 }

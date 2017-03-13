@@ -241,6 +241,7 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CompaniesController.cs" />
+    <Compile Include="Controllers\VehicleTypesController.cs" />
     <Compile Include="Controllers\EngineTypesController.cs" />
     <Compile Include="Controllers\EngineTypesManagerController.cs" />
     <Compile Include="Controllers\FuelTypesManagerController.cs" />
@@ -275,6 +276,38 @@
     <Compile Include="Migrations\201701271458269_AddedElevationToCoordinate.Designer.cs">
       <DependentUpon>201701271458269_AddedElevationToCoordinate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703091413357_VehicleTypeAndRegDate.cs" />
+    <Compile Include="Migrations\201703091413357_VehicleTypeAndRegDate.Designer.cs">
+      <DependentUpon>201703091413357_VehicleTypeAndRegDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703091548453_AddVehicleTypeTableAndCompanyTaxYear.cs" />
+    <Compile Include="Migrations\201703091548453_AddVehicleTypeTableAndCompanyTaxYear.Designer.cs">
+      <DependentUpon>201703091548453_AddVehicleTypeTableAndCompanyTaxYear.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703091549459_FixVehicleTable.cs" />
+    <Compile Include="Migrations\201703091549459_FixVehicleTable.Designer.cs">
+      <DependentUpon>201703091549459_FixVehicleTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703091551540_FixVehicleTable2.cs" />
+    <Compile Include="Migrations\201703091551540_FixVehicleTable2.Designer.cs">
+      <DependentUpon>201703091551540_FixVehicleTable2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703091553082_FixVehicleTable3.cs" />
+    <Compile Include="Migrations\201703091553082_FixVehicleTable3.Designer.cs">
+      <DependentUpon>201703091553082_FixVehicleTable3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703091658177_removeregdate.cs" />
+    <Compile Include="Migrations\201703091658177_removeregdate.Designer.cs">
+      <DependentUpon>201703091658177_removeregdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703100934325_AddRegDate.cs" />
+    <Compile Include="Migrations\201703100934325_AddRegDate.Designer.cs">
+      <DependentUpon>201703100934325_AddRegDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703130931495_regDateCorrection.cs" />
+    <Compile Include="Migrations\201703130931495_regDateCorrection.Designer.cs">
+      <DependentUpon>201703130931495_regDateCorrection.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -288,6 +321,7 @@
     <Compile Include="Models\DatabaseModels\CurrencyRate.cs" />
     <Compile Include="Models\DatabaseModels\Driver.cs" />
     <Compile Include="Models\DatabaseModels\DriverInvite.cs" />
+    <Compile Include="Models\DatabaseModels\VehicleType.cs" />
     <Compile Include="Models\DatabaseModels\EngineType.cs" />
     <Compile Include="Models\DatabaseModels\FreeAgentToken.cs" />
     <Compile Include="Models\DatabaseModels\FuelType.cs" />
@@ -474,6 +508,30 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701271458269_AddedElevationToCoordinate.resx">
       <DependentUpon>201701271458269_AddedElevationToCoordinate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703091413357_VehicleTypeAndRegDate.resx">
+      <DependentUpon>201703091413357_VehicleTypeAndRegDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703091548453_AddVehicleTypeTableAndCompanyTaxYear.resx">
+      <DependentUpon>201703091548453_AddVehicleTypeTableAndCompanyTaxYear.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703091549459_FixVehicleTable.resx">
+      <DependentUpon>201703091549459_FixVehicleTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703091551540_FixVehicleTable2.resx">
+      <DependentUpon>201703091551540_FixVehicleTable2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703091553082_FixVehicleTable3.resx">
+      <DependentUpon>201703091553082_FixVehicleTable3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703091658177_removeregdate.resx">
+      <DependentUpon>201703091658177_removeregdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703100934325_AddRegDate.resx">
+      <DependentUpon>201703100934325_AddRegDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703130931495_regDateCorrection.resx">
+      <DependentUpon>201703130931495_regDateCorrection.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

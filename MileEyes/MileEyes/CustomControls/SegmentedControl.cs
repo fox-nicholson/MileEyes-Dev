@@ -25,8 +25,7 @@ namespace MileEyes.CustomControls
             set
             {
                 selectedValue = value;
-                if (ValueChanged != null)
-                    ValueChanged(this, EventArgs.Empty);
+                ValueChanged?.Invoke(this, EventArgs.Empty);
             }
         }
     }

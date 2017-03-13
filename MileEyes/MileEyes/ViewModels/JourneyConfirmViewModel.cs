@@ -145,7 +145,7 @@ namespace MileEyes.ViewModels
             }
             else
             {
-                Vehicle = new Vehicle()
+                Vehicle = new Vehicle
                 {
                     Registration = "Required"
                 };
@@ -158,35 +158,35 @@ namespace MileEyes.ViewModels
             switch (defaultPassengers)
             {
                 case 0:
-                    Passenger = new Passenger()
+                    Passenger = new Passenger
                     {
                         Name = "Just Me",
                         Number = 0
                     };
                     break;
                 case 1:
-                    Passenger = new Passenger()
+                    Passenger = new Passenger
                     {
                         Name = "One",
                         Number = 1
                     };
                     break;
                 case 2:
-                    Passenger = new Passenger()
+                    Passenger = new Passenger
                     {
                         Name = "Two",
                         Number = 2
                     };
                     break;
                 case 3:
-                    Passenger = new Passenger()
+                    Passenger = new Passenger
                     {
                         Name = "Three",
                         Number = 3
                     };
                     break;
                 case 4:
-                    Passenger = new Passenger()
+                    Passenger = new Passenger
                     {
                         Name = "Four",
                         Number = 4
@@ -204,7 +204,7 @@ namespace MileEyes.ViewModels
                 }
                 else
                 {
-                    Company = new Company()
+                    Company = new Company
                     {
                         Name = "Required"
                     };
@@ -212,7 +212,7 @@ namespace MileEyes.ViewModels
             }
             else
             {
-                Company = new Company()
+                Company = new Company
                 {
                     Name = "N/A"
                 };
@@ -255,7 +255,7 @@ namespace MileEyes.ViewModels
                 }
             }
 
-            var journey = new Journey()
+            var journey = new Journey
             {
                 Company = Company,
                 Date = Date,
@@ -272,7 +272,7 @@ namespace MileEyes.ViewModels
 
             journey.Distance = await journey.CalculateDistance();
 
-            var result = await Services.Host.JourneyService.SaveJourney(journey);
+            await Services.Host.JourneyService.SaveJourney(journey);
 
             Saved?.Invoke(this, EventArgs.Empty);
 

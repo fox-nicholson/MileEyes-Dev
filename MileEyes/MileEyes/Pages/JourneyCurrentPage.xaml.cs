@@ -12,6 +12,8 @@ namespace MileEyes.Pages
         {
             InitializeComponent();
 
+            map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(54.319727, -3.622313), Distance.FromMiles(400)));
+
             Host.TrackerService.HasMoved += TrackerService_HasMoved;
 
             (BindingContext as JourneyCurrentViewModel).StopRequested += JourneyCurrentPage_StopRequested;
@@ -33,8 +35,7 @@ namespace MileEyes.Pages
 
             var response =
                 await
-                    DisplayActionSheet("Have you reached your destination?", "Cancel", "Stop & Delete Journey",
-                        "Yes, Save Journey");
+                    DisplayActionSheet("Have you reached your destination?", "Cancel", "Stop & Delete Journey", "Yes, Save Journey");
             switch (response)
             {
                 case "Yes, Save Journey":
@@ -55,11 +56,7 @@ namespace MileEyes.Pages
 
             var pos = Host.TrackerService.CurrentLocation;
 
-            map.MoveToRegion(MapSpan.FromCenterAndRadius(
-                new Position(pos.Latitude,
-                    pos.Longitude), Distance.FromMiles(0.25)));
-
-            // LocationIcon.Rotation = Services.Host.TrackerService.CurrentLocation.Heading;
+            map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(pos.Latitude, pos.Longitude), Distance.FromMiles(0.25)));
         }
     }
 }

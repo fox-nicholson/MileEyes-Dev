@@ -83,7 +83,7 @@ namespace MileEyes.ViewModels
                 return;
             }
 
-            var reason = await Services.Host.ReasonService.SaveReason(new Reason()
+            var reason = await Services.Host.ReasonService.SaveReason(new Reason
             {
                 Text = Text
             });

@@ -38,10 +38,12 @@
     <Compile Include="AuthService.cs" />
     <Compile Include="CompanyService.cs" />
     <Compile Include="DatabaseService.cs" />
+    <Compile Include="IVehicleTypeService.cs" />
+    <Compile Include="VehicleTypeService.cs" />
     <Compile Include="EngineTypeService.cs" />
+    <Compile Include="ExceptionReporting.cs" />
     <Compile Include="Extensions\CoordinatesExtensions.cs" />
     <Compile Include="Extensions\JourneyExtensions.cs" />
-    <Compile Include="Extensions\writeLog.cs" />
     <Compile Include="GeocodingService.cs" />
     <Compile Include="Helpers\TrigHelpers.cs" />
     <Compile Include="Helpers\Units.cs" />
@@ -63,6 +65,7 @@
     <Compile Include="Models\AuthToken.cs" />
     <Compile Include="Models\Company.cs" />
     <Compile Include="Models\Coordinates.cs" />
+    <Compile Include="Models\VehicleType.cs" />
     <Compile Include="Models\EngineType.cs" />
     <Compile Include="Models\GoogleModels.cs" />
     <Compile Include="Models\Journey.cs" />
@@ -120,6 +123,12 @@
     <Reference Include="System.Net.Http.Primitives, Version=1.5.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\portable-net40+sl4+win8+wp71+wpa81\System.Net.Http.Primitives.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1\System.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Extensions">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1\System.Web.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="Xamarin.Forms.Core, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Xamarin.Forms.2.3.3.193\lib\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.Core.dll</HintPath>

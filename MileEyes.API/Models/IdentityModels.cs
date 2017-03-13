@@ -68,6 +68,7 @@ namespace MileEyes.API.Models
         public DbSet<Coordinates> Coordinates { get; set; }
 
         public DbSet<Vehicle> Vehicles { get; set; }
+        public DbSet<VehicleType> VehicleTypes { get; set; }
         public DbSet<EngineType> EngineTypes { get; set; }
         public DbSet<FuelType> FuelTypes { get; set; }
 

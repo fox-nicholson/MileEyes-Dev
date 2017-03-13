@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MileEyes.Services.Models;
 using Newtonsoft.Json;
+using System;
 
 namespace MileEyes.Services
 {
@@ -21,7 +22,9 @@ namespace MileEyes.Services
 
             var response = await Host.HttpHelper.FileGetContents(url);
 
-            if (string.IsNullOrEmpty(response))
+                if (response == null) return null;
+
+                if (string.IsNullOrEmpty(response))
             {
                 return new[] {new Address() {PlaceId = "", Label = "Unknown Address"}};
             }
@@ -46,7 +49,9 @@ namespace MileEyes.Services
 
             var response = await Host.HttpHelper.FileGetContents(url);
 
-            if (string.IsNullOrEmpty(response))
+                if (response == null) return null;
+
+                if (string.IsNullOrEmpty(response))
             {
                 return "";
             }
@@ -65,7 +70,9 @@ namespace MileEyes.Services
 
             var response = await Host.HttpHelper.FileGetContents(url);
 
-            if (string.IsNullOrEmpty(response))
+                if (response == null) return null;
+
+                if (string.IsNullOrEmpty(response))
             {
                 return "";
             }
@@ -114,7 +121,9 @@ namespace MileEyes.Services
 
             var response = await Host.HttpHelper.FileGetContents(url);
 
-            if (string.IsNullOrEmpty(response))
+                if (response == null) return null;
+
+                if (string.IsNullOrEmpty(response))
             {
                 return new Address()
                 {
@@ -162,7 +171,9 @@ namespace MileEyes.Services
 
             var response = await Host.HttpHelper.FileGetContents(url);
 
-            if (string.IsNullOrEmpty(response))
+                if (response == null) return null;
+
+                if (string.IsNullOrEmpty(response))
             {
                 return new[] {0D, 0D};
             }
@@ -185,7 +196,9 @@ namespace MileEyes.Services
 
             var response = await Host.HttpHelper.FileGetContents(url);
 
-            if (string.IsNullOrEmpty(response))
+                if (response == null) return null;
+
+                if (string.IsNullOrEmpty(response))
             {
                 return "Unknown Location";
             }
@@ -222,7 +235,9 @@ namespace MileEyes.Services
 
             var content = await Host.HttpHelper.FileGetContents(url);
 
-            var distanceResult = JsonConvert.DeserializeObject<DistanceResult>(content);
+                if (content == null) return 0;
+
+                var distanceResult = JsonConvert.DeserializeObject<DistanceResult>(content);
 
             var route = distanceResult?.routes.FirstOrDefault();
 
@@ -242,7 +257,9 @@ namespace MileEyes.Services
 
             var content = await Host.HttpHelper.FileGetContents(url);
 
-            var t = content;
+                if (content == null) return 0;
+
+                var t = content;
 
             var distanceResult = JsonConvert.DeserializeObject<DistanceResult>(content);
 
@@ -261,6 +278,8 @@ namespace MileEyes.Services
 
             var content = await Host.HttpHelper.FileGetContents(url);
 
+                if (content == null) return null;
+
             var distanceResult = JsonConvert.DeserializeObject<DistanceResult>(content);
 
             var route = distanceResult?.routes.FirstOrDefault();
@@ -268,16 +287,18 @@ namespace MileEyes.Services
             return route?.legs.FirstOrDefault();
         }
 
-        public async Task<WeatherResponse> GetWeather(double lat, double lng)
+        public async Task<string> GetWeather(double lat, double lng)
         {
             var url = "http://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lng +
-                      "&appid=a08866147f5b57cc8b5a0fcf000ef1be";
+                        "&appid=a08866147f5b57cc8b5a0fcf000ef1be";
 
             var content = await Host.HttpHelper.FileGetContents(url);
 
+            if (content == null) return null;
+
             var weatherResult = JsonConvert.DeserializeObject<WeatherResponse>(content);
 
-            return weatherResult;
+            return weatherResult?.name;
         }
     }
 }

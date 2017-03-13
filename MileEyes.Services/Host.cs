@@ -9,6 +9,7 @@
         public static IUserService UserService = new UserService();
 
         public static IVehicleService VehicleService = new VehicleService();
+        public static IVehicleTypeService VehicleTypeService = new VehicleTypeService();
         public static IEngineTypeService EngineTypeService = new EngineTypeService();
         public static ICompanyService CompanyService = new CompanyService();
         public static IJourneyService JourneyService = new JourneyService();

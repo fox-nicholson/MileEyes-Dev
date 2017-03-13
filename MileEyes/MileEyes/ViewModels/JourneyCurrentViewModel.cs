@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using MileEyes.CustomControls;
+using MileEyes.Services;
 using MileEyes.Services.Helpers;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
@@ -67,7 +68,7 @@ namespace MileEyes.ViewModels
 
         public JourneyCurrentViewModel()
         {
-            Services.Host.TrackerService.HasMoved += TrackerService_HasMoved;
+            Host.TrackerService.HasMoved += TrackerService_HasMoved;
             StopCommand = new Command(Stop);
             Refresh();
 
@@ -79,7 +80,7 @@ namespace MileEyes.ViewModels
 
         private void TrackerService_HasMoved(object sender, EventArgs e)
         {
-            if (Services.Host.Backgrounded) return;
+            if (Host.Backgrounded) return;
 
             Refresh();
         }
@@ -92,19 +93,19 @@ namespace MileEyes.ViewModels
 
             Route.Clear();
 
-            foreach (var waypoint in Services.Host.TrackerService.CurrentWaypoints.OrderBy(w => w.Step))
+            foreach (var waypoint in Host.TrackerService.CurrentWaypoints.OrderBy(w => w.Step))
             {
                 Route.Add(new Position(waypoint.Latitude, waypoint.Longitude));
             }
 
-            CurrentDistance = Units.MetersToMiles(Services.Host.TrackerService.CurrentDistance);
+            CurrentDistance = Units.MetersToMiles(Host.TrackerService.CurrentDistance);
 
             Refreshing = false;
         }
 
         public bool UpdateLocalityCallback()
         {
-            if (!Services.Host.Backgrounded)
+            if (!Host.Backgrounded)
             {
                 UpdateLocation();
             }
@@ -115,13 +116,14 @@ namespace MileEyes.ViewModels
         public async void UpdateLocation()
         {
             var loc =
-                await Services.Host.GeocodingService.GetWeather(Services.Host.TrackerService.CurrentLocation.Latitude,
-                    Services.Host.TrackerService.CurrentLocation.Longitude);
+                await Host.GeocodingService.GetWeather(
+                    Host.TrackerService.CurrentLocation.Latitude,
+                    Host.TrackerService.CurrentLocation.Longitude);
 
-            if (loc.name != "Unknown Location")
+            if (loc!= null && loc != "Unknown Location")
             {
                 HasLocation = true;
-                CurrentLocation = loc.name;
+                CurrentLocation = loc;
             }
             else
             {
@@ -131,17 +133,15 @@ namespace MileEyes.ViewModels
 
         public bool RefreshDuration()
         {
-            if (Services.Host.Backgrounded) return true;
-            var currentWaypoints = Services.Host.TrackerService.CurrentWaypoints.OrderBy(w => w.Step);
+            if (Host.Backgrounded) return true;
+            var currentWaypoints = Host.TrackerService.CurrentWaypoints.OrderBy(w => w.Step);
 
-            if (currentWaypoints.Any())
-            {
-                var currentWaypoint = currentWaypoints.OrderBy(w => w.Step).First();
-                CurrentDuration = DateTimeOffset.UtcNow - currentWaypoint.Timestamp;
+            if (!currentWaypoints.Any()) return false;
 
-                return true;
-            }
-            return false;
+            var currentWaypoint = currentWaypoints.OrderBy(w => w.Step).First();
+            CurrentDuration = DateTimeOffset.UtcNow - currentWaypoint.Timestamp;
+
+            return true;
         }
 
         public ICommand StopCommand { get; set; }
@@ -151,10 +151,11 @@ namespace MileEyes.ViewModels
         public async void Stop()
         {
             if (Busy) return;
-            var currentWaypoints = Services.Host.TrackerService.CurrentWaypoints;
+            var currentWaypoints = Host.TrackerService.CurrentWaypoints;
             if (currentWaypoints.Count() < 2)
             {
-                await Services.Host.TrackerService.Cancel();
+                await Host.TrackerService.Cancel();
+                StopRequested?.Invoke(this, EventArgs.Empty);
                 return;
             }
             StopRequested?.Invoke(this, EventArgs.Empty);
@@ -164,7 +165,7 @@ namespace MileEyes.ViewModels
         public async void EndJourneyConfirmed()
         {
             Busy = true;
-            await Services.Host.TrackerService.Stop();
+            await Host.TrackerService.Stop();
         }
     }
 }

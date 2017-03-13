@@ -144,6 +144,9 @@
     <Compile Include="Pages\CompanySelectionPage.xaml.cs">
       <DependentUpon>CompanySelectionPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\VehicleTypeSelectionPage.xaml.cs">
+      <DependentUpon>VehicleTypeSelectionPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\ReasonDefaultSelectionPage.xaml.cs">
       <DependentUpon>ReasonDefaultSelectionPage.xaml</DependentUpon>
     </Compile>
@@ -212,6 +215,7 @@
     <Compile Include="ViewModels\CompanySelectionViewModel.cs" />
     <Compile Include="ViewModels\CompanyViewModel.cs" />
     <Compile Include="ViewModels\CustomTextCellViewModel.cs" />
+    <Compile Include="ViewModels\VehicleTypeViewModel.cs" />
     <Compile Include="ViewModels\ReasonsViewModel.cs" />
     <Compile Include="ViewModels\JourneyConfirmViewModel.cs" />
     <Compile Include="ViewModels\JourneyCurrentViewModel.cs" />
@@ -228,6 +232,7 @@
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\TrackViewModel.cs" />
     <Compile Include="ViewModels\VehiclesViewModel.cs" />
+    <Compile Include="ViewModels\VehicleTypesViewModel.cs" />
     <Compile Include="ViewModels\VehicleViewModel.cs" />
     <Compile Include="ViewModels\ViewModel.cs" />
     <Compile Include="Views\JourneyGroupCell.xaml.cs">
@@ -606,6 +611,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CustomControls\CloudAddressViewCell.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\VehicleTypeSelectionPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
