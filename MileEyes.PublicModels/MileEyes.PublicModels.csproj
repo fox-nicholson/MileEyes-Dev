@@ -47,6 +47,8 @@
     <Compile Include="Journey\JourneyBindingModel.cs" />
     <Compile Include="Journey\JourneyViewModel.cs" />
     <Compile Include="Journey\WaypointBindingModel.cs" />
+    <Compile Include="Journey\WaypointsBindingModel.cs" />
+    <Compile Include="Journey\WaypointsViewModel.cs" />
     <Compile Include="Journey\WaypointViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegisterBindingModel.cs" />

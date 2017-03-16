@@ -10,5 +10,6 @@ namespace MileEyes.PublicModels.Vehicles
         public string Registration { get; set; }
         public EngineTypeViewModel EngineType { get; set; }
         public VehicleTypeViewModel VehicleType { get; set; }
+        public DateTimeOffset RegDate { get; set; }
     }
 }

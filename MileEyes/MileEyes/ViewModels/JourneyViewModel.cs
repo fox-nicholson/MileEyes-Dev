@@ -49,32 +49,36 @@ namespace MileEyes.ViewModels
 
             Waypoints.Clear();
 
-            foreach (var w in j.Waypoints)
-                Waypoints.Add(w);
-
-            var originWaypoint = Waypoints.OrderBy(w => w.Step).First();
-            var destinationWaypoint = Waypoints.OrderBy(w => w.Step).Last();
-
-            OriginAddress = new Address
+            if (j.Waypoints.Any())
             {
-                Label = originWaypoint.Label,
-                Latitude = originWaypoint.Latitude,
-                Longitude = originWaypoint.Longitude,
-                PlaceId = originWaypoint.PlaceId
-            };
 
-            DestinationAddress = new Address
-            {
-                Label = destinationWaypoint.Label,
-                Latitude = destinationWaypoint.Latitude,
-                Longitude = destinationWaypoint.Longitude,
-                PlaceId = destinationWaypoint.PlaceId
-            };
+                foreach (var w in j.Waypoints)
+                    Waypoints.Add(w);
 
-            if (Waypoints.Count > 2)
-                Gps = true;
-            else
-                Manual = true;
+                var originWaypoint = Waypoints.OrderBy(w => w.Step).First();
+                var destinationWaypoint = Waypoints.OrderBy(w => w.Step).Last();
+
+                OriginAddress = new Address
+                {
+                    Label = originWaypoint.Label,
+                    Latitude = originWaypoint.Latitude,
+                    Longitude = originWaypoint.Longitude,
+                    PlaceId = originWaypoint.PlaceId
+                };
+
+                DestinationAddress = new Address
+                {
+                    Label = destinationWaypoint.Label,
+                    Latitude = destinationWaypoint.Latitude,
+                    Longitude = destinationWaypoint.Longitude,
+                    PlaceId = destinationWaypoint.PlaceId
+                };
+
+                if (Waypoints.Count > 2)
+                    Gps = true;
+                else
+                    Manual = true;
+            }
 
             Invoiced = j.Invoiced;
             Passengers = j.Passengers;
@@ -258,15 +262,18 @@ namespace MileEyes.ViewModels
             }
             else
             {
-                var leg =
-                    await Host.GeocodingService.GetDirectionsFromGoogle(
-                        new[] {OriginAddress.Latitude, OriginAddress.Longitude},
-                        new[] {DestinationAddress.Latitude, DestinationAddress.Longitude});
+                if (OriginAddress != null && DestinationAddress != null)
+                {
+                    var leg =
+                        await Host.GeocodingService.GetDirectionsFromGoogle(
+                            new[] { OriginAddress.Latitude, OriginAddress.Longitude },
+                            new[] { DestinationAddress.Latitude, DestinationAddress.Longitude });
 
-                Route.Clear();
-                if (leg != null)
-                    foreach (var step in leg.steps)
-                        Route.Add(new Position(step.end_location.lat, step.end_location.lng));
+                    Route.Clear();
+                    if (leg != null)
+                        foreach (var step in leg.steps)
+                            Route.Add(new Position(step.end_location.lat, step.end_location.lng));
+                }
             }
 
             Loaded = true;

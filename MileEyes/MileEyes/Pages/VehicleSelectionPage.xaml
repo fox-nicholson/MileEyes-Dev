@@ -29,7 +29,7 @@
         <ListView.ItemTemplate>
             <DataTemplate>
                 <customControls:CustomImageCell ImageSource="vehicle.png" ShowDisclosure="False"
-                                                Text="{Binding Registration}" Detail="{Binding EngineType.Name}">
+                                                Text="{Binding Registration}" Detail="{Binding VehicleType.Name}">
                     <customControls:CustomImageCell.TextColor>
                         <OnPlatform x:TypeArguments="Color"
                                     iOS="#FFFFFF"

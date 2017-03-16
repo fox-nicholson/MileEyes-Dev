@@ -14,6 +14,6 @@ namespace MileEyes.PublicModels.Journey
         public DateTimeOffset Date { get; set; }
         public CompanyBindingModel Company { get; set; }
         public VehicleBindingModel Vehicle { get; set; }
-        public IList<WaypointBindingModel> Waypoints { get; set; }
+        public int Waypoints { get; set; }
     }
 }

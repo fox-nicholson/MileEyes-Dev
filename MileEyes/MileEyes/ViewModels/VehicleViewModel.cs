@@ -155,7 +155,6 @@ namespace MileEyes.ViewModels
             Registration = _vehicle.Registration;
             EngineType = _vehicle.EngineType;
             VehicleType = _vehicle.VehicleType;
-            RegDate = _vehicle.RegDate;
 
             Refreshing = false;
         }
@@ -195,6 +194,7 @@ namespace MileEyes.ViewModels
             _vehicle.Registration = Registration;
             _vehicle.EngineType = EngineType;
             _vehicle.VehicleType = VehicleType;
+            _vehicle.RegDate = RegDate;
 
             _vehicle = await Services.Host.VehicleService.AddVehicle(_vehicle);
 

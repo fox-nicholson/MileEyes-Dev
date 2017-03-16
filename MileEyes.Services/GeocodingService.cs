@@ -104,6 +104,12 @@ namespace MileEyes.Services
 
             var geocodeResult = JsonConvert.DeserializeObject<GeocodeResult>(response);
 
+            if (geocodeResult?.status == "OVER_QUERY_LIMIT")
+                return new Address()
+                {
+                    Label = "Limit Met"
+                };
+
             if (geocodeResult?.result == null) return null;
 
             return new Address()

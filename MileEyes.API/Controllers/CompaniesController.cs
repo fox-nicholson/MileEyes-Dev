@@ -259,16 +259,7 @@ namespace MileEyes.API.Controllers
                             Invoiced = j.Invoiced,
                             Passengers = j.Passengers,
                             Reason = j.Reason,
-                            Rejected = j.Rejected,
-                            Waypoints = j.Waypoints.Select(w => new WaypointViewModel()
-                            {
-                                Latitude = w.Address.Coordinates.Latitude,
-                                Longitude = w.Address.Coordinates.Longitude,
-                                PlaceId = w.Address.PlaceId,
-                                Step = w.Step,
-                                Timestamp = w.Timestamp,
-                                Id = w.Id.ToString()
-                            }).ToList()
+                            Rejected = j.Rejected
                         });
                     }
                 }
@@ -313,16 +304,7 @@ namespace MileEyes.API.Controllers
                             Invoiced = j.Invoiced,
                             Passengers = j.Passengers,
                             Reason = j.Reason,
-                            Rejected = j.Rejected,
-                            Waypoints = j.Waypoints.Select(w => new WaypointViewModel()
-                            {
-                                Latitude = w.Address.Coordinates.Latitude,
-                                Longitude = w.Address.Coordinates.Longitude,
-                                PlaceId = w.Address.PlaceId,
-                                Step = w.Step,
-                                Timestamp = w.Timestamp,
-                                Id = w.Id.ToString()
-                            }).ToList()
+                            Rejected = j.Rejected
                         });
                     }
                 }
@@ -749,16 +731,7 @@ namespace MileEyes.API.Controllers
 										Invoiced = journey.Invoiced,
 										Passengers = journey.Passengers,
 										Reason = journey.Reason,
-										Rejected = journey.Rejected,
-										Waypoints = journey.Waypoints.Select(w => new WaypointViewModel()
-										{
-											Latitude = w.Address.Coordinates.Latitude,
-											Longitude = w.Address.Coordinates.Longitude,
-											PlaceId = w.Address.PlaceId,
-											Step = w.Step,
-											Timestamp = w.Timestamp,
-											Id = w.Id.ToString()
-										}).ToList()
+										Rejected = journey.Rejected
 									});
 								}
 							}
@@ -798,16 +771,7 @@ namespace MileEyes.API.Controllers
 										Invoiced = journey.Invoiced,
 										Passengers = journey.Passengers,
 										Reason = journey.Reason,
-										Rejected = journey.Rejected,
-										Waypoints = journey.Waypoints.Select(w => new WaypointViewModel()
-										{
-											Latitude = w.Address.Coordinates.Latitude,
-											Longitude = w.Address.Coordinates.Longitude,
-											PlaceId = w.Address.PlaceId,
-											Step = w.Step,
-											Timestamp = w.Timestamp,
-											Id = w.Id.ToString()
-										}).ToList()
+										Rejected = journey.Rejected
 									});
 								}
 							}
@@ -853,16 +817,7 @@ namespace MileEyes.API.Controllers
 											Invoiced = journey.Invoiced,
 											Passengers = journey.Passengers,
 											Reason = journey.Reason,
-											Rejected = journey.Rejected,
-											Waypoints = journey.Waypoints.Select(w => new WaypointViewModel()
-											{
-												Latitude = w.Address.Coordinates.Latitude,
-												Longitude = w.Address.Coordinates.Longitude,
-												PlaceId = w.Address.PlaceId,
-												Step = w.Step,
-												Timestamp = w.Timestamp,
-												Id = w.Id.ToString()
-											}).ToList()
+											Rejected = journey.Rejected
 										});
 									}
 								}
@@ -906,16 +861,7 @@ namespace MileEyes.API.Controllers
 							                Invoiced = journey.Invoiced,
 							                Passengers = journey.Passengers,
 							                Reason = journey.Reason,
-							                Rejected = journey.Rejected,
-							                Waypoints = journey.Waypoints.Select(w => new WaypointViewModel()
-							                {
-							                    Latitude = w.Address.Coordinates.Latitude,
-							                    Longitude = w.Address.Coordinates.Longitude,
-							                    PlaceId = w.Address.PlaceId,
-							                    Step = w.Step,
-							                    Timestamp = w.Timestamp,
-							                    Id = w.Id.ToString()
-							                }).ToList()
+							                Rejected = journey.Rejected
 							            });
 							        }
 							    }

@@ -8,6 +8,10 @@ using MileEyes.PublicModels.Journey;
 using MileEyes.Services.Models;
 using Newtonsoft.Json;
 using Xamarin.Forms;
+using MileEyes.PublicModels.Company;
+using MileEyes.PublicModels.Vehicles;
+using MileEyes.PublicModels.EngineTypes;
+using MileEyes.PublicModels.VehicleTypes;
 
 namespace MileEyes.Services
 {
@@ -172,12 +176,11 @@ namespace MileEyes.Services
                 requestedWeek = new DateTime(monday.Year, monday.Month, monday.Day).AddDays(-7 * i);
                 var requestedDay = requestedWeek.Day;
                 var requestedMonth = requestedWeek.Month;
-                var response =
-                    await RestService.Client.GetAsync("/api/Journeys/" + requestedDay + "/" + requestedMonth);
+                var response = await RestService.Client.GetAsync("/api/Journeys/" + requestedDay + "/" + requestedMonth);
 
                 if (response == null)
                 {
-                    _busy = false;
+                    Busy = false;
                     return;
                 }
 
@@ -187,23 +190,21 @@ namespace MileEyes.Services
 
                     var em = errorMessage;
 
-                    _busy = false;
+                    Busy = false;
 
                     return;
                 }
 
                 var responseText = await response.Content.ReadAsStringAsync();
 
-                var result =
-                    JsonConvert.DeserializeObject<ICollection<JourneyViewModel>>(responseText);
+                var result = JsonConvert.DeserializeObject<ICollection<JourneyViewModel>>(responseText);
 
                 var vehicles = await Host.VehicleService.GetVehicles();
                 var companies = await Host.CompanyService.GetCompanies();
 
                 foreach (var journeyData in result)
                 {
-                    var existingJourney =
-                        (await GetAllJourneys()).FirstOrDefault(v => v.CloudId == journeyData.Id);
+                    var existingJourney = (await GetAllJourneys()).FirstOrDefault(v => v.CloudId == journeyData.Id);
 
                     var vehicle = vehicles.FirstOrDefault(v => v.CloudId == journeyData.Vehicle.Id);
                     var company = companies.FirstOrDefault(c => c.CloudId == journeyData.Company.Id);
@@ -224,16 +225,58 @@ namespace MileEyes.Services
                             journey.Vehicle = vehicle;
                             journey.Company = company;
 
-                            foreach (var waypoint in journeyData.Waypoints)
-                            {
-                                var newWaypoint = DatabaseService.Realm.CreateObject<Waypoint>();
-                                newWaypoint.Latitude = waypoint.Latitude;
-                                newWaypoint.Longitude = waypoint.Longitude;
-                                newWaypoint.Step = waypoint.Step;
-                                newWaypoint.Timestamp = waypoint.Timestamp;
-                                newWaypoint.PlaceId = waypoint.PlaceId;
+                            var startPoint = 0;
+                            var endPoint = journeyData.Waypoints;
+                            var finish = true;
 
-                                journey.Waypoints.Add(newWaypoint);
+                            for (int w = 0; finish; w++)
+                            {
+                                startPoint = w * 50;
+
+                                finish = true;
+
+                                var waypointResponse = await RestService.Client.GetAsync("/api/Waypoints/" + journey.CloudId + "/" + startPoint);
+
+                                if (waypointResponse == null)
+                                {
+                                    Busy = false;
+                                    return;
+                                }
+
+                                if (!waypointResponse.IsSuccessStatusCode)
+                                {
+                                    var errorMessage = await waypointResponse.Content.ReadAsStringAsync();
+
+                                    var em = errorMessage;
+
+                                    Busy = false;
+
+                                    return;
+                                }
+
+                                var waypointResponseText = await waypointResponse.Content.ReadAsStringAsync();
+
+                                var waypointResult = JsonConvert.DeserializeObject<WaypointsViewModel>(waypointResponseText);
+
+                                if (waypointResult.Waypoints.Count == 2) endPoint = 1;
+
+                                foreach (var newWaypoint in waypointResult.Waypoints)
+                                {
+                                    var waypointToAdd = new Waypoint()
+                                    {
+                                        Id = newWaypoint.Id,
+                                        Latitude = newWaypoint.Latitude,
+                                        Longitude = newWaypoint.Longitude,
+                                        PlaceId = newWaypoint.PlaceId,
+                                        Step = newWaypoint.Step,
+                                        Timestamp = newWaypoint.Timestamp,
+                                        Label = ""
+                                    };
+                                    journey.Waypoints.Add(waypointToAdd);
+
+                                    if (journey.Waypoints.Count == endPoint) finish = false;
+                                    if (endPoint == 1) finish = false;
+                                }
                             }
 
                             var first = journey.Waypoints.OrderBy(w => w.Step).FirstOrDefault();
@@ -272,10 +315,8 @@ namespace MileEyes.Services
 
         private async Task PushNew()
         {
-            if (_busy) return;
-            _busy = true;
-
-            Device.StartTimer(TimeSpan.FromSeconds(45), Wait);
+            if (Busy) return;
+            Busy = true;
 
             var journeys = await GetJourneys();
 
@@ -285,10 +326,9 @@ namespace MileEyes.Services
 
             foreach (var j in journeysEnumerable.Where(j => j.MarkedForDeletion == false))
             {
-                try
-                {
-                    if
-                        (!string.IsNullOrEmpty(j.CloudId)) continue;
+                //try
+                //{
+                    if (!string.IsNullOrEmpty(j.CloudId)) continue;
 
                     if (j.Company == null)
                     {
@@ -298,29 +338,56 @@ namespace MileEyes.Services
 
                         var personalCompany = companiesEnumerable.FirstOrDefault(c => c.Personal);
 
-                        using
-                        (var transaction
-                            =
-                            DatabaseService.Realm.BeginWrite
-                                ()
-                        )
+                        using (var transaction = DatabaseService.Realm.BeginWrite())
                         {
                             j.Company = personalCompany;
 
                             transaction.Commit();
-                            transaction.Dispose();
                         }
                     }
 
-                    var data =
-                        new
-                            StringContent(JsonConvert.SerializeObject(j), Encoding.UTF8, "application/json");
+                    var waypoints = j.Waypoints;
+
+
+                    var journey = new JourneyBindingModel()
+                    {
+                        Company = new CompanyBindingModel()
+                        {
+                            CloudId = j.Company.CloudId,
+                            Id = j.Company.Id,
+                            Name = j.Company.Name,
+                            Personal = j.Company.Personal
+                        },
+                        Date = j.Date,
+                        Distance = j.Distance,
+                        Invoiced = j.Invoiced,
+                        Passengers = j.Passengers,
+                        Reason = j.Reason,
+                        Vehicle = new VehicleBindingModel()
+                        {
+                            CloudId = j.Vehicle.CloudId,
+                            Id = j.Vehicle.Id,
+                            RegDate = j.Vehicle.RegDate,
+                            Registration = j.Vehicle.Registration,
+                            EngineType = new EngineTypeBindingModel()
+                            {
+                                Id = j.Vehicle.EngineType.Id
+                            },
+                            VehicleType = new VehicleTypeBindingModel()
+                            {
+                                Id = j.Vehicle.VehicleType.Id
+                            }
+                        },
+                        Waypoints = waypoints.Count - 1
+                    };
+
+                    var data = new StringContent(JsonConvert.SerializeObject(journey), Encoding.UTF8, "application/json");
 
                     var response = await RestService.Client.PostAsync("/api/Journeys/", data);
 
                     if (response == null)
                     {
-                        _busy = false;
+                        Busy = false;
                         return;
                     }
 
@@ -339,26 +406,87 @@ namespace MileEyes.Services
 
                     if (result == null) continue;
 
+                var waypointsModel = new WaypointsBindingModel()
+                {
+                    first = waypoints.First().Step,
+                    last = waypoints.Last().Step,
+                    Journey = journey,
+                        journeyId = result.Id.ToString(),
+                        Waypoints = new List<WaypointBindingModel>()
+                    };
+
+                    if (waypoints.Count > 0)
+                    {
+                        var finish = true;
+                        for (int i = 0; finish; i++)
+                        {
+
+                            var startPoint = i * 50;
+                            var endPoint = startPoint + 49;
+
+                            if (endPoint > waypoints.Count) endPoint = waypoints.Count;
+
+                            for (int w = startPoint; w < endPoint; w++)
+                            {
+                                waypointsModel.Waypoints.Add(new WaypointBindingModel()
+                                {
+                                    Latitude = waypoints.ElementAt(w).Latitude,
+                                    Longitude = waypoints.ElementAt(w).Longitude,
+                                    PlaceId = waypoints.ElementAt(w).PlaceId,
+                                    Step = waypoints.ElementAt(w).Step,
+                                    Timestamp = waypoints.ElementAt(w).Timestamp
+                                });
+                            }
+                            
+                            data = new StringContent(JsonConvert.SerializeObject(waypointsModel), Encoding.UTF8, "application/json");
+
+                            response = await RestService.Client.PostAsync("/api/Waypoints/", data);
+
+                            if (response == null)
+                            {
+                                Busy = false;
+                                return;
+                            }
+
+                            if (!response.IsSuccessStatusCode)
+                            {
+                                var errorMessage = await response.Content.ReadAsStringAsync();
+
+                                var em = errorMessage;
+
+                                continue;
+                            }
+
+                            var waypointResult =
+                                JsonConvert.DeserializeObject<WaypointsViewModel>(
+                                    await response.Content.ReadAsStringAsync());
+
+                            if (result == null) continue;
+
+                            if (endPoint == waypoints.Count) finish = false;
+                        }
+                    }
+
                     using (var transaction = DatabaseService.Realm.BeginWrite())
                     {
                         j.CloudId = result.Id;
-                        j.Cost = result.Cost;
                         transaction.Commit();
                         transaction.Dispose();
                     }
-                }
-                catch (Exception ex)
+                //}
+                //catch (Exception ex)
 
-                {
-                    var message = ex.Message;
-                }
-                _busy = false;
+                //{
+                //    var message = ex.Message;
+                //}
+                Busy = false;
             }
+            Busy = false;
         }
 
         private bool Wait()
         {
-            _busy = false;
+            Busy = false;
             return false;
         }
     }

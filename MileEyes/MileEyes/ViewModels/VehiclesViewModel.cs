@@ -31,7 +31,7 @@ namespace MileEyes.ViewModels
             RemoveCommand = new Command<VehicleViewModel>(Remove);
             SelectCommand = new Command(Select);
 
-            Refresh();
+            //Refresh();
         }
 
         public event EventHandler NoVehicles = delegate { };
@@ -45,6 +45,10 @@ namespace MileEyes.ViewModels
             Refreshing = true;
 
             Vehicles.Clear();
+
+            await Services.Host.EngineTypeService.Sync();
+            await Services.Host.VehicleTypeService.Sync();
+            await Services.Host.VehicleService.Sync();
 
             var vehicles = await Services.Host.VehicleService.GetVehicles();
 

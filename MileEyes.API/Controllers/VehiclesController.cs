@@ -231,6 +231,7 @@ namespace MileEyes.API.Controllers
                 {
                     Id = vehicle.Id.ToString(),
                     Registration = vehicle.Registration,
+                    RegDate = vehicle.RegDate,
                     EngineType = new EngineTypeViewModel()
                     {
                         Id = vehicle.EngineType.Id.ToString()

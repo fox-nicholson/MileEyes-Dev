@@ -21,11 +21,14 @@ namespace MileEyes.Services
                 var engineType =
                     DatabaseService.Realm.All<EngineType>().FirstOrDefault(et => et.Id == v.EngineType.Id);
 
+                var vehicleType =
+                    DatabaseService.Realm.All<VehicleType>().FirstOrDefault(et => et.Id == v.VehicleType.Id);
+
                 vehicle.Id = Guid.NewGuid().ToString();
                 vehicle.CloudId = v.CloudId;
                 vehicle.Registration = v.Registration.ToUpper();
-                vehicle.EngineType = v.EngineType;
-                vehicle.VehicleType = v.VehicleType;
+                vehicle.EngineType = engineType;
+                vehicle.VehicleType = vehicleType;
                 vehicle.RegDate = v.RegDate;
 
                 transaction.Commit();
@@ -169,6 +172,7 @@ namespace MileEyes.Services
                     vehicle.Registration = vehicleData.Registration;
                     vehicle.EngineType = engineType;
                     vehicle.VehicleType = vehicleType;
+                    vehicle.RegDate = vehicleData.RegDate;
 
                     await AddVehicle(vehicle);
 

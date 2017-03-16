@@ -29,9 +29,9 @@ namespace MileEyes
         private static bool SyncTimer()
         {
             if (!Services.Host.AuthService.Authenticated) return true;
-            Services.Host.EngineTypeService.Sync();
-            Services.Host.VehicleTypeService.Sync();
-            Services.Host.VehicleService.Sync();
+            //Services.Host.EngineTypeService.Sync();
+            //Services.Host.VehicleTypeService.Sync();
+            //Services.Host.VehicleService.Sync();
             Services.Host.CompanyService.Sync();
             Services.Host.JourneyService.Sync();
 

@@ -104,11 +104,11 @@ namespace MileEyes.Services
                 // Set the token to successful
                 tokenResult.Success = true;
 
-                await Host.EngineTypeService.Sync();
-                await Host.VehicleTypeService.Sync();
-                await Host.VehicleService.Sync();
+                //await Host.EngineTypeService.Sync();
+                //await Host.VehicleTypeService.Sync();
+                //await Host.VehicleService.Sync();
                 await Host.CompanyService.Sync();
-                Host.JourneyService.Sync();
+                //Host.JourneyService.Sync();
 
                 // Return the token
                 return tokenResult;

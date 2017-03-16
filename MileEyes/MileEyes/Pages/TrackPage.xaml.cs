@@ -42,6 +42,8 @@ namespace MileEyes.Pages
 
             Device.BeginInvokeOnMainThread(async () => { await Navigation.PopModalAsync(); });
 
+            TrackerService.IsTracking = false;
+
             Device.StartTimer(TimeSpan.FromSeconds(1), Wait);
         }
 
@@ -50,6 +52,7 @@ namespace MileEyes.Pages
             Device.BeginInvokeOnMainThread(async () =>
             {
                 await Navigation.PopModalAsync();
+                TrackerService.IsTracking = false;
                 Device.OnPlatform(
                     async () =>
                     {
@@ -72,6 +75,7 @@ namespace MileEyes.Pages
         private void TrackerService_StartFailed(object sender, string e)
         {
             Device.BeginInvokeOnMainThread(async () => { await DisplayAlert("Tracking Problem", e, "Ok"); });
+            TrackerService.IsTracking = false;
         }
 
         private void TrackerService_Started(object sender, EventArgs e)

@@ -17,7 +17,7 @@ namespace MileEyes.PublicModels.Journey
         public DateTimeOffset Date { get; set; }
         public CompanyViewModel Company { get; set; }
         public VehicleViewModel Vehicle { get; set; }
-        public IList<WaypointViewModel> Waypoints { get; set; }
+        public int Waypoints { get; set; }
 
         public DriverViewModel Driver { get; set; }
 
