@@ -308,9 +308,18 @@
     <Compile Include="Migrations\201703130931495_regDateCorrection.Designer.cs">
       <DependentUpon>201703130931495_regDateCorrection.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703160924475_AddDriverAndVehicleInfo.cs" />
+    <Compile Include="Migrations\201703160924475_AddDriverAndVehicleInfo.Designer.cs">
+      <DependentUpon>201703160924475_AddDriverAndVehicleInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703160944012_MoreJourneyParams.cs" />
+    <Compile Include="Migrations\201703160944012_MoreJourneyParams.Designer.cs">
+      <DependentUpon>201703160944012_MoreJourneyParams.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\CostModel.cs" />
     <Compile Include="Models\DatabaseModels\Accountant.cs" />
     <Compile Include="Models\DatabaseModels\AccountingEntry.cs" />
     <Compile Include="Models\DatabaseModels\AccountingToken.cs" />
@@ -320,7 +329,9 @@
     <Compile Include="Models\DatabaseModels\Coordinates.cs" />
     <Compile Include="Models\DatabaseModels\CurrencyRate.cs" />
     <Compile Include="Models\DatabaseModels\Driver.cs" />
+    <Compile Include="Models\DatabaseModels\DriverInfo.cs" />
     <Compile Include="Models\DatabaseModels\DriverInvite.cs" />
+    <Compile Include="Models\DatabaseModels\VehicleInfo.cs" />
     <Compile Include="Models\DatabaseModels\VehicleType.cs" />
     <Compile Include="Models\DatabaseModels\EngineType.cs" />
     <Compile Include="Models\DatabaseModels\FreeAgentToken.cs" />
@@ -532,6 +543,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703130931495_regDateCorrection.resx">
       <DependentUpon>201703130931495_regDateCorrection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703160924475_AddDriverAndVehicleInfo.resx">
+      <DependentUpon>201703160924475_AddDriverAndVehicleInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703160944012_MoreJourneyParams.resx">
+      <DependentUpon>201703160944012_MoreJourneyParams.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -10,6 +10,7 @@ using MileEyes.API.Models;
 using MileEyes.API.Models.DatabaseModels;
 using MileEyes.API.Models.GeocodingModels;
 using MileEyes.API.Services;
+using MileEyes.API.Extensions;
 using MileEyes.PublicModels.Company;
 using MileEyes.PublicModels.Journey;
 using MileEyes.PublicModels.Vehicles;
@@ -23,6 +24,24 @@ namespace MileEyes.API.Controllers
     public class JourneysController : ApiController
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+
+        [Route("api/JourneyCost/")]
+        public async Task<IHttpActionResult> GetJourneyCost(string journeyId)
+        {
+            var costs = new CostModel();
+
+            var journey = db.Journeys.Find(Guid.Parse(journeyId));
+
+            costs = journey.CalculateCost();
+
+            journey.Cost = costs.Cost;
+            journey.UnderDistance = costs.UnderDistance;
+            journey.OverDistance = costs.OverDistance;
+
+            await db.SaveChangesAsync();
+
+            return Ok();
+        }
 
         // GET: api/Journeys
         [Route("api/Journeys/{requestedDay}/{requestedMonth}")]
@@ -124,71 +143,7 @@ namespace MileEyes.API.Controllers
                 return null;
             }
         }
-
-        // GET: api/Journeys/5
-        /*[ResponseType(typeof(JourneyViewModel))]
-        public async Task<IHttpActionResult> GetJourney(Guid id)
-        {
-            Journey j = await db.Journeys.FindAsync(id);
-            if (j == null)
-            {
-                return NotFound();
-            }
-
-            var user = db.Users.Find(User.Identity.GetUserId());
-            
-            var drivers = user.Profiles.OfType<Driver>();
-
-            Driver driver = null;
-            foreach (var d in drivers)
-            {
-                if (user.Email == d.User.Email)
-                {
-                    driver = d;
-                    break;
-                }
-            }
-
-			if (driver == null)
-			{
-				return BadRequest();
-			}
-
-            try
-            {
-                if (j.Driver.Id != driver.Id) return NotFound();
-            }
-            catch (NullReferenceException e)
-            {
-                Console.WriteLine("Caught Exception in Journey Controllor: " + e);
-            }
-            return Ok(new JourneyViewModel()
-            {
-                Accepted = j.Accepted,
-                Company = new CompanyViewModel()
-                {
-                    Id = j.Company.Id.ToString()
-                },
-                Cost = Convert.ToDouble(j.Cost),
-                Date = j.Date,
-                Distance = j.Distance,
-                Id = j.Id.ToString(),
-                Invoiced = j.Invoiced,
-                Passengers = j.Passengers,
-                Reason = j.Reason,
-                Rejected = j.Rejected,
-                Waypoints = j.Waypoints.Select(w => new WaypointViewModel()
-                {
-                    Latitude = w.Address.Coordinates.Latitude,
-                    Longitude = w.Address.Coordinates.Longitude,
-                    PlaceId = w.Address.PlaceId,
-                    Step = w.Step,
-                    Timestamp = w.Timestamp,
-                    Id = w.Id.ToString()
-                }).ToList()
-            });
-        }*/
-
+               
         [Route("api/Journeys/")]
         [ResponseType(typeof(JourneyViewModel))]
         public async Task<IHttpActionResult> PostJourney(JourneyBindingModel model)

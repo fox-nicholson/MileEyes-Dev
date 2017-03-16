@@ -18,6 +18,8 @@ namespace MileEyes.API.Models.DatabaseModels
         /// !!! DISTANCES STORED IN METERS !!!
         /// </summary>
         public double Distance { get; set; }
+        public double UnderDistance { get; set; }
+        public double OverDistance { get; set; }
 
         public decimal Cost { get; set; }
         public decimal FuelVat { get; set; }

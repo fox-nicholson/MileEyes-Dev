@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using MileEyes.API.Helpers;
+using MileEyes.API.Models;
 using MileEyes.API.Models.DatabaseModels;
 
 namespace MileEyes.API.Extensions
@@ -78,10 +79,13 @@ namespace MileEyes.API.Extensions
                    (journey.Vehicle.EngineType.FuelRate * 0.20M);
         }
 
-        public static decimal CalculateCost(this Journey journey)
+        public static CostModel CalculateCost(this Journey journey)
         {
             var underMiles = 0.0;
             var overMiles = 0.0;
+            var result = new CostModel();
+
+            result.Distance = journey.Distance;
 
             var currentMiles = journey.Driver.Journeys.Sum(j => j.Distance);
 
@@ -95,6 +99,7 @@ namespace MileEyes.API.Extensions
             {
                 // Set over miles to the amount it went over
                 overMiles = journey.Distance;
+                result.OverDistance = overMiles;
             }
             else
             {
@@ -103,21 +108,28 @@ namespace MileEyes.API.Extensions
                 {
                     underMiles = ceiling - currentMiles;
                     overMiles = newMiles - ceiling;
+                    result.UnderDistance = underMiles;
+                    result.OverDistance = overMiles;
                 }
                 // Its under
                 else
                 {
                     underMiles = journey.Distance;
+                    result.UnderDistance = underMiles;
                 }
             }
 
             // Calculate the under cut off cost
             var underCost = CalculateCost(underMiles, journey.Company.HighRate);
+            result.UnderCost = underCost;
             // Calculate the over cut off cost
             var overCost = CalculateCost(overMiles, journey.Company.LowRate);
+            result.OverCost = overCost;
+
+            result.Cost = underCost + overCost;
 
             // Return the combined sum
-            return underCost + overCost;
+            return result;
         }
 
         public static decimal CalculateCost(double distance, decimal rate)
