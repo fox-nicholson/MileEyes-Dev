@@ -15,11 +15,12 @@ using MileEyes.PublicModels.VehicleTypes;
 
 namespace MileEyes.Services
 {
-    internal class JourneyService : IJourneyService
+    public class JourneyService : IJourneyService
     {
         private readonly List<Journey> _journeys = new List<Journey>();
         public event EventHandler JourneySaved = delegate { };
         private bool Busy;
+        public static bool JourneySyncing;
 
         public async Task<IEnumerable<Journey>> GetJourneys()
         {
@@ -149,10 +150,12 @@ namespace MileEyes.Services
 
         public async Task Sync()
         {
-            if (!TrackerService.IsTracking)
+            if (!TrackerService.IsTracking && !VehicleTypeService.VehicleTypeSyncing && !VehicleService.VehicleSyncing && !CompanyService.CompanySyncing && !EngineTypeService.EngineTypeSyncing)
             {
+                JourneySyncing = true;
                 await PushNew();
                 await PullUpdate();
+                JourneySyncing = false;
             }
         }
 

@@ -8,5 +8,6 @@ namespace MileEyes.API.Models.DatabaseModels
         public virtual Guid DriverId { get; set; }
         public virtual Guid CompanyId { get; set; }
         public double CurrentMileage { get; set; }
+        public bool AutoAccept { get; set; }
     }
 }

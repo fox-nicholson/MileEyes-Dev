@@ -164,6 +164,19 @@ namespace MileEyes.ViewModels
             }
         }
 
+        private bool _autoReturn;
+
+        public bool AutoReturn
+        {
+            get { return _autoReturn; }
+            set
+            {
+                if (_autoReturn == value) return;
+                _autoReturn = value;
+                OnPropertyChanged(nameof(AutoReturn));
+            }
+        }
+
         public JourneyManualViewModel()
         {
             Date = DateTime.UtcNow;
@@ -359,6 +372,29 @@ namespace MileEyes.ViewModels
             journey.Distance = await journey.CalculateDistance();
 
             await Services.Host.JourneyService.SaveJourney(journey);
+
+            if (AutoReturn)
+            {
+                journey = new Journey
+                {
+                    Company = Company,
+                    Date = Date,
+                    Invoiced = Invoiced,
+                    Passengers = Passengers,
+                    Reason = Reason,
+                    Vehicle = Vehicle
+                };
+
+                destinationWaypoint.Step = 0;
+                originWaypoint.Step = 1;
+
+                journey.Waypoints.Add(destinationWaypoint);
+                journey.Waypoints.Add(originWaypoint);
+
+                journey.Distance = await journey.CalculateDistance();
+
+                await Services.Host.JourneyService.SaveJourney(journey);
+            }
 
             Saved?.Invoke(this, EventArgs.Empty);
 

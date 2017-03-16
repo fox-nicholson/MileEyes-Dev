@@ -25,7 +25,7 @@ namespace MileEyes.API.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        [Route("api/JourneyCost/")]
+        [Route("api/JourneyCost/{journeyId}/")]
         public async Task<IHttpActionResult> GetJourneyCost(string journeyId)
         {
             var costs = new CostModel();

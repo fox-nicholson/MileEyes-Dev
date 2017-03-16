@@ -12,6 +12,7 @@ namespace MileEyes.Services
 {
     public class VehicleService : IVehicleService
     {
+        public static bool VehicleSyncing;
         public async Task<Vehicle> AddVehicle(Vehicle v)
         {
             using (var transaction = DatabaseService.Realm.BeginWrite())
@@ -98,11 +99,13 @@ namespace MileEyes.Services
 
         public async Task Sync()
         {
-            if (!TrackerService.IsTracking)
+            if (!TrackerService.IsTracking && !JourneyService.JourneySyncing && !VehicleTypeService.VehicleTypeSyncing && !CompanyService.CompanySyncing && !EngineTypeService.EngineTypeSyncing)
             {
+                VehicleSyncing = true;
                 await PushNew();
                 await PullUpdate();
                 await DeleteMarked();
+                VehicleSyncing = false;
             }
         }
 

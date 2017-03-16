@@ -10,8 +10,7 @@ namespace MileEyes.PublicModels.Driver
         public string Email { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-
-        public Guid LastActiveVehicle { get; set; }
+		public bool AutoAccept { get; set; }
 
         public IList<VehicleViewModel> Vehicles { get; set; }
     }

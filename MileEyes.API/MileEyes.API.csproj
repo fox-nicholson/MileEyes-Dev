@@ -320,6 +320,14 @@
     <Compile Include="Migrations\201703161005191_AddPendingUsers.Designer.cs">
       <DependentUpon>201703161005191_AddPendingUsers.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703161037053_AddSignupDate.cs" />
+    <Compile Include="Migrations\201703161037053_AddSignupDate.Designer.cs">
+      <DependentUpon>201703161037053_AddSignupDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703161154438_AddedDriverAutoAccept.cs" />
+    <Compile Include="Migrations\201703161154438_AddedDriverAutoAccept.Designer.cs">
+      <DependentUpon>201703161154438_AddedDriverAutoAccept.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -557,6 +565,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703161005191_AddPendingUsers.resx">
       <DependentUpon>201703161005191_AddPendingUsers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703161037053_AddSignupDate.resx">
+      <DependentUpon>201703161037053_AddSignupDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703161154438_AddedDriverAutoAccept.resx">
+      <DependentUpon>201703161154438_AddedDriverAutoAccept.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

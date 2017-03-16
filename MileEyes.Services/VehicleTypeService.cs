@@ -8,8 +8,9 @@ using Newtonsoft.Json;
 
 namespace MileEyes.Services
 {
-    class VehicleTypeService : IVehicleTypeService
+    public class VehicleTypeService : IVehicleTypeService
     {
+        public static bool VehicleTypeSyncing;
         public event EventHandler SyncFailed = delegate { };
 
         public async Task<IEnumerable<VehicleType>> GetVehicleTypes()
@@ -30,33 +31,39 @@ namespace MileEyes.Services
 
         public async Task Sync()
         {
-            var response = await RestService.Client.GetAsync("api/VehicleTypes/");
-
-            if (response == null) { SyncFailed?.Invoke(this, EventArgs.Empty); return; }
-
-            if (!response.IsSuccessStatusCode)
+            if (!TrackerService.IsTracking && !JourneyService.JourneySyncing && !VehicleService.VehicleSyncing && !CompanyService.CompanySyncing && !EngineTypeService.EngineTypeSyncing)
             {
-                SyncFailed?.Invoke(this, EventArgs.Empty);
-                return;
-            }
+                VehicleTypeSyncing = true;
+                var response = await RestService.Client.GetAsync("api/VehicleTypes/");
 
-            var result =
-                JsonConvert.DeserializeObject<IEnumerable<VehicleTypeViewModel>>(
-                    await response.Content.ReadAsStringAsync());
+                if (response == null) { SyncFailed?.Invoke(this, EventArgs.Empty); return; }
 
-            using (var transaction = DatabaseService.Realm.BeginWrite())
-            {
-                DatabaseService.Realm.RemoveAll<VehicleType>();
-
-                foreach (var et in result)
+                if (!response.IsSuccessStatusCode)
                 {
-                    var realmEt = DatabaseService.Realm.CreateObject<VehicleType>();
-                    realmEt.Id = et.Id;
-                    realmEt.Name = et.Name;
+                    VehicleTypeSyncing = false;
+                    SyncFailed?.Invoke(this, EventArgs.Empty);
+                    return;
                 }
 
-                transaction.Commit();
-                transaction.Dispose();
+                var result =
+                    JsonConvert.DeserializeObject<IEnumerable<VehicleTypeViewModel>>(
+                        await response.Content.ReadAsStringAsync());
+
+                using (var transaction = DatabaseService.Realm.BeginWrite())
+                {
+                    DatabaseService.Realm.RemoveAll<VehicleType>();
+
+                    foreach (var et in result)
+                    {
+                        var realmEt = DatabaseService.Realm.CreateObject<VehicleType>();
+                        realmEt.Id = et.Id;
+                        realmEt.Name = et.Name;
+                    }
+
+                    transaction.Commit();
+                    transaction.Dispose();
+                }
+                VehicleTypeSyncing = false;
             }
         }
     }

@@ -32,7 +32,7 @@ namespace MileEyes.Services
 
         private static int MIN_SLOW_MOVED_DISTANCE = 15;
 
-        private static int MIN_SLOW_MOVED_TIME = 120;
+        private static int MIN_SLOW_MOVED_TIME = 90;
 
         private static int POLL_DELAY = 250; // How often we poll the gps for current position.
 
@@ -46,13 +46,13 @@ namespace MileEyes.Services
 
         private static double MAX_ACCELERATION = 4.0;
 
-        private static double MAX_ACCURACY = 40.0;
+        private static double MAX_ACCURACY = 50.0;
 
-        private static double ACCURACY_STEP_RATE = 2;
+        private static double MAX_ACCURACY_TIMEOUT = 6.0;
 
         private static double START_ACCURACY = 20.0;
 
-        private static double MIN_SPEED = 5.9; // 6.9
+        private static double MIN_SPEED = 5.6; // 6.9
 
         private static double METERS_PER_SECOND = 0.44704;
 
@@ -60,14 +60,11 @@ namespace MileEyes.Services
 
         private List<Position> catchedPositions;
 
-        private static double currentAccuracy;
-
         public async Task Reset()
         {
             await Plugin.Geolocator.CrossGeolocator.Current.StopListeningAsync();
             waypoints = new List<Waypoint>();
             catchedPositions = new List<Position>(MAX_CATCHED_POSITIONS);
-            currentAccuracy = START_ACCURACY - ACCURACY_STEP_RATE;
             CurrentDistance = 0.0;
             CurrentLocation = null;
             IsTracking = false;
@@ -184,15 +181,17 @@ namespace MileEyes.Services
 
                 var maxDistance = (METERS_PER_SECOND * MAX_MILES_PER_HOUR) * delta;
 
-                currentAccuracy = START_ACCURACY + ACCURACY_STEP_RATE;
+                var currentAccuracy = START_ACCURACY + (((MAX_ACCURACY - START_ACCURACY) / MAX_ACCURACY_TIMEOUT) * delta);
                 if (currentAccuracy > MAX_ACCURACY)
                 {
                     currentAccuracy = MAX_ACCURACY;
                 }
 
+                System.Diagnostics.Debug.WriteLine("Delta: " + delta + ", Current Accuracy: " + currentAccuracy);
+
                 if ((MIN_MOVED_DISTANCE < distance && maxDistance > distance && MAX_ACCELERATION >= acceleration && currentAccuracy >= accuracy) && (speed >= MIN_SPEED || MIN_SLOW_MOVED_DISTANCE < distance && delta >= MIN_SLOW_MOVED_TIME))
                 {
-                    currentAccuracy = START_ACCURACY - ACCURACY_STEP_RATE;
+                    currentAccuracy = START_ACCURACY;
 
                     CurrentLocation = e.Position;
                     CurrentLocation.Speed = speed;

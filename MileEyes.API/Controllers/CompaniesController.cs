@@ -242,7 +242,6 @@ namespace MileEyes.API.Controllers
                                 Id = j.Driver.Id.ToString(),
                                 FirstName = j.Driver.User.FirstName,
                                 LastName = j.Driver.User.LastName,
-                                LastActiveVehicle = j.Driver.LastActiveVehicle
                             },
                             Vehicle = new VehicleViewModel()
                             {
@@ -287,7 +286,6 @@ namespace MileEyes.API.Controllers
                                 Id = j.Driver.Id.ToString(),
                                 FirstName = j.Driver.User.FirstName,
                                 LastName = j.Driver.User.LastName,
-                                LastActiveVehicle = j.Driver.LastActiveVehicle
                             },
                             Vehicle = new VehicleViewModel()
                             {
@@ -396,38 +394,6 @@ namespace MileEyes.API.Controllers
             return Ok();
         }
 
-        [Route("api/Companies/{companyId}/Journeys/{journeyId}/PushToAccountancy/{accountingPackage}")]
-        public async Task<IHttpActionResult> PushCompanyJourneyToAccouncy(Guid companyId, Guid journeyId,
-            string accountancyPackage)
-        {
-            // Get the current User
-            var user = db.Users.Find(User.Identity.GetUserId());
-
-            try
-            {
-                // get the company
-                var company = db.Companies.Find(companyId);
-
-				var owner = company.Profiles.OfType<Owner>().FirstOrDefault(query => query.User.Email == user.Email);
-				var manager = company.Profiles.OfType<Manager>().FirstOrDefault(query => query.User.Email == user.Email);
-                
-                // Check if the current users has rights, if not respond with bad request
-				if (owner == null && manager == null) return BadRequest();
-            }
-            catch (NullReferenceException e)
-            {
-                Console.WriteLine(e);
-            }
-
-            /*
-             * Implement accounting push here using respective API's, Fox has links to the relevant docs for this
-             */
-
-
-            // Always returns Bad until implemented
-            return BadRequest();
-        }
-
         [HttpGet]
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
         [Route("api/Companies/{companyId}/Drivers")]
@@ -455,13 +421,14 @@ namespace MileEyes.API.Controllers
                     var drivers = company.Profiles.OfType<Driver>();
                     foreach (var d in drivers)
                     {
+						DriverInfo driverInfo = db.DriverInfo.FirstOrDefault(info => info.DriverId == d.Id);
                         Company personal = db.Companies.FirstOrDefault(c => c.Personal && c.Owner.User.Email == d.User.Email);
                         if (personal != null)
                         {
                             result.Add(new DriverViewModel()
                             {
                                 Id = d.Id.ToString(),
-                                LastActiveVehicle = d.LastActiveVehicle,
+								AutoAccept = driverInfo.AutoAccept,
                                 FirstName = d.User.FirstName,
                                 LastName = d.User.LastName,
                                 Email = d.User.Email,
@@ -481,13 +448,14 @@ namespace MileEyes.API.Controllers
                 }
 				else if (driver != null)
                 {
+					DriverInfo driverInfo = db.DriverInfo.FirstOrDefault(info => info.DriverId == driver.Id);
                     Company personal = db.Companies.FirstOrDefault(c => c.Personal && c.Owner.User.Email == driver.User.Email);
                     if (personal != null)
                     {
                         result.Add(new DriverViewModel()
                         {
                             Id = driver.Id.ToString(),
-                            LastActiveVehicle = driver.LastActiveVehicle,
+							AutoAccept = driverInfo.AutoAccept,
                             FirstName = driver.User.FirstName,
                             LastName = driver.User.LastName,
                             Email = driver.User.Email,
@@ -512,6 +480,91 @@ namespace MileEyes.API.Controllers
             }
             return result.AsQueryable();
         }
+
+		[HttpGet]
+		[HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
+		[Route("api/Companies/{companyId}/Driver/{driverId}")]
+		public IQueryable<DriverViewModel> GetDriver(Guid companyId, Guid driverId)
+		{
+			var result = new List<DriverViewModel>();
+
+			var user = db.Users.Find(User.Identity.GetUserId());
+
+			try
+			{
+
+				// get the company
+				var company = db.Companies.Find(companyId);
+
+				if (company.Profiles.OfType<Driver>().FirstOrDefault(query => query.Id == driverId) == null)
+				{
+					return result.AsQueryable();
+				}
+
+				var driver = db.Drivers.Find(driverId);
+				DriverInfo driverInfo = db.DriverInfo.FirstOrDefault(info => info.DriverId == driver.Id);
+
+				var owner = company.Profiles.OfType<Owner>().FirstOrDefault(query => query.User.Email == user.Email);
+				var manager = company.Profiles.OfType<Manager>().FirstOrDefault(query => query.User.Email == user.Email);
+				var accountant = company.Profiles.OfType<Accountant>().FirstOrDefault(query => query.User.Email == user.Email);
+
+
+				// Check if the current users has rights, if not respond with bad request
+				if (owner != null || manager != null || accountant != null)
+				{
+					Company personal = db.Companies.FirstOrDefault(c => c.Personal && c.Owner.User.Email == driver.User.Email);
+					result.Add(new DriverViewModel()
+					{
+						Id = driver.Id.ToString(),
+						AutoAccept = driverInfo.AutoAccept,
+						FirstName = driver.User.FirstName,
+						LastName = driver.User.LastName,
+						Email = driver.User.Email,
+						Vehicles = personal.Profiles.OfType<Driver>().FirstOrDefault().Vehicles.Select(v => new VehicleViewModel()
+						{
+							Id = v.Id.ToString(),
+							Registration = v.Registration,
+							EngineType = new EngineTypeViewModel()
+							{
+								Id = v.EngineType.Id.ToString(),
+								Name = v.EngineType.Name
+							}
+						}).ToList()
+					});
+				}
+				else if (driver != null && driver.User.Email == user.Email)
+				{
+					Company personal = db.Companies.FirstOrDefault(c => c.Personal && c.Owner.User.Email == driver.User.Email);
+					if (personal != null)
+					{
+						result.Add(new DriverViewModel()
+						{
+							Id = driver.Id.ToString(),
+							AutoAccept = driverInfo.AutoAccept,
+							FirstName = driver.User.FirstName,
+							LastName = driver.User.LastName,
+							Email = driver.User.Email,
+							Vehicles = personal.Profiles.OfType<Driver>().FirstOrDefault().Vehicles.Select(v => new VehicleViewModel()
+							{
+								Id = v.Id.ToString(),
+								Registration = v.Registration,
+								EngineType = new EngineTypeViewModel()
+								{
+									Id = v.EngineType.Id.ToString(),
+									Name = v.EngineType.Name
+								}
+							}).ToList()
+						});
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				//return BadRequest(e.ToString());
+				return null;
+			}
+			return result.AsQueryable();
+		}
 
 
         [HttpPost]
@@ -543,6 +596,14 @@ namespace MileEyes.API.Controllers
             // If the driver doesnt exist then return BadRequest
             if (newDriver == null) return BadRequest();
 
+			db.DriverInfo.Add(new DriverInfo()
+			{
+				Id = Guid.NewGuid(),
+				DriverId = newDriver.Id,
+				CompanyId = company.Id,
+				CurrentMileage = model.CurrentMileage
+			});
+
             try
             {
                 // Add the driver to the company
@@ -573,6 +634,11 @@ namespace MileEyes.API.Controllers
             // get the company
             var company = db.Companies.Find(companyId);
 
+			if (company.Profiles.OfType<Driver>().FirstOrDefault(query => query.Id == driverId) == null)
+			{
+				return BadRequest();
+			}
+
             try
             {
                 var owner = company.Profiles.OfType<Owner>().FirstOrDefault(query => query.User.Email == user.Email);
@@ -588,6 +654,8 @@ namespace MileEyes.API.Controllers
             // Get the driver were removing
             var driver = db.Drivers.Find(driverId);
 
+			var driverInfo = db.DriverInfo.FirstOrDefault(info => info.DriverId == driver.Id);
+
             try
             {
                 // If the driver isnt part of the company return bad request
@@ -595,6 +663,7 @@ namespace MileEyes.API.Controllers
 
                 // Remove the driver from the company
                 company.Profiles.Remove(driver);
+				db.DriverInfo.Remove(driverInfo);
             }
             catch (NullReferenceException e)
             {
@@ -616,6 +685,50 @@ namespace MileEyes.API.Controllers
                 return null;
             }
         }
+
+		[HttpPost]
+		[ResponseType(typeof(DriverViewModel))]
+		[Route("api/Companies/{companyId}/DriverAutoAccept/{driverId}/{value}")]
+		public async Task<IHttpActionResult> CompanyDriverAutoAccept(Guid companyId, Guid driverId, String value)
+		{
+			// Get the current User
+			var user = db.Users.Find(User.Identity.GetUserId());
+
+			// get the company
+			var company = db.Companies.Find(companyId);
+
+			if (company.Profiles.OfType<Driver>().FirstOrDefault(query => query.Id == driverId) == null)
+			{
+				return BadRequest();
+			}
+
+			//TODO redo the rights system
+
+			try
+			{
+				var owner = company.Profiles.OfType<Owner>().FirstOrDefault(query => query.User.Email == user.Email);
+				var manager = company.Profiles.OfType<Manager>().FirstOrDefault(query => query.User.Email == user.Email);
+
+				// Check if the current users has rights, if not respond with bad request
+				if (manager == null && owner == null) return BadRequest();
+			}
+			catch (NullReferenceException e)
+			{
+				Console.WriteLine(e);
+			}
+
+			var driverInfo = db.DriverInfo.FirstOrDefault(info => info.DriverId == driverId);
+
+			if (driverInfo != null)
+			{
+				driverInfo.AutoAccept = value.ToLower().Equals("true");
+			}
+
+			// Save changes
+			await db.SaveChangesAsync();
+
+			return Ok();
+		}
 
 		[HttpGet]
 		[HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
@@ -667,6 +780,69 @@ namespace MileEyes.API.Controllers
 					}
 				}
 			} catch (NullReferenceException e)
+			{
+				Console.WriteLine(e);
+			}
+			return result.AsQueryable();
+		}
+
+		[HttpGet]
+		[HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
+		[Route("api/Companies/{companyId}/DriverJourneysInfo/{driverId}")]
+		public IQueryable<JourneyInfoViewModel> getDriverJourneysInfo(Guid companyId, Guid driverId, long start, long end)
+		{
+			var result = new List<JourneyInfoViewModel>();
+			DateTime startDate = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+			startDate = startDate.AddMilliseconds(start).ToLocalTime();
+			DateTime endDate = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+			endDate = endDate.AddMilliseconds(end).ToLocalTime();
+
+			try
+			{
+				Company company = db.Companies.Find(companyId);
+
+				if (company.Profiles.OfType<Driver>().FirstOrDefault(query => query.Id == driverId) == null)
+				{
+					return result.AsQueryable();
+				}
+
+
+				if (company != null)
+				{
+					var user = db.Users.Find(User.Identity.GetUserId());
+
+					var owner = company.Profiles.OfType<Owner>().FirstOrDefault(query => query.User.Email == user.Email);
+					var manager = company.Profiles.OfType<Manager>().FirstOrDefault(query => query.User.Email == user.Email);
+					var accountant = company.Profiles.OfType<Accountant>().FirstOrDefault(query => query.User.Email == user.Email);
+					var driver = company.Profiles.OfType<Driver>().FirstOrDefault(query => query.User.Email == user.Email);
+
+					if (owner != null || manager != null || accountant != null)
+					{
+						var journeys = company.Journeys.Where(journey => journey.Company.Id == company.Id && journey.Driver.Id == driver.Id && journey.Date >= startDate && journey.Date <= endDate);
+						foreach (var journey in journeys)
+						{
+							result.Add(new JourneyInfoViewModel()
+							{
+								Id = journey.Id,
+								Date = journey.Date
+							});
+						}
+					}
+					else if (driver != null && driver.User.Email == user.Email)
+					{
+						var journeys = company.Journeys.Where(journey => journey.Company.Id == company.Id && journey.Driver.Id == driver.Id && journey.Date >= startDate && journey.Date <= endDate);
+						foreach (var journey in journeys)
+						{
+							result.Add(new JourneyInfoViewModel()
+							{
+								Id = journey.Id,
+								Date = journey.Date
+							});
+						}
+					}
+				}
+			}
+			catch (NullReferenceException e)
 			{
 				Console.WriteLine(e);
 			}

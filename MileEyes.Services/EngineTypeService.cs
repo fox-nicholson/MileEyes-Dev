@@ -8,8 +8,10 @@ using Newtonsoft.Json;
 
 namespace MileEyes.Services
 {
-    class EngineTypeService : IEngineTypeService
+    public class EngineTypeService : IEngineTypeService
     {
+        public static bool EngineTypeSyncing;
+
         public event EventHandler SyncFailed = delegate { };
 
         public async Task<IEnumerable<EngineType>> GetEngineTypes()
@@ -30,33 +32,39 @@ namespace MileEyes.Services
 
         public async Task Sync()
         {
-            var response = await RestService.Client.GetAsync("api/EngineTypes/");
-
-            if (response == null) { SyncFailed?.Invoke(this, EventArgs.Empty); return; }
-
-            if (!response.IsSuccessStatusCode)
+            if (!TrackerService.IsTracking && !JourneyService.JourneySyncing && !VehicleService.VehicleSyncing && !CompanyService.CompanySyncing && !VehicleTypeService.VehicleTypeSyncing)
             {
-                SyncFailed?.Invoke(this, EventArgs.Empty);
-                return;
-            }
+                EngineTypeSyncing = true;
+                var response = await RestService.Client.GetAsync("api/EngineTypes/");
 
-            var result =
-                JsonConvert.DeserializeObject<IEnumerable<EngineTypeViewModel>>(
-                    await response.Content.ReadAsStringAsync());
+                if (response == null) { SyncFailed?.Invoke(this, EventArgs.Empty); return; }
 
-            using (var transaction = DatabaseService.Realm.BeginWrite())
-            {
-                DatabaseService.Realm.RemoveAll<EngineType>();
-
-                foreach (var et in result)
+                if (!response.IsSuccessStatusCode)
                 {
-                    var realmEt = DatabaseService.Realm.CreateObject<EngineType>();
-                    realmEt.Id = et.Id;
-                    realmEt.Name = et.Name;
+                    EngineTypeSyncing = false;
+                    SyncFailed?.Invoke(this, EventArgs.Empty);
+                    return;
                 }
 
-                transaction.Commit();
-                transaction.Dispose();
+                var result =
+                    JsonConvert.DeserializeObject<IEnumerable<EngineTypeViewModel>>(
+                        await response.Content.ReadAsStringAsync());
+
+                using (var transaction = DatabaseService.Realm.BeginWrite())
+                {
+                    DatabaseService.Realm.RemoveAll<EngineType>();
+
+                    foreach (var et in result)
+                    {
+                        var realmEt = DatabaseService.Realm.CreateObject<EngineType>();
+                        realmEt.Id = et.Id;
+                        realmEt.Name = et.Name;
+                    }
+
+                    transaction.Commit();
+                    transaction.Dispose();
+                }
+                EngineTypeSyncing = false;
             }
         }
     }

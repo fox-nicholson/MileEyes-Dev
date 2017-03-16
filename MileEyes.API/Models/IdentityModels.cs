@@ -72,11 +72,6 @@ namespace MileEyes.API.Models
         public DbSet<EngineType> EngineTypes { get; set; }
         public DbSet<FuelType> FuelTypes { get; set; }
 
-        public DbSet<AccountingEntry> AccountingEntries { get; set; }
-
-        public DbSet<AccountingToken> AccountingTokens { get; set; }
-        public DbSet<XeroToken> XeroTokens { get; set; }
-
         public DbSet<Adjustment> Adjustments { get; set; }
 
         public DbSet<Invite> Invites { get; set; }

@@ -8,8 +8,10 @@ using Newtonsoft.Json;
 
 namespace MileEyes.Services
 {
-    class CompanyService : ICompanyService
+    public class CompanyService : ICompanyService
     {
+        public static bool CompanySyncing;
+
         public event EventHandler SyncFailed = delegate { };
 
         public async Task<IEnumerable<Company>> GetCompanies()
@@ -24,79 +26,86 @@ namespace MileEyes.Services
 
         public async Task Sync()
         {
-            var response = await RestService.Client.GetAsync("api/Companies/");
-
-            if (response == null)
+            if (!TrackerService.IsTracking && !JourneyService.JourneySyncing && !VehicleService.VehicleSyncing && !VehicleTypeService.VehicleTypeSyncing && !EngineTypeService.EngineTypeSyncing)
             {
-                SyncFailed?.Invoke(this, EventArgs.Empty);
-                return;
-            }
+                CompanySyncing = true;
+                var response = await RestService.Client.GetAsync("api/Companies/");
+
+                if (response == null)
+                {
+                    CompanySyncing = false;
+                    SyncFailed?.Invoke(this, EventArgs.Empty);
+                    return;
+                }
 
                 if (!response.IsSuccessStatusCode)
-            {
-                SyncFailed?.Invoke(this, EventArgs.Empty);
-                return;
-            }
-
-            var result =
-                JsonConvert.DeserializeObject<IEnumerable<CompanyViewModel>>(
-                    await response.Content.ReadAsStringAsync()).Select(c => new Company()
                 {
-                    CloudId = c.Id.ToString(),
-                    Name = c.Name,
-                    Personal = c.Personal
-                });
+                    CompanySyncing = false;
+                    SyncFailed?.Invoke(this, EventArgs.Empty);
+                    return;
+                }
 
-            var existing = await GetCompanies();
+                var result =
+                    JsonConvert.DeserializeObject<IEnumerable<CompanyViewModel>>(
+                        await response.Content.ReadAsStringAsync()).Select(c => new Company()
+                        {
+                            CloudId = c.Id.ToString(),
+                            Name = c.Name,
+                            Personal = c.Personal
+                        });
 
-            var existingEnumerable = existing as Company[] ?? existing.ToArray();
+                var existing = await GetCompanies();
 
-            var resultEnumerable = result as Company[] ?? result.ToArray();
+                var existingEnumerable = existing as Company[] ?? existing.ToArray();
 
-            foreach (var company in resultEnumerable)
-            {
-                var currentCompany = existingEnumerable.FirstOrDefault(c => c.CloudId == company.CloudId);
+                var resultEnumerable = result as Company[] ?? result.ToArray();
 
-                if (currentCompany == null)
+                foreach (var company in resultEnumerable)
                 {
-                    using (var transaction = DatabaseService.Realm.BeginWrite())
+                    var currentCompany = existingEnumerable.FirstOrDefault(c => c.CloudId == company.CloudId);
+
+                    if (currentCompany == null)
                     {
-                        var newCompany = DatabaseService.Realm.CreateObject<Company>();
+                        using (var transaction = DatabaseService.Realm.BeginWrite())
+                        {
+                            var newCompany = DatabaseService.Realm.CreateObject<Company>();
 
-                        newCompany.CloudId = company.CloudId;
-                        newCompany.Id = Guid.NewGuid().ToString();
+                            newCompany.CloudId = company.CloudId;
+                            newCompany.Id = Guid.NewGuid().ToString();
 
-                        newCompany.Name = company.Name;
-                        newCompany.Personal = company.Personal;
+                            newCompany.Name = company.Name;
+                            newCompany.Personal = company.Personal;
 
-                        transaction.Commit();
-                        transaction.Dispose();
+                            transaction.Commit();
+                            transaction.Dispose();
+                        }
+                    }
+                    else
+                    {
+                        using (var transaction = DatabaseService.Realm.BeginWrite())
+                        {
+                            var existingCompany = DatabaseService.Realm.ObjectForPrimaryKey<Company>(currentCompany.Id);
+
+                            existingCompany.Name = company.Name;
+                            existingCompany.Personal = company.Personal;
+
+                            transaction.Commit();
+                            transaction.Dispose();
+                        }
                     }
                 }
-                else
+
+                foreach (var company in existingEnumerable)
                 {
-                    using (var transaction = DatabaseService.Realm.BeginWrite())
-                    {
-                        var existingCompany = DatabaseService.Realm.ObjectForPrimaryKey<Company>(currentCompany.Id);
+                    var currentCompany = resultEnumerable.FirstOrDefault(c => c.CloudId == company.CloudId);
 
-                        existingCompany.Name = company.Name;
-                        existingCompany.Personal = company.Personal;
+                    if (currentCompany != null) continue;
 
-                        transaction.Commit();
-                        transaction.Dispose();
-                    }
+                    var existingCompany = await Host.CompanyService.GetCompany(company.Id);
+
+                    DatabaseService.Realm.Remove(existingCompany);
                 }
-            }
-
-            foreach (var company in existingEnumerable)
-            {
-                var currentCompany = resultEnumerable.FirstOrDefault(c => c.CloudId == company.CloudId);
-
-                if (currentCompany != null) continue;
-
-                var existingCompany = await Host.CompanyService.GetCompany(company.Id);
-
-                DatabaseService.Realm.Remove(existingCompany);
+                CompanySyncing = false;
             }
         }
 

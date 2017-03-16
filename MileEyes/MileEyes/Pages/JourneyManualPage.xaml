@@ -30,6 +30,16 @@
             </customControls:CustomTableView.BackgroundColor>
             <TableRoot>
                 <TableSection Title="Journey Details">
+
+                  <customControls:CustomSwitchCell ImageSource="bill_to_client.png" Text="Return Journey"
+                                                   On="{Binding AutoReturn}">
+                    <customControls:CustomSwitchCell.TextColor>
+                      <OnPlatform x:TypeArguments="Color"
+                                  iOS="#FFFFFF"
+                                  Android="Black" />
+                    </customControls:CustomSwitchCell.TextColor>
+                  </customControls:CustomSwitchCell>
+                  
                     <customControls:CustomImageCell ImageSource="origin.png" Text="Origin"
                                                     Detail="{Binding OriginAddress.Label}" Tapped="OriginCell_OnTapped">
                         <customControls:CustomImageCell.TextColor>
