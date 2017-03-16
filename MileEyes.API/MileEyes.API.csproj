@@ -316,6 +316,10 @@
     <Compile Include="Migrations\201703160944012_MoreJourneyParams.Designer.cs">
       <DependentUpon>201703160944012_MoreJourneyParams.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703161005191_AddPendingUsers.cs" />
+    <Compile Include="Migrations\201703161005191_AddPendingUsers.Designer.cs">
+      <DependentUpon>201703161005191_AddPendingUsers.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -331,6 +335,7 @@
     <Compile Include="Models\DatabaseModels\Driver.cs" />
     <Compile Include="Models\DatabaseModels\DriverInfo.cs" />
     <Compile Include="Models\DatabaseModels\DriverInvite.cs" />
+    <Compile Include="Models\DatabaseModels\PendingUsers.cs" />
     <Compile Include="Models\DatabaseModels\VehicleInfo.cs" />
     <Compile Include="Models\DatabaseModels\VehicleType.cs" />
     <Compile Include="Models\DatabaseModels\EngineType.cs" />
@@ -549,6 +554,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703160944012_MoreJourneyParams.resx">
       <DependentUpon>201703160944012_MoreJourneyParams.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703161005191_AddPendingUsers.resx">
+      <DependentUpon>201703161005191_AddPendingUsers.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -84,5 +84,7 @@ namespace MileEyes.API.Models
 
         public DbSet<DriverInfo> DriverInfo { get; set; }
         public DbSet<VehicleInfo> VehicleInfo { get; set; }
+
+        public DbSet<PendingUsers> PendingUsers { get; set; }
     }
 }
