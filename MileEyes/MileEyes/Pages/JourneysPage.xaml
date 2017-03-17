@@ -15,6 +15,7 @@
         <viewModels:JourneysViewModel />
     </ContentPage.BindingContext>
     <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Export" Command="{Binding ExportCommand}" />
         <ToolbarItem Text="Add" Clicked="Button_OnClicked" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>

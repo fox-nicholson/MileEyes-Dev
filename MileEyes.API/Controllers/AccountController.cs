@@ -478,47 +478,44 @@ namespace MileEyes.API.Controllers
             var company = db.Companies.FirstOrDefault(c => c.Id.ToString() == companyId);
             if (company == null)
             {
-                return BadRequest("Unable to find company!");
+                return BadRequest("");
             }
             var user = db.Users.Find(User.Identity.GetUserId());
 
-            var owner = user.Profiles.OfType<Owner>();
-            var companyOwners = company.Profiles.OfType<Owner>();
-            foreach (var o in owner)
-            {
-                if (companyOwners.Contains(o))
-                {
-                    return Ok("4");
-                }
-            }
-            var accountant = user.Profiles.OfType<Accountant>();
-            var companyAccountants = company.Profiles.OfType<Accountant>();
-            foreach (var a in accountant)
-            {
-                if (companyAccountants.Contains(a))
-                {
-                    return Ok("3");
-                }
-            }
-            var manager = user.Profiles.OfType<Manager>();
-            var companyManagers = company.Profiles.OfType<Manager>();
-            foreach (var m in manager)
-            {
-                if (companyManagers.Contains(m))
-                {
-                    return Ok("2");
-                }
-            }
-            var driver = user.Profiles.OfType<Driver>();
-            var companyDrivers = company.Profiles.OfType<Driver>();
-            foreach (var d in driver)
-            {
-                if (companyDrivers.Contains(d))
-                {
-                    return Ok("1");
-                }
-            }
-            return BadRequest("You don't have the rights to use this.");
+			String rights = "";
+			var owner = company.Profiles.OfType<Owner>().FirstOrDefault(query => query.User.Email == user.Email);
+			var manager = company.Profiles.OfType<Manager>().FirstOrDefault(query => query.User.Email == user.Email);
+			var driver = company.Profiles.OfType<Driver>().FirstOrDefault(query => query.User.Email == user.Email);
+
+			if (owner != null)
+			{
+				rights = "3";
+			}
+
+			if (manager != null)
+			{
+				if (rights == "")
+				{
+					rights = "2";
+				}
+				else
+				{
+					rights += ",2";
+				}
+			}
+
+			if (driver != null)
+			{
+				if (rights == "")
+				{
+					rights = "1";
+				}
+				else
+				{
+					rights += ",1";
+				}
+			}
+            return Ok(rights);
         }
 
         // GET api/Account/CheckInvite
@@ -530,7 +527,7 @@ namespace MileEyes.API.Controllers
             var company = db.Companies.FirstOrDefault(c => c.Id.ToString() == companyId);
             if (company == null)
             {
-                return BadRequest("Unable to find company!");
+                return BadRequest("");
             }
             var driverInvite =
                 db.DriverInvites.FirstOrDefault(

@@ -148,6 +148,24 @@ namespace MileEyes.Services
             return j;
         }
 
+        public async Task ExportJourneys()
+        {
+            if (Busy) return;
+            Busy = true;
+
+            var journeys = await GetJourneys();
+            var file = "";
+
+            foreach (var journey in journeys)
+            {
+                file = string.Join(",", "HelloWorld", "TestExport");
+            }
+
+            var response = await RestService.Client.GetAsync("/api/ExportJourneys/" + file + "/");
+
+            Busy = false;
+        }
+
         public async Task Sync()
         {
             if (!TrackerService.IsTracking && !VehicleTypeService.VehicleTypeSyncing && !VehicleService.VehicleSyncing && !CompanyService.CompanySyncing && !EngineTypeService.EngineTypeSyncing)

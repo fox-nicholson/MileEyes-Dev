@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Input;
 using MileEyes.Extensions;
 using MileEyes.Services.Models;
+using MileEyes.Services;
 using Xamarin.Forms;
 
 namespace MileEyes.ViewModels
@@ -34,10 +35,12 @@ namespace MileEyes.ViewModels
         public JourneysViewModel()
         {
             RefreshCommand = new Command(Refresh);
+            ExportCommand = new Command(Export);
             Refresh();
         }
 
         public ICommand RefreshCommand { get; set; }
+        public ICommand ExportCommand { get; set; }
 
         public override async void Refresh()
         {
@@ -145,6 +148,11 @@ namespace MileEyes.ViewModels
 
             // Mark View as not Refreshing
             Refreshing = false;
+        }
+
+        public async void Export()
+        {
+            await Host.JourneyService.ExportJourneys();
         }
     }
 }

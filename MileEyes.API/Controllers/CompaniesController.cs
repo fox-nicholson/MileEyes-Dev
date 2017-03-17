@@ -12,6 +12,7 @@ using MileEyes.PublicModels.Company;
 using MileEyes.PublicModels.Driver;
 using MileEyes.PublicModels.Journey;
 using MileEyes.PublicModels.Vehicles;
+using MileEyes.PublicModels.VehicleTypes;
 using MileEyes.PublicModels.EngineTypes;
 
 namespace MileEyes.API.Controllers
@@ -28,9 +29,8 @@ namespace MileEyes.API.Controllers
 
             var result = new List<CompanyViewModel>();
             try
-            {
+			{
                 var drivers = user.Profiles.OfType<Driver>();
-                var accountants = user.Profiles.OfType<Accountant>();
                 var managers = user.Profiles.OfType<Manager>();
                 var owners = user.Profiles.OfType<Owner>();
 
@@ -46,17 +46,15 @@ namespace MileEyes.API.Controllers
                             continue;
                         }
                         companies.Add(c);
-                    }
-                }
-                foreach (var a in accountants)
-                {
-                    foreach (var c in a.Companies)
-                    {
-                        if (companies.Contains(c))
-                        {
-                            continue;
-                        }
-                        companies.Add(c);
+						result.Add(new CompanyViewModel()
+						{
+							Id = c.Id.ToString(),
+							Name = c.Name,
+							Personal = c.Personal,
+							LowRate = c.LowRate,
+							HighRate = c.HighRate,
+							rank = 3
+						});
                     }
                 }
                 foreach (var m in managers)
@@ -68,6 +66,15 @@ namespace MileEyes.API.Controllers
                             continue;
                         }
                         companies.Add(c);
+						result.Add(new CompanyViewModel()
+						{
+							Id = c.Id.ToString(),
+							Name = c.Name,
+							Personal = c.Personal,
+							LowRate = c.LowRate,
+							HighRate = c.HighRate,
+							rank = 2
+						});
                     }
                 }
                 foreach (var o in owners)
@@ -79,19 +86,18 @@ namespace MileEyes.API.Controllers
                             continue;
                         }
                         companies.Add(c);
+						result.Add(new CompanyViewModel()
+						{
+							Id = c.Id.ToString(),
+							Name = c.Name,
+							Personal = c.Personal,
+							LowRate = c.LowRate,
+							HighRate = c.HighRate,
+							rank = 1
+						});
                     }
                 }
-                foreach (var c in companies)
-                {
-                    result.Add(new CompanyViewModel()
-                    {
-                        Id = c.Id.ToString(),
-                        Name = c.Name,
-                        Personal = c.Personal,
-                        LowRate = c.LowRate,
-                        HighRate = c.HighRate
-                    });
-                }
+                    
             }
             catch (Exception e)
             {
@@ -428,7 +434,7 @@ namespace MileEyes.API.Controllers
                             result.Add(new DriverViewModel()
                             {
                                 Id = d.Id.ToString(),
-								AutoAccept = driverInfo.AutoAccept,
+								//AutoAccept = driverInfo.AutoAccept,
                                 FirstName = d.User.FirstName,
                                 LastName = d.User.LastName,
                                 Email = d.User.Email,
@@ -440,7 +446,11 @@ namespace MileEyes.API.Controllers
                                     {
                                         Id = v.EngineType.Id.ToString(),
                                         Name = v.EngineType.Name
-                                    }
+                                    },
+									VehicleType = new VehicleTypeViewModel()
+				                    {
+				                        Id = v.VehicleType.Id.ToString()
+				                    }
                                 }).ToList()
                             });
                         }
@@ -455,7 +465,7 @@ namespace MileEyes.API.Controllers
                         result.Add(new DriverViewModel()
                         {
                             Id = driver.Id.ToString(),
-							AutoAccept = driverInfo.AutoAccept,
+							//AutoAccept = driverInfo.AutoAccept,
                             FirstName = driver.User.FirstName,
                             LastName = driver.User.LastName,
                             Email = driver.User.Email,
@@ -467,7 +477,11 @@ namespace MileEyes.API.Controllers
                                 {
                                     Id = v.EngineType.Id.ToString(),
                                     Name = v.EngineType.Name
-                                }
+                                },
+								VehicleType = new VehicleTypeViewModel()
+			                    {
+			                        Id = v.VehicleType.Id.ToString()
+			                    }
                             }).ToList()
                         });
                     }
@@ -596,12 +610,13 @@ namespace MileEyes.API.Controllers
             // If the driver doesnt exist then return BadRequest
             if (newDriver == null) return BadRequest();
 
-			db.DriverInfo.Add(new DriverInfo()
-			{
-				Id = Guid.NewGuid(),
-				DriverId = newDriver.Id,
-				CompanyId = company.Id,
-				CurrentMileage = model.CurrentMileage
+            db.DriverInfo.Add(new DriverInfo()
+            {
+                Id = Guid.NewGuid(),
+                DriverId = newDriver.Id,
+                CompanyId = company.Id,
+                CurrentMileage = model.CurrentMileage,
+                AutoAccept = false
 			});
 
             try
@@ -784,6 +799,19 @@ namespace MileEyes.API.Controllers
 				Console.WriteLine(e);
 			}
 			return result.AsQueryable();
+		}
+
+		[HttpGet]
+		[HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
+		[Route("api/Companies/CheckName")]
+		public async Task<IHttpActionResult> CheckCompanyName(String name)
+		{
+			var result = db.Companies.FirstOrDefault(c => c.Name.ToLower() == name.ToLower());
+			if (result != null)
+			{
+				return BadRequest("The company name has been taken!");
+			}
+			return Ok();
 		}
 
 		[HttpGet]

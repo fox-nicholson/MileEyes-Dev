@@ -59,7 +59,7 @@ namespace MileEyes.Pages
             //Use Wait() to prevent Multi-Tap
             Device.StartTimer(TimeSpan.FromSeconds(1), Wait);
         }
-
+                
         /// <summary>
         ///     Track New Journey Button Handler
         /// </summary>

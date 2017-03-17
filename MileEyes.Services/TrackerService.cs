@@ -30,11 +30,11 @@ namespace MileEyes.Services
 
         private static int MIN_MOVED_DISTANCE = 3; // The minmum distance the user has to move before we push another waypoint in meters.
 
-        private static int MIN_SLOW_MOVED_DISTANCE = 15;
+        private static int MIN_SLOW_MOVED_DISTANCE = 10;
 
-        private static int MIN_SLOW_MOVED_TIME = 90;
+        private static int MIN_SLOW_MOVED_TIME = 30;
 
-        private static int POLL_DELAY = 250; // How often we poll the gps for current position.
+        private static int POLL_DELAY = 1000; // How often we poll the gps for current position.
 
         private static int MAX_CATCHED_POSITIONS = 30; // Max amount of catched positions between pushes.
 
@@ -44,9 +44,9 @@ namespace MileEyes.Services
 
         private static double MAX_MILES_PER_HOUR = 75.0;
 
-        private static double MAX_ACCELERATION = 4.0;
+        private static double MAX_ACCELERATION = 5.0;
 
-        private static double MAX_ACCURACY = 50.0;
+        private static double MAX_ACCURACY = 60.0;
 
         private static double MAX_ACCURACY_TIMEOUT = 6.0;
 
@@ -137,7 +137,7 @@ namespace MileEyes.Services
 
             Plugin.Geolocator.CrossGeolocator.Current.PositionChanged += updatePosition;
 
-            var started = await Plugin.Geolocator.CrossGeolocator.Current.StartListeningAsync(POLL_DELAY, MIN_MOVED_DISTANCE);
+			var started = await Plugin.Geolocator.CrossGeolocator.Current.StartListeningAsync(POLL_DELAY, MIN_SLOW_MOVED_DISTANCE);
 
             if (started)
             {

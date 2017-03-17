@@ -14,7 +14,7 @@ namespace MileEyes.ViewModels
     {
         private Company _company;
 
-        private decimal _cost;
+        private string _status;
         private DateTimeOffset _date;
 
         private Address _destinationAddress;
@@ -44,7 +44,18 @@ namespace MileEyes.ViewModels
         public JourneyViewModel(Journey j)
         {
             Distance = Units.MetersToMiles(j.Distance);
-            Cost = Convert.ToDecimal(j.Cost);
+            if (j.Cost != 0.00 && j.Accepted == true)
+            {
+                Status = "£" + Convert.ToString(j.Cost);
+            }
+            else if (j.Rejected == true)
+            {
+                Status = "Rejected";
+            }
+            else
+            {
+                Status = "Pending";
+            }
             Date = j.Date;
 
             Waypoints.Clear();
@@ -188,17 +199,17 @@ namespace MileEyes.ViewModels
             }
         }
 
-        public decimal Cost
+        public string Status
         {
-            get { return _cost; }
+            get { return _status; }
             set
             {
-                if (_cost == value) return;
-                _cost = value;
-                OnPropertyChanged(nameof(Cost));
+                if (_status == value) return;
+                _status = value;
+                OnPropertyChanged(nameof(Status));
             }
         }
-
+        
         public bool HasCost
         {
             get { return _hasCost; }

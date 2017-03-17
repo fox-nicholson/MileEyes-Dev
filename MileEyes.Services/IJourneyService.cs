@@ -17,6 +17,8 @@ namespace MileEyes.Services
 
         Task<Journey> DeleteJourney(string id);
 
+        Task ExportJourneys();
+
         Task Sync();
     }
 }

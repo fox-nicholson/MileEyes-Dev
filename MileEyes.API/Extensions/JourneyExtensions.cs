@@ -79,7 +79,7 @@ namespace MileEyes.API.Extensions
                    (journey.Vehicle.EngineType.FuelRate * 0.20M);
         }
 
-        public static CostModel CalculateCost(this Journey journey)
+        public static CostModel CalculateCost(this Journey journey, double currentMileage)
         {
             var underMiles = 0.0;
             var overMiles = 0.0;
@@ -87,7 +87,9 @@ namespace MileEyes.API.Extensions
 
             result.Distance = journey.Distance;
 
-            var currentMiles = journey.Driver.Journeys.Sum(j => j.Distance);
+            var currentMiles = currentMileage + journey.Driver.Journeys.Sum(j => j.Distance);
+
+            
 
             // What is the number of miles after adding this journey distance onto the existing distance
             var newMiles = currentMiles + journey.Distance;

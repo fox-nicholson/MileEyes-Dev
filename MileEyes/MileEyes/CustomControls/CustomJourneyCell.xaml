@@ -77,7 +77,7 @@
                                         Android="Gray" />
                         </Label.TextColor>
                     </Label>
-                    <Label Text="{Binding Cost, StringFormat='£{0:N2}'}" FontAttributes="Bold"
+                    <Label Text="{Binding Status}" FontAttributes="Bold"
                            VerticalTextAlignment="Center" IsVisible="{Binding Authenticated}"
                            HorizontalOptions="Start">
                         <Label.TextColor>

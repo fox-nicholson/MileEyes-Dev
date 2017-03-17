@@ -15,5 +15,7 @@ namespace MileEyes.PublicModels.Company
         public decimal HighRate { get; set; }
 
         public DateTimeOffset StartOfTaxYear { get; set; }
+
+		public int rank { get; set; }
     }
 }

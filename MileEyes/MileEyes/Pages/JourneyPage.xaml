@@ -72,7 +72,7 @@
                                             Android="Gray" />
                             </Label.TextColor>
                         </Label>
-                        <Label Text="{Binding Cost, StringFormat='{0:C}'}" IsVisible="{Binding Authenticated}"
+                        <Label Text="{Binding Status}" IsVisible="{Binding Authenticated}"
                                FontSize="25" FontAttributes="Bold">
                             <Label.TextColor>
                                 <OnPlatform x:TypeArguments="Color"
