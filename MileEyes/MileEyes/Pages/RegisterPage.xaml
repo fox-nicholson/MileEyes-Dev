@@ -35,9 +35,6 @@
                     <customControls:CustomEntryCell Keyboard="Text" Label="Last Name"
                                                     LabelColor="{StaticResource premiumTextColor}"
                                                     Placeholder="Required" Text="{Binding LastName}" />
-                    <customControls:CustomTextCell Text="Address" Detail="{Binding Address.Label}"
-                                                   TextColor="{StaticResource premiumTextColor}"
-                                                   DetailColor="#80FFFFFF" Tapped="AddressCell_OnTapped" />
                 </TableSection>
                 <TableSection Title="Account Details">
                     <customControls:CustomEntryCell Keyboard="Email" Label="Email"

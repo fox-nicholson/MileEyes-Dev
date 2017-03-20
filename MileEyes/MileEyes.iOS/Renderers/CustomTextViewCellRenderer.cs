@@ -21,8 +21,6 @@ using Xamarin.Forms.Platform.iOS;
 [assembly: ExportRenderer(typeof(PassengersViewCell), typeof(CustomTextViewCellRenderer))]
 [assembly: ExportRenderer(typeof(DestinationAddressViewCell), typeof(CustomTextViewCellRenderer))]
 [assembly: ExportRenderer(typeof(OriginAddressViewCell), typeof(CustomTextViewCellRenderer))]
-[assembly: ExportRenderer(typeof(RegisterAddressViewCell), typeof(CustomTextViewCellRenderer))]
-[assembly: ExportRenderer(typeof(CloudAddressViewCell), typeof(CustomTextViewCellRenderer))]
 
 namespace MileEyes.iOS.Renderers
 {

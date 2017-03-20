@@ -42,9 +42,6 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="CustomControls\BlurStackLayout.cs" />
-    <Compile Include="CustomControls\CloudAddressViewCell.xaml.cs">
-      <DependentUpon>CloudAddressViewCell.xaml</DependentUpon>
-    </Compile>
     <Compile Include="CustomControls\CloudSyncViewCell.xaml.cs">
       <DependentUpon>CloudSyncViewCell.xaml</DependentUpon>
     </Compile>
@@ -113,9 +110,6 @@
     <Compile Include="CustomControls\ReasonViewCell.xaml.cs">
       <DependentUpon>ReasonViewCell.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\RegisterAddressViewCell.xaml.cs">
-      <DependentUpon>RegisterAddressViewCell.xaml</DependentUpon>
-    </Compile>
     <Compile Include="CustomControls\RouteMap.cs" />
     <Compile Include="CustomControls\SegmentedControl.cs" />
     <Compile Include="CustomControls\VehicleItemViewCell.xaml.cs">
@@ -134,9 +128,6 @@
     </Compile>
     <Compile Include="Pages\AddressSelectionPage.xaml.cs">
       <DependentUpon>AddressSelectionPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\CloudAddressSelectionPage.xaml.cs">
-      <DependentUpon>CloudAddressSelectionPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\CloudPage.xaml.cs">
       <DependentUpon>CloudPage.xaml</DependentUpon>
@@ -592,25 +583,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="CustomControls\RegisterAddressViewCell.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Pages\RegisterAddressSelectionPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Pages\CloudAddressSelectionPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CustomControls\CloudAddressViewCell.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

@@ -86,7 +86,7 @@ namespace MileEyes.ViewModels
         public void StartJourney()
         {
             if (!TrackerService.IsTracking)
-            Host.TrackerService.Start();
+                Host.TrackerService.Start();
         }
     }
 }

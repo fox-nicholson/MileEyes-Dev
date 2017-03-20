@@ -44,7 +44,7 @@
     <BuildIpa>True</BuildIpa>
     <IpaIncludeArtwork>False</IpaIncludeArtwork>
     <MtouchProfiling>False</MtouchProfiling>
-    <MtouchFastDev>False</MtouchFastDev>
+    <MtouchFastDev>True</MtouchFastDev>
     <MtouchUseLlvm>False</MtouchUseLlvm>
     <MtouchUseThumb>False</MtouchUseThumb>
     <MtouchEnableBitcode>False</MtouchEnableBitcode>

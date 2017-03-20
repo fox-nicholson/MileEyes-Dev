@@ -159,12 +159,14 @@ namespace MileEyes.ViewModels
                 return;
             }
             StopRequested?.Invoke(this, EventArgs.Empty);
+            TrackerService.IsTracking = false;
             Busy = false;
         }
 
         public async void EndJourneyConfirmed()
         {
             Busy = true;
+            TrackerService.IsTracking = false;
             await Host.TrackerService.Stop();
         }
     }

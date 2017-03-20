@@ -18,7 +18,6 @@ namespace MileEyes.Services
                 FirstName = firstName,
                 LastName = lastName,
                 Email = email,
-                PlaceId = addressPlaceId
             }), Encoding.UTF8, "application/json");
 
             try

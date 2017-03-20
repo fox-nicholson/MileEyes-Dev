@@ -46,8 +46,6 @@
                                     Android="Black" />
                     </customControls:CustomEntryCell.LabelColor>
                 </customControls:CustomEntryCell>
-
-                <customControls:CloudAddressViewCell Tapped="AddressCell_OnTapped" Height="50"/>
             
                 <ViewCell Height="60">
                     <StackLayout HorizontalOptions="FillAndExpand" Padding="0, 5, 0, 0">

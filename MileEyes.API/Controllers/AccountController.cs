@@ -55,8 +55,7 @@ namespace MileEyes.API.Controllers
         public UserInfoViewModel GetUserInfo()
         {
             try
-            { 
-                var externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
+            {
 
                 var userId = User.Identity.GetUserId();
 
@@ -65,12 +64,8 @@ namespace MileEyes.API.Controllers
                 return new UserInfoViewModel
                 {
                     Email = User.Identity.GetUserName(),
-                    HasRegistered = externalLogin == null,
-                    LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null,
-                    EmailConfirmed = user.EmailConfirmed,
                     FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    PlaceId = user.Address.PlaceId
+                    LastName = user.LastName
                 };
             }
             catch (Exception e)
@@ -96,21 +91,12 @@ namespace MileEyes.API.Controllers
                 {
                     return BadRequest();
                 }
-                
+
+				user.UserName = model.Email;
                 user.Email = model.Email;
                 user.FirstName = model.FirstName;
                 user.LastName = model.LastName;
 
-                var existingAddresses = db.Addresses.FirstOrDefault(a => a.PlaceId == model.PlaceId);
-
-                if (existingAddresses != null)
-                    user.Address = existingAddresses;
-                else
-                    user.Address = new Address
-                    {
-                        Id = Guid.NewGuid(),
-                        PlaceId = model.PlaceId
-                    };
                 await db.SaveChangesAsync();
 
                 return Ok();
@@ -126,42 +112,8 @@ namespace MileEyes.API.Controllers
         [Route("Logout")]
         public IHttpActionResult Logout()
         {
-            Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
-            return Ok();
-        }
-
-        // GET api/Account/ManageInfo?returnUrl=%2F&generateState=true
-        [Route("ManageInfo")]
-        public async Task<ManageInfoViewModel> GetManageInfo(string returnUrl, bool generateState = false)
-        {
-            IdentityUser user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-
-            if (user == null)
-                return null;
-
-            var logins = new List<UserLoginInfoViewModel>();
-
-            foreach (var linkedAccount in user.Logins)
-                logins.Add(new UserLoginInfoViewModel
-                {
-                    LoginProvider = linkedAccount.LoginProvider,
-                    ProviderKey = linkedAccount.ProviderKey
-                });
-
-            if (user.PasswordHash != null)
-                logins.Add(new UserLoginInfoViewModel
-                {
-                    LoginProvider = LocalLoginProvider,
-                    ProviderKey = user.UserName
-                });
-
-            return new ManageInfoViewModel
-            {
-                LocalLoginProvider = LocalLoginProvider,
-                Email = user.UserName,
-                Logins = logins,
-                ExternalLoginProviders = GetExternalLogins(returnUrl, generateState)
-            };
+			Authentication.SignOut(DefaultAuthenticationTypes.ExternalBearer);
+			return Ok();
         }
 
         // POST api/Account/ChangePassword
@@ -180,163 +132,47 @@ namespace MileEyes.API.Controllers
             return Ok();
         }
 
-        // POST api/Account/SetPassword
-        [Route("SetPassword")]
-        public async Task<IHttpActionResult> SetPassword(SetPasswordBindingModel model)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+		[AllowAnonymous]
+		[Route("SendRegisterEmail")]
+		[HttpGet]
+		public async Task<IHttpActionResult> SendRegisterEmail(String email, String subscription)
+		{
+			var result = UserManager.FindByEmail(email);
+			if (result == null) {
 
-            var result = await UserManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
+				var pending = db.PendingUsers.FirstOrDefault(q => q.Email.ToLower() == email.ToLower());
+				if (pending == null)
+				{
+					pending = db.PendingUsers.Add(new PendingUsers()
+					{
+						Id = Guid.NewGuid(),
+						Email = email,
+						SubscriptionId = Guid.Parse(subscription),
+						SignUpDate = DateTime.UtcNow
+					});
+				}
+				pending.SignUpDate = DateTime.UtcNow;
+				pending.SubscriptionId = Guid.Parse(subscription);
+				await db.SaveChangesAsync();
 
-            if (!result.Succeeded)
-                return GetErrorResult(result);
+				EmailService.SendEmail(email, "Mile Eyes Register Email", "Id: " + pending.Id);
+				return Ok();
+			}
+			return BadRequest();
+		}
 
-            return Ok();
-        }
-
-        // POST api/Account/AddExternalLogin
-        [Route("AddExternalLogin")]
-        public async Task<IHttpActionResult> AddExternalLogin(AddExternalLoginBindingModel model)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-
-            var ticket = AccessTokenFormat.Unprotect(model.ExternalAccessToken);
-
-            if (ticket == null || ticket.Identity == null || ticket.Properties != null
-                && ticket.Properties.ExpiresUtc.HasValue
-                && ticket.Properties.ExpiresUtc.Value < DateTimeOffset.UtcNow)
-                return BadRequest("External login failure.");
-
-            var externalData = ExternalLoginData.FromIdentity(ticket.Identity);
-
-            if (externalData == null)
-                return BadRequest("The external login is already associated with an account.");
-
-            var result = await UserManager.AddLoginAsync(User.Identity.GetUserId(),
-                new UserLoginInfo(externalData.LoginProvider, externalData.ProviderKey));
-
-            if (!result.Succeeded)
-                return GetErrorResult(result);
-
-            return Ok();
-        }
-
-        // POST api/Account/RemoveLogin
-        [Route("RemoveLogin")]
-        public async Task<IHttpActionResult> RemoveLogin(RemoveLoginBindingModel model)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            IdentityResult result;
-
-            if (model.LoginProvider == LocalLoginProvider)
-                result = await UserManager.RemovePasswordAsync(User.Identity.GetUserId());
-            else
-                result = await UserManager.RemoveLoginAsync(User.Identity.GetUserId(),
-                    new UserLoginInfo(model.LoginProvider, model.ProviderKey));
-
-            if (!result.Succeeded)
-                return GetErrorResult(result);
-
-            return Ok();
-        }
-
-        // GET api/Account/ExternalLogin
-        [OverrideAuthentication]
-        [HostAuthentication(DefaultAuthenticationTypes.ExternalCookie)]
-        [AllowAnonymous]
-        [Route("ExternalLogin", Name = "ExternalLogin")]
-        public async Task<IHttpActionResult> GetExternalLogin(string provider, string error = null)
-        {
-            if (error != null)
-                return Redirect(Url.Content("~/") + "#error=" + Uri.EscapeDataString(error));
-
-            if (!User.Identity.IsAuthenticated)
-                return new ChallengeResult(provider, this);
-
-            var externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
-
-            if (externalLogin == null)
-                return InternalServerError();
-
-            if (externalLogin.LoginProvider != provider)
-            {
-                Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-                return new ChallengeResult(provider, this);
-            }
-
-            var user = await UserManager.FindAsync(new UserLoginInfo(externalLogin.LoginProvider,
-                externalLogin.ProviderKey));
-
-            var hasRegistered = user != null;
-
-            if (hasRegistered)
-            {
-                Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-
-                var oAuthIdentity = await user.GenerateUserIdentityAsync(UserManager,
-                    OAuthDefaults.AuthenticationType);
-                var cookieIdentity = await user.GenerateUserIdentityAsync(UserManager,
-                    CookieAuthenticationDefaults.AuthenticationType);
-
-                var properties = ApplicationOAuthProvider.CreateProperties(user.UserName);
-                Authentication.SignIn(properties, oAuthIdentity, cookieIdentity);
-            }
-            else
-            {
-                IEnumerable<Claim> claims = externalLogin.GetClaims();
-                var identity = new ClaimsIdentity(claims, OAuthDefaults.AuthenticationType);
-                Authentication.SignIn(identity);
-            }
-
-            return Ok();
-        }
-
-        // GET api/Account/ExternalLogins?returnUrl=%2F&generateState=true
-        [AllowAnonymous]
-        [Route("ExternalLogins")]
-        public IEnumerable<ExternalLoginViewModel> GetExternalLogins(string returnUrl, bool generateState = false)
-        {
-            var descriptions = Authentication.GetExternalAuthenticationTypes();
-            var logins = new List<ExternalLoginViewModel>();
-
-            string state;
-
-            if (generateState)
-            {
-                const int strengthInBits = 256;
-                state = RandomOAuthStateGenerator.Generate(strengthInBits);
-            }
-            else
-            {
-                state = null;
-            }
-
-            foreach (var description in descriptions)
-            {
-                var login = new ExternalLoginViewModel
-                {
-                    Name = description.Caption,
-                    Url = Url.Route("ExternalLogin", new
-                    {
-                        provider = description.AuthenticationType,
-                        response_type = "token",
-                        client_id = Startup.PublicClientId,
-                        redirect_uri = new Uri(Request.RequestUri, returnUrl).AbsoluteUri,
-                        state
-                    }),
-                    State = state
-                };
-                logins.Add(login);
-            }
-
-            return logins;
-        }
+		[AllowAnonymous]
+		[Route("CheckRegisterEmail")]
+		[HttpGet]
+		public async Task<IHttpActionResult> CheckRegisterEmail(String id)
+		{
+			var pending = db.PendingUsers.FirstOrDefault(q => q.Id.ToString() == id);
+			if (pending == null)
+			{
+				return BadRequest();
+			}
+			return Ok(pending.Email + "," + pending.SubscriptionId);
+		}
 
         // POST api/Account/Register
         [AllowAnonymous]
@@ -348,37 +184,26 @@ namespace MileEyes.API.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                var existingAddress = db.Addresses.FirstOrDefault(a => a.PlaceId == model.PlaceId);
+				var pending = db.PendingUsers.FirstOrDefault(q => q.Id.ToString() == model.PendingId);
 
-                Address address;
+				if (pending == null)
+				{
+					return BadRequest();
+				}
 
-                if (existingAddress == null)
-                {
-                    var addressResult = await GeocodingService.GetAddress(model.PlaceId);
-
-                    address = new Address
-                    {
-                        Id = Guid.NewGuid(),
-                        PlaceId = addressResult.PlaceId,
-                        Coordinates = new Coordinates
-                        {
-                            Id = Guid.NewGuid(),
-                            Latitude = addressResult.Latitude,
-                            Longitude = addressResult.Longitude
-                        }
-                    };
-                }
-                else
-                {
-                    address = existingAddress;
-                }
+				var taken = UserManager.FindByEmail(pending.Email);
+				if (taken != null)
+				{
+					return BadRequest();
+				}
 
                 var user = new ApplicationUser
                 {
-                    UserName = model.Email,
-                    Email = model.Email,
+                    UserName = pending.Email,
+                    Email = pending.Email,
                     FirstName = model.FirstName,
-                    LastName = model.LastName
+                    LastName = model.LastName,
+					SignupDate = DateTime.UtcNow
                 };
 
                 var result = await UserManager.CreateAsync(user, model.Password);
@@ -386,68 +211,11 @@ namespace MileEyes.API.Controllers
                 if (!result.Succeeded)
                     return GetErrorResult(result);
 
+				db.PendingUsers.Remove(pending);
+
+				await db.SaveChangesAsync();
+
                 var dbuser = db.Users.Find(user.Id);
-
-                dbuser.Address = address;
-
-                var owner = new Owner
-                {
-                    Id = Guid.NewGuid(),
-                    User = dbuser
-                };
-                var accountant = new Accountant
-                {
-                    Id = Guid.NewGuid(),
-                    User = dbuser
-                };
-                var manager = new Manager
-                {
-                    Id = Guid.NewGuid(),
-                    User = dbuser
-                };
-                var driver = new Driver
-                {
-                    Id = Guid.NewGuid(),
-                    User = dbuser
-                };
-
-                var personalCompany = new Company
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Personal",
-                    AutoAccept = true,
-                    HighRate = 0.45M,
-                    LowRate = 0.25M,
-                    Address = address,
-                    AutoAcceptDistance = 160934,
-                    Personal = true,
-                    Vat = false,
-                    Owner = owner
-                };
-
-                personalCompany.Profiles.Add(driver);
-
-                owner.Companies.Add(personalCompany);
-
-                dbuser.Profiles.Add(owner);
-                dbuser.Profiles.Add(accountant);
-                dbuser.Profiles.Add(manager);
-                dbuser.Profiles.Add(driver);
-                try
-                {
-                    await db.SaveChangesAsync();
-                }
-                catch (Exception ex)
-                {
-                    var m = ex.Message;
-                }
-                var hostname = Request.RequestUri.Host;
-
-                //var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                //var callbackUrl = "http://" + hostname + "/Account/ConfirmEmail?userId=" + user.Id +
-                // "&code=" + code;
-
-                //await UserManager.SendEmailAsync(user.Id, "Welcome to MileEyes", callbackUrl);
 
                 return Ok();
             } catch (Exception)
@@ -515,7 +283,7 @@ namespace MileEyes.API.Controllers
 					rights += ",1";
 				}
 			}
-            return Ok(rights);
+			return Ok(rights);
         }
 
         // GET api/Account/CheckInvite
@@ -699,31 +467,6 @@ namespace MileEyes.API.Controllers
             return Ok("Email has been sent!");
         }
 
-        // POST api/Account/RegisterExternal
-        [OverrideAuthentication]
-        [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
-        [Route("RegisterExternal")]
-        public async Task<IHttpActionResult> RegisterExternal(RegisterExternalBindingModel model)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var info = await Authentication.GetExternalLoginInfoAsync();
-            if (info == null)
-                return InternalServerError();
-
-            var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-
-            var result = await UserManager.CreateAsync(user);
-            if (!result.Succeeded)
-                return GetErrorResult(result);
-
-            result = await UserManager.AddLoginAsync(user.Id, info.Login);
-            if (!result.Succeeded)
-                return GetErrorResult(result);
-            return Ok();
-        }
-
         protected override void Dispose(bool disposing)
         {
             if (disposing && _userManager != null)
@@ -760,46 +503,6 @@ namespace MileEyes.API.Controllers
             }
 
             return null;
-        }
-
-        private class ExternalLoginData
-        {
-            public string LoginProvider { get; set; }
-            public string ProviderKey { get; set; }
-            public string UserName { get; set; }
-
-            public IList<Claim> GetClaims()
-            {
-                IList<Claim> claims = new List<Claim>();
-                claims.Add(new Claim(ClaimTypes.NameIdentifier, ProviderKey, null, LoginProvider));
-
-                if (UserName != null)
-                    claims.Add(new Claim(ClaimTypes.Name, UserName, null, LoginProvider));
-
-                return claims;
-            }
-
-            public static ExternalLoginData FromIdentity(ClaimsIdentity identity)
-            {
-                if (identity == null)
-                    return null;
-
-                var providerKeyClaim = identity.FindFirst(ClaimTypes.NameIdentifier);
-
-                if (providerKeyClaim == null || string.IsNullOrEmpty(providerKeyClaim.Issuer)
-                    || string.IsNullOrEmpty(providerKeyClaim.Value))
-                    return null;
-
-                if (providerKeyClaim.Issuer == ClaimsIdentity.DefaultIssuer)
-                    return null;
-
-                return new ExternalLoginData
-                {
-                    LoginProvider = providerKeyClaim.Issuer,
-                    ProviderKey = providerKeyClaim.Value,
-                    UserName = identity.FindFirstValue(ClaimTypes.Name)
-                };
-            }
         }
 
         private static class RandomOAuthStateGenerator

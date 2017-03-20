@@ -19,8 +19,5 @@ namespace MileEyes.Services.Models
 
         [JsonProperty("model.Email")]
         public string[] Email { get; set; }
-
-        [JsonProperty("model.PlaceId")]
-        public string[] PlaceId { get; set; }
     }
 }

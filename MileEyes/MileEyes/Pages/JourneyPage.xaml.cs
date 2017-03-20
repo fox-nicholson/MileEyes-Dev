@@ -30,25 +30,25 @@ namespace MileEyes.Pages
             SegmentedControl.SelectedValue = "Details";
 
             if (j == null) return;
+            var distance = new Distance();
+            Device.OnPlatform(
+                    () =>
+                    {
+                        distance = Distance.FromMiles(j.Distance * 0.0014);
+                    }, () =>
+                    {
+                        distance = Distance.FromMiles(j.Distance * 0.08);
+                    });
+
             if (j.Waypoints.Count > 2)
             {
                 int midpoint = j.Waypoints.OrderBy(w => w.Step).Count() / 2;
-                map.MoveToRegion(
-                    MapSpan.FromCenterAndRadius(
-                        new Position(j.Waypoints.ElementAt(midpoint).Latitude,
-                            j.Waypoints.ElementAt(midpoint).Longitude),
-                        Distance.FromMiles(j.Distance * 0.08)));
+                map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(j.Waypoints.ElementAt(midpoint).Latitude, j.Waypoints.ElementAt(midpoint).Longitude), distance));
             }
             else
             {
-                var midpoint =
-                    Services.Helpers.TrigHelpers.MidPoint(
-                        new[] {j.OriginAddress.Latitude, j.OriginAddress.Longitude},
-                        new[] {j.DestinationAddress.Latitude, j.DestinationAddress.Longitude});
-                map.MoveToRegion(
-                    MapSpan.FromCenterAndRadius(
-                        new Position(midpoint[0], midpoint[1]),
-                        Distance.FromMiles(j.Distance * 0.08)));
+                var midpoint = Services.Helpers.TrigHelpers.MidPoint(new[] {j.OriginAddress.Latitude, j.OriginAddress.Longitude}, new[] {j.DestinationAddress.Latitude, j.DestinationAddress.Longitude});
+                map.MoveToRegion( MapSpan.FromCenterAndRadius(new Position(midpoint[0], midpoint[1]), distance));
             }
 
 

@@ -45,20 +45,7 @@ namespace MileEyes.ViewModels
                 OnPropertyChanged(nameof(Email));
             }
         }
-
-        private Address _address;
-
-        public Address Address
-        {
-            get { return _address; }
-            set
-            {
-                if (_address == value) return;
-                _address = value;
-                OnPropertyChanged(nameof(Address));
-            }
-        }
-
+        
         public ICommand SaveCommand { get; set; }
         public ICommand LogoutCommand { get; set; }
 
@@ -80,7 +67,6 @@ namespace MileEyes.ViewModels
             Email = userdetails.Result.Email;
             FirstName = userdetails.Result.FirstName;
             LastName = userdetails.Result.LastName;
-            Address = await Services.Host.GeocodingService.GetAddress(userdetails.Result.PlaceId);
         }
 
         public event EventHandler<string> SaveFailed = delegate { };
@@ -105,22 +91,7 @@ namespace MileEyes.ViewModels
                 Busy = false;
                 return;
             }
-
-            if (string.IsNullOrEmpty(Address.PlaceId))
-            {
-                SaveFailed?.Invoke(this, "Address is required.");
-                Busy = false;
-                return;
-            }
-
-            var result = await Services.Host.UserService.UpdateDetails(FirstName, LastName, Email, Address.PlaceId);
-
-            if (result.Error)
-            {
-                SaveFailed?.Invoke(this, result.Message);
-                Busy = false;
-            }
-
+            
             SaveComplete?.Invoke(this, EventArgs.Empty);
             Busy = false;
         }

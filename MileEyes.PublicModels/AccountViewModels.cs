@@ -12,8 +12,6 @@
 
         public string LastName { get; set; }
 
-        public string PlaceId { get; set; }
-
         public bool EmailConfirmed { get; set; }
     }
 }

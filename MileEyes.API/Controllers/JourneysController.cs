@@ -18,6 +18,8 @@ using MileEyes.PublicModels.Vehicles;
 using Newtonsoft.Json;
 using Address = MileEyes.API.Models.DatabaseModels.Address;
 using Coordinates = MileEyes.API.Models.DatabaseModels.Coordinates;
+using System.Net.Http;
+using System.IO;
 
 namespace MileEyes.API.Controllers
 {
@@ -120,7 +122,7 @@ namespace MileEyes.API.Controllers
 
                 var waypointsToProcess = journey.Waypoints.OrderBy(s => s.Step);
                 
-                for (int i = startingStep; startingStep + 50 > i; i++)
+                for (int i = startingStep; startingStep + 200 > i; i++)
                 {
                     if (i > waypointsToProcess.Count() - 1) break;
                     var waypoint = waypointsToProcess.ElementAt(i);
@@ -436,12 +438,12 @@ namespace MileEyes.API.Controllers
             return Ok();
         }
                 
-        [Route("api/ExportJourneys/{file}/")]
-        public async Task<IHttpActionResult> GetSendExportEmail(string file)
+        [Route("api/ExportJourneys/")]
+        public async Task<IHttpActionResult> GetSendExportEmail()
         {
             var user = db.Users.Find(User.Identity.GetUserId());
 
-            EmailService.SendEmailWithAttachment(user.Email, "Test Export", "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'><html xmlns='http://www.w3.org/1999/xhtml'> <head> <meta http-equiv='Content-Type' content='text/html; charset=utf-8'> <meta name='viewport' content='width=device-width'> <style> #outlook a { padding: 0; } body { width: 100% !important; min-width: 100%; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; margin: 0; Margin: 0; padding: 0; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; } .ExternalClass { width: 100%; }" +
+            EmailService.SendEmail("fox@powerhouse.software", "Test Export", "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'><html xmlns='http://www.w3.org/1999/xhtml'> <head> <meta http-equiv='Content-Type' content='text/html; charset=utf-8'> <meta name='viewport' content='width=device-width'> <style> #outlook a { padding: 0; } body { width: 100% !important; min-width: 100%; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; margin: 0; Margin: 0; padding: 0; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; } .ExternalClass { width: 100%; }" +
                 " .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div { line-height: 100%; } #backgroundTable { margin: 0; Margin: 0; padding: 0; width: 100% !important; line-height: 100% !important; } img { outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; clear: both; display: block; } center { width: 100%; min-width: 580px; } a img { border: none; } a.button {	 background-color: #47a800;	 color: white;	 padding: 1em;	 border-radius: 0.25em;	 display: inline-block;	 margin: 2em 0; }" +
                 " a.button:hover {	 background-color: #72dd25;	 color: white; } a.button:visited {	 background-color: #72dd25;	 color: white; } .button-row {	 text-align: center; } p { margin: 0 0 0 10px; Margin: 0 0 0 10px; } table { border-spacing: 0; border-collapse: collapse; } td { border-collapse: collapse !important; } table, tr, td { padding: 0; vertical-align: top; text-align: left; } html { min-height: 100%; background: #14b9ee; } table.body { background: #14b9ee; height: 100%; width: 100%; } table.container { background: white; width: 580px; margin: 0 auto; Margin: 0 auto; text-align: inherit; }" +
                 " table.row { padding: 0; width: 100%; position: relative; } table.container table.row { display: table; } td.columns, td.column, th.columns, th.column { margin: 0 auto; Margin: 0 auto; padding-left: 16px; padding-bottom: 16px; } td.columns.last, td.column.last, th.columns.last, th.column.last { padding-right: 16px; } td.columns table, td.column table, th.columns table, th.column table { width: 100%; } td.large-1, th.large-1 { width: 32.33333px; padding-left: 8px; padding-right: 8px; } td.large-1.first, th.large-1.first { padding-left: 16px; } td.large-1.last, th.large-1.last { padding-right: 16px; }" +
@@ -491,9 +493,67 @@ namespace MileEyes.API.Controllers
                 "STRING" + ". Simply choose " + "STRING" +
                 " from the list of companies at the end of your journey and we'll do the rest. </p> <p>What's more, it won't cost you anything more to track mileage for " +
                 "STRING" +
-                                   ".</p> <table class='callout'> <tr> <td class='callout-inner primary button-row'> <br/> <a href='http://mileeyes-portal.azurewebsites.net/#/invite?type=driver&invite=" + "STRING" + "&email=" + "STRING" + "&companyId=" + "STRING" + "&companyName=" + "STRING" + "' class='button'>Join</a> </td> <td class='expander'></td> </tr>								</table> </th> </tr> </table> </th> </tr> </tbody> </table> </td> </tr> <tr class='transparent'>				 <th>					 <br/>					 <br/>					 <p>&copy; Powerhouse Software</p>					 <br/>					 <br/>				 </th>			 </tr> </tbody> </table> </center> </td> </tr> </table> </body></html>", file);
+                                   ".</p> <table class='callout'> <tr> <td class='callout-inner primary button-row'> <br/> <a href='http://mileyesapi.azurewebsites.net/api/DownloadJourneys/" + user.Id.ToString() + "' class='button'>Join</a> </td> <td class='expander'></td> </tr>								</table> </th> </tr> </table> </th> </tr> </tbody> </table> </td> </tr> <tr class='transparent'>				 <th>					 <br/>					 <br/>					 <p>&copy; Powerhouse Software</p>					 <br/>					 <br/>				 </th>			 </tr> </tbody> </table> </center> </td> </tr> </table> </body></html>");
 
             return Ok();
+        }
+        
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/DownloadJourneys/{userId}/")]
+        public async Task<HttpResponseMessage> GetDownloadJourneys(string userId)
+        {
+            var user = db.Users.Where(u => u.Id.ToString() == userId);
+
+            var profiles = db.Profiles.Where(pro => pro.User.Id == user.FirstOrDefault().Id);
+
+            var drivers = profiles.OfType<Driver>();
+
+            var driversToProcess = drivers.ToList();
+
+            var currentUser = user.FirstOrDefault();
+
+            var fileString = currentUser.FirstName + " " + currentUser.LastName + " Personal Journeys: \n\n" + 
+                "Date,Distance (Miles),Cost,Vehicle Registration,Passengers,Reason,Accepted,Rejected,Invoiced\n";
+            
+            for(int d = 0; driversToProcess.Count() > d; d++)
+            {
+                var driver = driversToProcess.ElementAt(d);
+                for(int i = 0; driver.Journeys.Count() > i; i++)
+                {
+                    var journey = driver.Journeys.ElementAt(i);
+                    if (journey.Company.Name == "Personal")
+                    {
+                        var accepted = "No";
+                        var rejected = "No";
+                        var invoiced = "No";
+                        if (journey.Accepted) accepted = "Yes";
+                        if (journey.Rejected) rejected = "Yes";
+                        if (journey.Invoiced) invoiced = "Yes";
+
+                        fileString = fileString + journey.Date.Date.ToShortDateString() + "," + journey.Distance.ToString() + ","
+                            + journey.Cost.ToString() + "," + journey.Vehicle.Registration + "," + journey.Passengers.ToString() + ","
+                            + journey.Reason + "," + accepted + "," + rejected + "," + invoiced + "\n";
+                    }
+                }
+            }
+
+            db.Dispose();
+
+            MemoryStream stream = new MemoryStream();
+            StreamWriter writer = new StreamWriter(stream);
+            writer.Write(fileString);
+            writer.Flush();
+            stream.Position = 0;
+
+            var response = Request.CreateResponse(System.Net.HttpStatusCode.OK);
+
+            response.Content = new StreamContent(stream);
+            response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("text/csv");
+            response.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment") { FileName = currentUser.FirstName + "_" + currentUser.LastName + "_Journeys_" + DateTime.UtcNow.Date.ToShortDateString() + ".csv" };
+
+            return response;
+
         }
     }
 }

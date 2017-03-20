@@ -72,20 +72,7 @@ namespace MileEyes.ViewModels
                 OnPropertyChanged(nameof(ConfirmPassword));
             }
         }
-
-        private Address _address;
-
-        public Address Address
-        {
-            get { return _address; }
-            set
-            {
-                if (_address == value) return;
-                _address = value;
-                OnPropertyChanged(nameof(Address));
-            }
-        }
-
+        
         public ICommand RegisterCommand { get; set; }
 
         public RegisterViewModel()
@@ -96,12 +83,7 @@ namespace MileEyes.ViewModels
 
             //Password = "Ab.123";
             //ConfirmPassword = "Ab.123";
-
-            Address = new Address
-            {
-                Label = "Required"
-            };
-
+            
             RegisterCommand = new Command(Register);
         }
 
@@ -142,20 +124,10 @@ namespace MileEyes.ViewModels
 
                 Busy = false;
                 return;
-            }
-
-            if (string.IsNullOrEmpty(Address.PlaceId))
-            {
-                RegisterFailed?.Invoke(this, "Address is required.");
-
-                Busy = false;
-                return;
-            }
-
+            }            
             var result =
                 await
-                    Services.Host.AuthService.Register(FirstName, LastName, Email, Password, ConfirmPassword,
-                        Address.PlaceId);
+                    Services.Host.AuthService.Register(FirstName, LastName, Email, Password, ConfirmPassword);
 
             if (result.Error)
             {
@@ -181,19 +153,7 @@ namespace MileEyes.ViewModels
 
                     errorMessage = result.ModelState.Password?.Aggregate(errorMessage,
                         (current, s) => current + s + Environment.NewLine);
-
-                    if (!string.IsNullOrEmpty(emailTaken))
-                    {
-                        errorMessage = result.ModelState.PlaceId?.Aggregate(errorMessage,
-                            (current, s) => current + "Address is required." + Environment.NewLine);
-                        errorMessage += emailTaken + Environment.NewLine;
-                    }
-                    else
-                    {
-                        errorMessage = result.ModelState.PlaceId?.Aggregate(errorMessage,
-                            (current, s) => current + "Address is required.");
-                    }
-
+                                        
                     errorMessage = result.ModelState.Password?.Aggregate(errorMessage,
                         (current, s) => current + s + Environment.NewLine);
 

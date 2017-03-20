@@ -185,10 +185,25 @@ namespace MileEyes.ViewModels
             var defaultVehicle =
                 (await Host.VehicleService.GetVehicles()).FirstOrDefault(v => v.Default);
 
-            DefaultVehicle = defaultVehicle;
+            if (defaultVehicle == null)
+            {
+                DefaultVehicle = (await Host.VehicleService.GetVehicles()).FirstOrDefault();
+            }
+            else
+            {
+                DefaultVehicle = defaultVehicle;
+            }
 
             var defaultReason =
                 (await Host.ReasonService.GetReasons()).FirstOrDefault(v => v.Default);
+
+            if (defaultReason == null)
+            {
+                await Host.ReasonService.CreateStartReasons();
+                defaultReason =
+                (await Host.ReasonService.GetReasons()).FirstOrDefault(v => v.Default);
+
+            }
 
             DefaultReason = defaultReason;
 

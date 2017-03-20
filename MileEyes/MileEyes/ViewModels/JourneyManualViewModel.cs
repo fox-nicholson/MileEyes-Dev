@@ -378,10 +378,10 @@ namespace MileEyes.ViewModels
                 journey = new Journey
                 {
                     Company = Company,
-                    Date = Date,
+                    Date = Date.AddHours(1),
                     Invoiced = Invoiced,
                     Passengers = Passengers,
-                    Reason = Reason,
+                    Reason = "Return: " + Reason,
                     Vehicle = Vehicle
                 };
 

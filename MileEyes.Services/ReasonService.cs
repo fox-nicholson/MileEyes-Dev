@@ -63,5 +63,27 @@ namespace MileEyes.Services
                 transaction.Dispose();
             }
         }
+
+        public async Task CreateStartReasons()
+        {
+            using (var transaction = DatabaseService.Realm.BeginWrite())
+            {
+                var reason = DatabaseService.Realm.CreateObject<Reason>();
+
+                reason.Id = Guid.NewGuid().ToString();
+                reason.Text = "Personal";
+                reason.Default = true;
+
+                transaction.Commit();
+                transaction.Dispose();
+            }
+
+                var meeting = new Reason()
+            {
+                Text = "Meeting"
+            };
+
+            await SaveReason(meeting);
+        }
     }
 }

@@ -60,30 +60,47 @@ namespace MileEyes.ViewModels
 
             Waypoints.Clear();
 
+            OriginAddress = new Address()
+            {
+                Label = "Loading",
+                Latitude = 0.0,
+                Longitude = 0.0,
+                PlaceId = ""
+            };
+
+            DestinationAddress = new Address()
+            {
+                Label = "Loading",
+                Latitude = 0.0,
+                Longitude = 0.0,
+                PlaceId = ""
+            };
+
             if (j.Waypoints.Any())
             {
-
                 foreach (var w in j.Waypoints)
                     Waypoints.Add(w);
 
                 var originWaypoint = Waypoints.OrderBy(w => w.Step).First();
                 var destinationWaypoint = Waypoints.OrderBy(w => w.Step).Last();
 
-                OriginAddress = new Address
-                {
-                    Label = originWaypoint.Label,
-                    Latitude = originWaypoint.Latitude,
-                    Longitude = originWaypoint.Longitude,
-                    PlaceId = originWaypoint.PlaceId
-                };
+                if (!(originWaypoint.Label == ""))
+                    OriginAddress = new Address
+                    {
+                        Label = originWaypoint.Label,
+                        Latitude = originWaypoint.Latitude,
+                        Longitude = originWaypoint.Longitude,
+                        PlaceId = originWaypoint.PlaceId
+                    };
 
-                DestinationAddress = new Address
-                {
-                    Label = destinationWaypoint.Label,
-                    Latitude = destinationWaypoint.Latitude,
-                    Longitude = destinationWaypoint.Longitude,
-                    PlaceId = destinationWaypoint.PlaceId
-                };
+                if (!(destinationWaypoint.Label == ""))
+                    DestinationAddress = new Address
+                    {
+                        Label = destinationWaypoint.Label,
+                        Latitude = destinationWaypoint.Latitude,
+                        Longitude = destinationWaypoint.Longitude,
+                        PlaceId = destinationWaypoint.PlaceId
+                    };
 
                 if (Waypoints.Count > 2)
                     Gps = true;

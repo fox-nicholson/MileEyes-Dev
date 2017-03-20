@@ -18,13 +18,11 @@ namespace MileEyes.Pages
         private void JourneyConfirmPage_Saved(object sender, EventArgs e)
         {
             Device.BeginInvokeOnMainThread(async () => { await Navigation.PopModalAsync(); });
-            TrackerService.IsTracking = false;
         }
 
         private void JourneyConfirmPage_SaveFailed(object sender, string e)
         {
             Device.BeginInvokeOnMainThread(async () => { await DisplayAlert("Journey Not Saved", e, "Ok"); });
-            TrackerService.IsTracking = false;
         }
 
         private async void CancelMenuItem_OnClicked(object sender, EventArgs e)

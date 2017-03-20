@@ -103,12 +103,8 @@ namespace MileEyes.Services
 
                 // Set the token to successful
                 tokenResult.Success = true;
-
-                //await Host.EngineTypeService.Sync();
-                //await Host.VehicleTypeService.Sync();
-                //await Host.VehicleService.Sync();
+                
                 await Host.CompanyService.Sync();
-                //Host.JourneyService.Sync();
 
                 // Return the token
                 return tokenResult;
@@ -123,8 +119,7 @@ namespace MileEyes.Services
         }
 
         public async Task<RegisterResponse> Register(string firstName, string lastName, string email, string password,
-            string confirmPassword,
-            string addressPlaceId)
+            string confirmPassword)
         {
             var data = new StringContent(JsonConvert.SerializeObject(new RegisterBindingModel()
             {
@@ -133,7 +128,6 @@ namespace MileEyes.Services
                 Email = email,
                 Password = password,
                 ConfirmPassword = confirmPassword,
-                PlaceId = addressPlaceId
             }), Encoding.UTF8, "application/json");
 
             try

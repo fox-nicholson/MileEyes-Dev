@@ -28,23 +28,27 @@ namespace MileEyes.Services
 
 
 
-        private static int MIN_MOVED_DISTANCE = 3; // The minmum distance the user has to move before we push another waypoint in meters.
+        private static int MIN_MOVED_DISTANCE = 2; // The minmum distance the user has to move before we push another waypoint in meters.
 
-        private static int MIN_SLOW_MOVED_DISTANCE = 10;
+        private static int MIN_SLOW_MOVED_DISTANCE = 8;
 
-        private static int MIN_SLOW_MOVED_TIME = 30;
+        private static int MIN_SLOW_MOVED_TIME = 16;
 
-        private static int POLL_DELAY = 1000; // How often we poll the gps for current position.
+        private static int POLL_DELAY = 2000; // How often we poll the gps for current position.
 
         private static int MAX_CATCHED_POSITIONS = 30; // Max amount of catched positions between pushes.
 
         private static int GPS_ACCURACY = 1; // The accuracy of the gps.
 
-        private static int MAX_CURRENT_LOCATION_TRYS = 10;
+        private static int MAX_CURRENT_LOCATION_TRYS = 4;
 
         private static double MAX_MILES_PER_HOUR = 75.0;
 
-        private static double MAX_ACCELERATION = 5.0;
+        private static double MAX_ACCELERATION = 38.0;
+
+        private static double START_ACCELERTION = 3.0;
+
+        private static double MAX_ACCELERATION_TIMEOUT = 4;
 
         private static double MAX_ACCURACY = 60.0;
 
@@ -52,7 +56,7 @@ namespace MileEyes.Services
 
         private static double START_ACCURACY = 20.0;
 
-        private static double MIN_SPEED = 5.6; // 6.9
+        private static double MIN_SPEED = 4.9; // 6.9
 
         private static double METERS_PER_SECOND = 0.44704;
 
@@ -67,21 +71,18 @@ namespace MileEyes.Services
             catchedPositions = new List<Position>(MAX_CATCHED_POSITIONS);
             CurrentDistance = 0.0;
             CurrentLocation = null;
-            IsTracking = false;
         }
 
         public async Task Start()
         {
             if (!Plugin.Geolocator.CrossGeolocator.Current.IsGeolocationAvailable || !Plugin.Geolocator.CrossGeolocator.Current.IsGeolocationEnabled)
             {
-                IsTracking = false;
                 StartFailed?.Invoke(this, "GPS is not enabled on this device.");
                 return;
             }
 
             await Reset();
 
-            IsTracking = true;
 
             Plugin.Geolocator.CrossGeolocator.Current.AllowsBackgroundUpdates = true;
             Plugin.Geolocator.CrossGeolocator.Current.DesiredAccuracy = GPS_ACCURACY;
@@ -122,7 +123,6 @@ namespace MileEyes.Services
             }
             if (CurrentLocation == null || catchedPositions.Count == 0)
             {
-                IsTracking = false;
                 StartFailed?.Invoke(this, "Currently unable to connection to GPS.");
                 return;
             }
@@ -137,7 +137,7 @@ namespace MileEyes.Services
 
             Plugin.Geolocator.CrossGeolocator.Current.PositionChanged += updatePosition;
 
-			var started = await Plugin.Geolocator.CrossGeolocator.Current.StartListeningAsync(POLL_DELAY, MIN_SLOW_MOVED_DISTANCE);
+			var started = await Plugin.Geolocator.CrossGeolocator.Current.StartListeningAsync(POLL_DELAY, 0);
 
             if (started)
             {
@@ -145,7 +145,6 @@ namespace MileEyes.Services
             }
             else
             {
-                IsTracking = false;
                 StartFailed?.Invoke(this, "There was a problem starting GPS Services on your device.");
             }
         }
@@ -179,19 +178,38 @@ namespace MileEyes.Services
 
                 var accuracy = e.Position.Accuracy;
 
-                var maxDistance = (METERS_PER_SECOND * MAX_MILES_PER_HOUR) * delta;
+                var maxDistance = 0.0;
 
-                var currentAccuracy = START_ACCURACY + (((MAX_ACCURACY - START_ACCURACY) / MAX_ACCURACY_TIMEOUT) * delta);
-                if (currentAccuracy > MAX_ACCURACY)
+                if (delta >= 1.0)
                 {
-                    currentAccuracy = MAX_ACCURACY;
+                    maxDistance = (METERS_PER_SECOND * MAX_MILES_PER_HOUR) * delta;
+                }
+                else
+                {
+                    maxDistance = (METERS_PER_SECOND * MAX_MILES_PER_HOUR) / delta;
                 }
 
-                System.Diagnostics.Debug.WriteLine("Delta: " + delta + ", Current Accuracy: " + currentAccuracy);
+                var currentMaxAccuracy = START_ACCURACY + (((MAX_ACCURACY - START_ACCURACY) / MAX_ACCURACY_TIMEOUT) * delta);
 
-                if ((MIN_MOVED_DISTANCE < distance && maxDistance > distance && MAX_ACCELERATION >= acceleration && currentAccuracy >= accuracy) && (speed >= MIN_SPEED || MIN_SLOW_MOVED_DISTANCE < distance && delta >= MIN_SLOW_MOVED_TIME))
+                var currentMaxAcceleration = START_ACCELERTION + (((MAX_ACCELERATION - START_ACCELERTION) / MAX_ACCELERATION_TIMEOUT) * delta);
+
+                if (currentMaxAccuracy > MAX_ACCURACY)
                 {
-                    currentAccuracy = START_ACCURACY;
+                    currentMaxAccuracy = MAX_ACCURACY;
+                }
+
+
+                if (currentMaxAcceleration > MAX_ACCELERATION)
+                {
+                    currentMaxAcceleration = MAX_ACCELERATION;
+                }
+
+                System.Diagnostics.Debug.WriteLine("Delta: " + delta + ", Current Accuracy: " + currentMaxAccuracy + ", acceleration: " + acceleration + ", max: " + currentMaxAcceleration + ", speed: " + speed + ", maxDistance: " + maxDistance);
+
+                if ((MIN_MOVED_DISTANCE < distance && currentMaxAcceleration >= acceleration && currentMaxAccuracy >= accuracy) && (speed >= MIN_SPEED || MIN_SLOW_MOVED_DISTANCE < distance && delta >= MIN_SLOW_MOVED_TIME))
+                {
+                    currentMaxAccuracy = START_ACCURACY;
+                    currentMaxAcceleration = START_ACCELERTION;
 
                     CurrentLocation = e.Position;
                     CurrentLocation.Speed = speed;
@@ -285,6 +303,8 @@ namespace MileEyes.Services
         public async Task Cancel()
         {
             IsTracking = false;
+            if (Plugin.Geolocator.CrossGeolocator.Current.IsListening)
+            await Plugin.Geolocator.CrossGeolocator.Current.StopListeningAsync();
             Cancelled?.Invoke(this, EventArgs.Empty);
         }
 

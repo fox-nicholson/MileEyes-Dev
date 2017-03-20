@@ -17,21 +17,27 @@ namespace MileEyes
             Device.OnPlatform(
                 iOS: () => { MainPage = new MainPage(); },
                 Android: () => { MainPage = new AndroidMainPage(); });
-
-//            SyncTimer();
-            Device.StartTimer(TimeSpan.FromMinutes(1), SyncTimer);
+            
+            Device.StartTimer(TimeSpan.FromSeconds(90), CompanySyncTimer);
+            Device.StartTimer(TimeSpan.FromSeconds(60), JourneySyncTimer);
         }
 
         /// <summary>
         /// Triggers Sync of Data for Authenticated Users
         /// </summary>
         /// <returns></returns>
-        public bool isSyncing;
-        private static bool SyncTimer()
+        private static bool JourneySyncTimer()
+        {
+            if (!Services.Host.AuthService.Authenticated) return true;
+            Services.Host.JourneyService.Sync();
+
+            return true;
+        }
+
+        private static bool CompanySyncTimer()
         {
             if (!Services.Host.AuthService.Authenticated) return true;
             Services.Host.CompanyService.Sync();
-            Services.Host.JourneyService.Sync();
 
             return true;
         }

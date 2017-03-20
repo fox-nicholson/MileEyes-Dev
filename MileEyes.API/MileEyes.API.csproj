@@ -328,6 +328,10 @@
     <Compile Include="Migrations\201703161154438_AddedDriverAutoAccept.Designer.cs">
       <DependentUpon>201703161154438_AddedDriverAutoAccept.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703201038536_removeUserAddress.cs" />
+    <Compile Include="Migrations\201703201038536_removeUserAddress.Designer.cs">
+      <DependentUpon>201703201038536_removeUserAddress.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -571,6 +575,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703161154438_AddedDriverAutoAccept.resx">
       <DependentUpon>201703161154438_AddedDriverAutoAccept.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703201038536_removeUserAddress.resx">
+      <DependentUpon>201703201038536_removeUserAddress.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

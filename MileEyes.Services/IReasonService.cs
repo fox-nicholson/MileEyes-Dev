@@ -15,5 +15,7 @@ namespace MileEyes.Services
         Task<Reason> DeleteReason(string id);
 
         Task SetDefault(string id);
+
+        Task CreateStartReasons();
     }
 }

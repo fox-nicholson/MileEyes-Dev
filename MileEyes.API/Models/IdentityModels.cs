@@ -22,8 +22,6 @@ namespace MileEyes.API.Models
 
         public string CustomerId { get; set; }
 
-        public virtual Address Address { get; set; }
-
         public DateTimeOffset SignupDate { get; set; }
 
         public virtual CurrencyRate Currency { get; set; }

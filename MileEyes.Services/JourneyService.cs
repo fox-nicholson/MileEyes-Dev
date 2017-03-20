@@ -161,7 +161,7 @@ namespace MileEyes.Services
                 file = string.Join(",", "HelloWorld", "TestExport");
             }
 
-            var response = await RestService.Client.GetAsync("/api/ExportJourneys/" + file + "/");
+            var response = await RestService.Client.GetAsync("/api/ExportJourneys/");
 
             Busy = false;
         }
@@ -252,7 +252,7 @@ namespace MileEyes.Services
 
                             for (int w = 0; finish; w++)
                             {
-                                startPoint = w * 50;
+                                startPoint = w * 200;
 
                                 finish = true;
 
@@ -442,8 +442,8 @@ namespace MileEyes.Services
                         for (int i = 0; finish; i++)
                         {
 
-                            var startPoint = i * 50;
-                            var endPoint = startPoint + 49;
+                            var startPoint = i * 200;
+                            var endPoint = startPoint + 199;
 
                             if (endPoint > waypoints.Count) endPoint = waypoints.Count;
 

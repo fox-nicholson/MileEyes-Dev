@@ -10,6 +10,6 @@ namespace MileEyes.Services
         Task<AuthResponse> Authenticate(string email, string password);
 
         Task<RegisterResponse> Register(string firstName, string lastName, string email, string password,
-            string confirmPassword, string addressPlaceId);
+            string confirmPassword);
     }
 }
