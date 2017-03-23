@@ -29,7 +29,11 @@ namespace MileEyes.Pages
 
             _busy = true;
 
-            Device.BeginInvokeOnMainThread(async () => { await Navigation.PushAsync(new RegisterPage()); });
+            var RegisterPage = new Uri("http://mileeyes-portal.azurewebsites.net");
+
+            Device.OpenUri(RegisterPage);
+
+            //Device.BeginInvokeOnMainThread(async () => { await Navigation.PushAsync(new RegisterPage()); });
 
             Device.StartTimer(TimeSpan.FromSeconds(1), Wait);
         }

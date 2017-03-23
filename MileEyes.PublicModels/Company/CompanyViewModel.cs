@@ -8,13 +8,9 @@ namespace MileEyes.PublicModels.Company
 
         public string Name { get; set; }
 
-        public bool Personal { get; set; }
-
         public decimal LowRate { get; set; }
 
         public decimal HighRate { get; set; }
-
-        public DateTimeOffset StartOfTaxYear { get; set; }
 
 		public int rank { get; set; }
     }

@@ -371,14 +371,22 @@ namespace MileEyes.ViewModels
 
             journey.Distance = await journey.CalculateDistance();
 
-            await Services.Host.JourneyService.SaveJourney(journey);
+            try
+            {
+                await Services.Host.JourneyService.SaveJourney(journey);
+            }
+            catch (NullReferenceException)
+            {
+                SaveFailed?.Invoke(this, "A network connection is required to save journeys.");
+                return;
+            }
 
             if (AutoReturn)
             {
                 journey = new Journey
                 {
                     Company = Company,
-                    Date = Date.AddHours(1),
+                    Date = Date.AddMinutes(1),
                     Invoiced = Invoiced,
                     Passengers = Passengers,
                     Reason = "Return: " + Reason,
@@ -398,6 +406,7 @@ namespace MileEyes.ViewModels
 
             Saved?.Invoke(this, EventArgs.Empty);
 
+            if (Authenticated)
             Services.Host.JourneyService.Sync();
 
             Device.StartTimer(TimeSpan.FromSeconds(1), Wait);

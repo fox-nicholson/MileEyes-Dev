@@ -41,7 +41,7 @@ namespace MileEyes.Services
 
         public async Task<Vehicle> GetVehicle(string id)
         {
-            return DatabaseService.Realm.ObjectForPrimaryKey<Vehicle>(id);
+            return DatabaseService.Realm.Find<Vehicle>(id);
         }
 
         public async Task<IQueryable<Vehicle>> GetVehicles()
@@ -87,6 +87,14 @@ namespace MileEyes.Services
             {
                 var vehicles = DatabaseService.Realm.All<Vehicle>();
 
+                if (!(vehicles.Where(d => d.Default).Any()) && vehicles.Any())
+                {
+                    vehicles.FirstOrDefault().Default = true;
+                    transaction.Commit();
+                    transaction.Dispose();
+                    return;
+                }
+
                 foreach (var vehicle in vehicles)
                 {
                     vehicle.Default = vehicle.Id == id;
@@ -117,6 +125,8 @@ namespace MileEyes.Services
             {
                 try
                 {
+                    RestService.Client.Timeout = new TimeSpan(0, 0, 30);
+
                     var response = await RestService.Client.DeleteAsync("/api/Vehicles/" + v.CloudId);
 
                     if (!response.IsSuccessStatusCode) continue;
@@ -139,77 +149,85 @@ namespace MileEyes.Services
 
         private async Task PullUpdate()
         {
-            var response = await RestService.Client.GetAsync("/api/Vehicles/");
+            try
+            { 
+                RestService.Client.Timeout = new TimeSpan(0, 0, 30);
 
-            if (response == null) return;
+                var response = await RestService.Client.GetAsync("/api/Vehicles/");
 
-            if (!response.IsSuccessStatusCode) return;
+                if (response == null) return;
 
-            var result =
-                JsonConvert.DeserializeObject<ICollection<VehicleViewModel>>(
-                    await response.Content.ReadAsStringAsync());
+                if (!response.IsSuccessStatusCode) return;
 
-            foreach (var vehicleData in result)
+                var result =
+                    JsonConvert.DeserializeObject<ICollection<VehicleViewModel>>(
+                        await response.Content.ReadAsStringAsync());
+
+                foreach (var vehicleData in result)
+                {
+                    var vehicles = await GetVehicles();
+
+                    var vehiclesEnumerable = vehicles.ToArray();
+
+                    var existingVehicles = vehiclesEnumerable.Where(v => v.CloudId == vehicleData.Id);
+
+                    var existingVehiclesEnumerable = existingVehicles as Vehicle[] ?? existingVehicles.ToArray();
+
+                    if (!existingVehiclesEnumerable.Any())
+                    {
+                        var vehicle = new Vehicle();
+
+                        var engineTypes = await Host.EngineTypeService.GetEngineTypes();
+
+                        var engineType = engineTypes.FirstOrDefault(et => et.Id == vehicleData.EngineType.Id);
+
+                        var vehicleTypes = await Host.VehicleTypeService.GetVehicleTypes();
+
+                        var vehicleType = vehicleTypes.FirstOrDefault(vt => vt.Id == vehicleData.VehicleType.Id);
+
+                        vehicle.CloudId = vehicleData.Id;
+                        vehicle.Registration = vehicleData.Registration;
+                        vehicle.EngineType = engineType;
+                        vehicle.VehicleType = vehicleType;
+                        vehicle.RegDate = vehicleData.RegDate;
+
+                        await AddVehicle(vehicle);
+
+                        return;
+                    }
+
+                    var existingVehicle = await GetVehicle(existingVehiclesEnumerable.FirstOrDefault().Id);
+
+                    using (var transaction = DatabaseService.Realm.BeginWrite())
+                    {
+                        var engineTypes = await Host.EngineTypeService.GetEngineTypes();
+
+                        var engineType = engineTypes.FirstOrDefault(
+                            et => et.Id == vehicleData.EngineType.Id);
+
+                        var a = engineType;
+
+                        existingVehicle.EngineType = engineType;
+
+                        var vehicleTypes = await Host.VehicleTypeService.GetVehicleTypes();
+
+                        var vehicleType = vehicleTypes.FirstOrDefault(
+                            vt => vt.Id == vehicleData.VehicleType.Id);
+
+                        var t = vehicleType;
+
+                        existingVehicle.VehicleType = vehicleType;
+
+                        existingVehicle.Registration = vehicleData.Registration;
+
+                        transaction.Commit();
+                        transaction.Dispose();
+                    }
+                }
+            } catch (Exception)
             {
-                var vehicles = await GetVehicles();
-
-                var vehiclesEnumerable = vehicles.ToArray();
-
-                var existingVehicles = vehiclesEnumerable.Where(v => v.CloudId == vehicleData.Id);
-
-                var existingVehiclesEnumerable = existingVehicles as Vehicle[] ?? existingVehicles.ToArray();
-
-                if (!existingVehiclesEnumerable.Any())
-                {
-                    var vehicle = new Vehicle();
-
-                    var engineTypes = await Host.EngineTypeService.GetEngineTypes();
-
-                    var engineType = engineTypes.FirstOrDefault(et => et.Id == vehicleData.EngineType.Id);
-
-                    var vehicleTypes = await Host.VehicleTypeService.GetVehicleTypes();
-
-                    var vehicleType = vehicleTypes.FirstOrDefault(vt => vt.Id == vehicleData.VehicleType.Id);
-
-                    vehicle.CloudId = vehicleData.Id;
-                    vehicle.Registration = vehicleData.Registration;
-                    vehicle.EngineType = engineType;
-                    vehicle.VehicleType = vehicleType;
-                    vehicle.RegDate = vehicleData.RegDate;
-
-                    await AddVehicle(vehicle);
-
-                    return;
-                }
-
-                var existingVehicle = await GetVehicle(existingVehiclesEnumerable.FirstOrDefault().Id);
-
-                using (var transaction = DatabaseService.Realm.BeginWrite())
-                {
-                    var engineTypes = await Host.EngineTypeService.GetEngineTypes();
-
-                    var engineType = engineTypes.FirstOrDefault(
-                        et => et.Id == vehicleData.EngineType.Id);
-
-                    var a = engineType;
-
-                    existingVehicle.EngineType = engineType;
-
-                    var vehicleTypes = await Host.VehicleTypeService.GetVehicleTypes();
-
-                    var vehicleType = vehicleTypes.FirstOrDefault(
-                        vt => vt.Id == vehicleData.VehicleType.Id);
-
-                    var t = vehicleType;
-
-                    existingVehicle.VehicleType = vehicleType;
-
-                    existingVehicle.Registration = vehicleData.Registration;
-
-                    transaction.Commit();
-                    transaction.Dispose();
-                }
-             }
+                return;
+            }
         }
 
         private async Task PushNew()
@@ -224,6 +242,8 @@ namespace MileEyes.Services
 
                 try
                 {
+                    RestService.Client.Timeout = new TimeSpan(0, 0, 30);
+
                     var data = new StringContent(JsonConvert.SerializeObject(v), Encoding.UTF8, "application/json");
 
                     var response = await RestService.Client.PostAsync("/api/Vehicles/", data);

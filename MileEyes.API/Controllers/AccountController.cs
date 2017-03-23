@@ -23,7 +23,6 @@ using MileEyes.API.Services;
 namespace MileEyes.API.Controllers
 {
     [Authorize]
-    [RoutePrefix("api/Account")]
     public class AccountController : ApiController
     {
         private const string LocalLoginProvider = "Local";
@@ -51,7 +50,7 @@ namespace MileEyes.API.Controllers
 
         // GET api/Account/UserInfo
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
-        [Route("UserInfo")]
+        [Route("api/Account/UserInfo")]
         public UserInfoViewModel GetUserInfo()
         {
             try
@@ -75,7 +74,7 @@ namespace MileEyes.API.Controllers
             }
         }
 
-        [Route("UserInfo")]
+        [Route("api/Account/UserInfo")]
         [HttpPost]
         public async Task<IHttpActionResult> UpdateUserInfo(UserInfoBindingModel model)
         {
@@ -109,7 +108,7 @@ namespace MileEyes.API.Controllers
         }
 
         // POST api/Account/Logout
-        [Route("Logout")]
+        [Route("api/Account/Logout")]
         public IHttpActionResult Logout()
         {
 			Authentication.SignOut(DefaultAuthenticationTypes.ExternalBearer);
@@ -117,7 +116,7 @@ namespace MileEyes.API.Controllers
         }
 
         // POST api/Account/ChangePassword
-        [Route("ChangePassword")]
+        [Route("api/Account/ChangePassword")]
         public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model)
         {
             if (!ModelState.IsValid)
@@ -133,9 +132,9 @@ namespace MileEyes.API.Controllers
         }
 
 		[AllowAnonymous]
-		[Route("SendRegisterEmail")]
+		[Route("api/Account/SendRegisterEmail")]
 		[HttpGet]
-		public async Task<IHttpActionResult> SendRegisterEmail(String email, String subscription)
+		public async Task<IHttpActionResult> SendRegisterEmail(string email, string subscription)
 		{
 			var result = UserManager.FindByEmail(email);
 			if (result == null) {
@@ -147,22 +146,23 @@ namespace MileEyes.API.Controllers
 					{
 						Id = Guid.NewGuid(),
 						Email = email,
-						SubscriptionId = Guid.Parse(subscription),
+						SubscriptionId = ((subscription == "undefined") ? Guid.Empty : Guid.Parse(subscription)),
 						SignUpDate = DateTime.UtcNow
 					});
 				}
-				pending.SignUpDate = DateTime.UtcNow;
-				pending.SubscriptionId = Guid.Parse(subscription);
+                //ShowText = CurrentAdvertisement.ShowText ? Visibility.Visible : Visibility.Hidden;
+                pending.SignUpDate = DateTime.UtcNow;
+                pending.SubscriptionId = ((subscription == "undefined") ? Guid.Empty : Guid.Parse(subscription));
 				await db.SaveChangesAsync();
 
-				EmailService.SendEmail(email, "Mile Eyes Register Email", "Id: " + pending.Id);
+				EmailService.SendEmail(email, "Mile Eyes Register Email", "<a href=\"http://mileeyes-portal.azurewebsites.net/#/login?pending=" + pending.Id + "\"><font size='12'>Click me</font></a>");
 				return Ok();
 			}
 			return BadRequest();
 		}
 
 		[AllowAnonymous]
-		[Route("CheckRegisterEmail")]
+		[Route("api/Account/CheckRegisterEmail")]
 		[HttpGet]
 		public async Task<IHttpActionResult> CheckRegisterEmail(String id)
 		{
@@ -176,7 +176,7 @@ namespace MileEyes.API.Controllers
 
         // POST api/Account/Register
         [AllowAnonymous]
-        [Route("Register")]
+        [Route("api/Account/Register")]
         public async Task<IHttpActionResult> Register(RegisterBindingModel model)
         {
             try
@@ -226,7 +226,7 @@ namespace MileEyes.API.Controllers
 
         // GET api/Account/CheckEmail
         [AllowAnonymous]
-        [Route("CheckEmail")]
+        [Route("api/Account/CheckEmail")]
         [HttpGet]
         public async Task<IHttpActionResult> CheckEmail(String email)
         {
@@ -239,7 +239,7 @@ namespace MileEyes.API.Controllers
         }
 
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
-        [Route("CheckUserRight")]
+        [Route("api/Account/CheckUserRight")]
         [HttpGet]
         public async Task<IHttpActionResult> CheckUserRight(String companyId)
         {
@@ -288,7 +288,7 @@ namespace MileEyes.API.Controllers
 
         // GET api/Account/CheckInvite
         [AllowAnonymous]
-        [Route("CheckDriverInvite")]
+        [Route("api/Account/CheckDriverInvite")]
         [HttpGet]
         public async Task<IHttpActionResult> CheckDriverInvite(String companyId, String email)
         {
@@ -308,7 +308,7 @@ namespace MileEyes.API.Controllers
         }
 
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
-        [Route("AcceptDriverInviteEmail")]
+        [Route("api/Account/AcceptDriverInviteEmail")]
         [HttpPost]
         public async Task<IHttpActionResult> AcceptDriverInviteEmail(String invite, String email)
         {
@@ -344,7 +344,7 @@ namespace MileEyes.API.Controllers
         }
 
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
-        [Route("SendDriverInviteEmail")]
+        [Route("api/Account/SendDriverInviteEmail")]
         [HttpPost]
         public async Task<IHttpActionResult> SendDriverInviteEmail(String companyId, String email)
         {

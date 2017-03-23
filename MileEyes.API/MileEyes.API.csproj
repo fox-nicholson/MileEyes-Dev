@@ -332,6 +332,10 @@
     <Compile Include="Migrations\201703201038536_removeUserAddress.Designer.cs">
       <DependentUpon>201703201038536_removeUserAddress.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703231023273_removeCompanyObjects.cs" />
+    <Compile Include="Migrations\201703231023273_removeCompanyObjects.Designer.cs">
+      <DependentUpon>201703231023273_removeCompanyObjects.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -451,6 +455,7 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <None Include="Properties\PublishProfiles\mileeyesdevelopment - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\mileyesapi - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
@@ -578,6 +583,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703201038536_removeUserAddress.resx">
       <DependentUpon>201703201038536_removeUserAddress.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703231023273_removeCompanyObjects.resx">
+      <DependentUpon>201703231023273_removeCompanyObjects.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

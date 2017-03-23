@@ -14,7 +14,7 @@ namespace MileEyes.Services
 
         public async Task<Reason> GetReason(string id)
         {
-            return DatabaseService.Realm.ObjectForPrimaryKey<Reason>(id);            
+            return DatabaseService.Realm.Find<Reason>(id);            
         }
 
         public async Task<Reason> SaveReason(Reason r)
@@ -37,7 +37,7 @@ namespace MileEyes.Services
         {
             using (var transaction = DatabaseService.Realm.BeginWrite())
             {
-                var reason = DatabaseService.Realm.ObjectForPrimaryKey<Reason>(id);
+                var reason = DatabaseService.Realm.Find<Reason>(id);
 
                 DatabaseService.Realm.Remove(reason);
 

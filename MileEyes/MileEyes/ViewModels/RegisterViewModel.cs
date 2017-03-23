@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Linq;
 using System.Windows.Input;
 using MileEyes.Services.Models;
@@ -90,6 +90,7 @@ namespace MileEyes.ViewModels
         public event EventHandler<string> RegisterFailed = delegate { };
         public event EventHandler RegisterSuccess = delegate { };
 
+
         public async void Register()
         {
             Busy = true;
@@ -175,4 +176,4 @@ namespace MileEyes.ViewModels
             }
         }
     }
-}
+}*/

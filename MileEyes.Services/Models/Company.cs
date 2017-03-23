@@ -11,10 +11,6 @@ namespace MileEyes.Services.Models
         public string CloudId { get; set; }
 
         public string Name { get; set; }
-
-        public bool Personal { get; set; }
         public bool Default { get; set; }
-        
-        public DateTimeOffset StartOfTaxYear { get; set; }
     }
 }

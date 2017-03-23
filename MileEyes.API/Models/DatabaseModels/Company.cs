@@ -12,17 +12,9 @@ namespace MileEyes.API.Models.DatabaseModels
         public string Name { get; set; }
         public decimal HighRate { get; set; }
         public decimal LowRate { get; set; }
-        public bool AutoAccept { get; set; }
-        public bool Vat { get; set; }
-        public string VatNumber { get; set; }
-        public bool Personal { get; set; }
-
-        public double? AutoAcceptDistance { get; set; }
 
         public virtual Owner Owner { get; set; }
         
-        public virtual Address Address { get; set; }
-
         public virtual CurrencyRate Currency { get; set; }
 
         public virtual ICollection<Profile> Profiles { get; set; } = new HashSet<Profile>();
@@ -36,7 +28,5 @@ namespace MileEyes.API.Models.DatabaseModels
         public DateTimeOffset Modified { get; set; }
 
         public string SubscriptionId { get; set; }
-
-        public DateTimeOffset StartOfTaxYear { get; set; }
     }
 }

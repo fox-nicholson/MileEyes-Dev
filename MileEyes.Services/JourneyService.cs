@@ -95,7 +95,7 @@ namespace MileEyes.Services
                             Host.GeocodingService.GetAddress(
                                 journey.Waypoints.OrderBy(w => w.Step).FirstOrDefault().Latitude,
                                 journey.Waypoints.OrderBy(w => w.Step).FirstOrDefault().Longitude);
-
+                    
                     journey.Waypoints.OrderBy(w => w.Step).FirstOrDefault().Label = firstAddress.Label;
                 }
                 else
@@ -151,19 +151,10 @@ namespace MileEyes.Services
         public async Task ExportJourneys()
         {
             if (Busy) return;
-            Busy = true;
-
-            var journeys = await GetJourneys();
-            var file = "";
-
-            foreach (var journey in journeys)
-            {
-                file = string.Join(",", "HelloWorld", "TestExport");
-            }
+            
+            RestService.Client.Timeout = new TimeSpan(0, 0, 30);
 
             var response = await RestService.Client.GetAsync("/api/ExportJourneys/");
-
-            Busy = false;
         }
 
         public async Task Sync()
@@ -186,153 +177,161 @@ namespace MileEyes.Services
         {
             if (Busy) return;
             Busy = true;
-            var requestedWeek = new DateTime();
-            var startOfYear = new DateTime(DateTime.Today.Year, 1, 1);
-            var weeksInYearTs = (DateTime.Today - startOfYear).TotalDays / 7;
-            var weeksInYear = (int) Math.Ceiling(weeksInYearTs);
-            var monday = DateTime.Today.AddDays(-(int) DateTime.Today.DayOfWeek + (int) DayOfWeek.Monday);
-
-            for (var i = 0; i < weeksInYear; i++)
+            try
             {
-                requestedWeek = new DateTime(monday.Year, monday.Month, monday.Day).AddDays(-7 * i);
-                var requestedDay = requestedWeek.Day;
-                var requestedMonth = requestedWeek.Month;
-                var response = await RestService.Client.GetAsync("/api/Journeys/" + requestedDay + "/" + requestedMonth);
+                var requestedWeek = new DateTime();
+                var startOfYear = new DateTime(DateTime.Today.Year, 1, 1);
+                var weeksInYearTs = (DateTime.Today - startOfYear).TotalDays / 7;
+                var weeksInYear = (int)Math.Ceiling(weeksInYearTs);
+                var monday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday);
 
-                if (response == null)
+                for (var i = 0; i < weeksInYear; i++)
                 {
-                    Busy = false;
-                    return;
-                }
+                    requestedWeek = new DateTime(monday.Year, monday.Month, monday.Day).AddDays(-7 * i);
+                    var requestedDay = requestedWeek.Day;
+                    var requestedMonth = requestedWeek.Month;
+                    RestService.Client.Timeout = new TimeSpan(0, 0, 30);
+                    var response = await RestService.Client.GetAsync("/api/Journeys/" + requestedDay + "/" + requestedMonth);
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    var errorMessage = await response.Content.ReadAsStringAsync();
+                    if (response == null)
+                    {
+                        Busy = false;
+                        return;
+                    }
 
-                    var em = errorMessage;
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        var errorMessage = await response.Content.ReadAsStringAsync();
 
-                    Busy = false;
+                        var em = errorMessage;
 
-                    return;
-                }
+                        Busy = false;
 
-                var responseText = await response.Content.ReadAsStringAsync();
+                        return;
+                    }
 
-                var result = JsonConvert.DeserializeObject<ICollection<JourneyViewModel>>(responseText);
+                    var responseText = await response.Content.ReadAsStringAsync();
 
-                var vehicles = await Host.VehicleService.GetVehicles();
-                var companies = await Host.CompanyService.GetCompanies();
+                    var result = JsonConvert.DeserializeObject<ICollection<JourneyViewModel>>(responseText);
 
-                foreach (var journeyData in result)
-                {
-                    var existingJourney = (await GetAllJourneys()).FirstOrDefault(v => v.CloudId == journeyData.Id);
+                    var vehicles = await Host.VehicleService.GetVehicles();
+                    var companies = await Host.CompanyService.GetCompanies();
 
-                    var vehicle = vehicles.FirstOrDefault(v => v.CloudId == journeyData.Vehicle.Id);
-                    var company = companies.FirstOrDefault(c => c.CloudId == journeyData.Company.Id);
+                    foreach (var journeyData in result)
+                    {
+                        var existingJourney = (await GetAllJourneys()).FirstOrDefault(v => v.CloudId == journeyData.Id);
 
-                    if (existingJourney == null)
-                        using (var transaction = DatabaseService.Realm.BeginWrite())
-                        {
-                            var journey = DatabaseService.Realm.CreateObject<Journey>();
-                            journey.CloudId = journeyData.Id;
-                            journey.Date = journeyData.Date;
-                            journey.Accepted = journeyData.Accepted;
-                            journey.Rejected = journeyData.Rejected;
-                            journey.Cost = journeyData.Cost;
-                            journey.Distance = journeyData.Distance;
-                            journey.Reason = journeyData.Reason;
-                            journey.Invoiced = journeyData.Invoiced;
-                            journey.Passengers = journeyData.Passengers;
-                            journey.Vehicle = vehicle;
-                            journey.Company = company;
+                        var vehicle = vehicles.FirstOrDefault(v => v.CloudId == journeyData.Vehicle.Id);
+                        var company = companies.FirstOrDefault(c => c.CloudId == journeyData.Company.Id);
 
-                            var startPoint = 0;
-                            var endPoint = journeyData.Waypoints;
-                            var finish = true;
-
-                            for (int w = 0; finish; w++)
+                        if (existingJourney == null)
+                            using (var transaction = DatabaseService.Realm.BeginWrite())
                             {
-                                startPoint = w * 200;
+                                var journey = DatabaseService.Realm.CreateObject<Journey>();
+                                journey.CloudId = journeyData.Id;
+                                journey.Date = journeyData.Date;
+                                journey.Accepted = journeyData.Accepted;
+                                journey.Rejected = journeyData.Rejected;
+                                journey.Cost = journeyData.Cost;
+                                journey.Distance = journeyData.Distance;
+                                journey.Reason = journeyData.Reason;
+                                journey.Invoiced = journeyData.Invoiced;
+                                journey.Passengers = journeyData.Passengers;
+                                journey.Vehicle = vehicle;
+                                journey.Company = company;
 
-                                finish = true;
+                                var startPoint = 0;
+                                var endPoint = journeyData.Waypoints;
+                                var finish = true;
 
-                                var waypointResponse = await RestService.Client.GetAsync("/api/Waypoints/" + journey.CloudId + "/" + startPoint);
-
-                                if (waypointResponse == null)
+                                for (int w = 0; finish; w++)
                                 {
-                                    Busy = false;
-                                    return;
-                                }
+                                    startPoint = w * 200;
 
-                                if (!waypointResponse.IsSuccessStatusCode)
-                                {
-                                    var errorMessage = await waypointResponse.Content.ReadAsStringAsync();
+                                    finish = true;
 
-                                    var em = errorMessage;
+                                    RestService.Client.Timeout = new TimeSpan(0, 0, 30);
 
-                                    Busy = false;
+                                    var waypointResponse = await RestService.Client.GetAsync("/api/Waypoints/" + journey.CloudId + "/" + startPoint);
 
-                                    return;
-                                }
-
-                                var waypointResponseText = await waypointResponse.Content.ReadAsStringAsync();
-
-                                var waypointResult = JsonConvert.DeserializeObject<WaypointsViewModel>(waypointResponseText);
-
-                                if (waypointResult.Waypoints.Count == 2) endPoint = 1;
-
-                                foreach (var newWaypoint in waypointResult.Waypoints)
-                                {
-                                    var waypointToAdd = new Waypoint()
+                                    if (waypointResponse == null)
                                     {
-                                        Id = newWaypoint.Id,
-                                        Latitude = newWaypoint.Latitude,
-                                        Longitude = newWaypoint.Longitude,
-                                        PlaceId = newWaypoint.PlaceId,
-                                        Step = newWaypoint.Step,
-                                        Timestamp = newWaypoint.Timestamp,
-                                        Label = ""
-                                    };
-                                    journey.Waypoints.Add(waypointToAdd);
+                                        Busy = false;
+                                        return;
+                                    }
 
-                                    if (journey.Waypoints.Count == endPoint) finish = false;
-                                    if (endPoint == 1) finish = false;
+                                    if (!waypointResponse.IsSuccessStatusCode)
+                                    {
+                                        var errorMessage = await waypointResponse.Content.ReadAsStringAsync();
+
+                                        var em = errorMessage;
+
+                                        Busy = false;
+
+                                        return;
+                                    }
+
+                                    var waypointResponseText = await waypointResponse.Content.ReadAsStringAsync();
+
+                                    var waypointResult = JsonConvert.DeserializeObject<WaypointsViewModel>(waypointResponseText);
+
+                                    if (waypointResult.Waypoints.Count == 2) endPoint = 1;
+
+                                    foreach (var newWaypoint in waypointResult.Waypoints)
+                                    {
+                                        var waypointToAdd = new Waypoint()
+                                        {
+                                            Id = newWaypoint.Id,
+                                            Latitude = newWaypoint.Latitude,
+                                            Longitude = newWaypoint.Longitude,
+                                            PlaceId = newWaypoint.PlaceId,
+                                            Step = newWaypoint.Step,
+                                            Timestamp = newWaypoint.Timestamp,
+                                            Label = ""
+                                        };
+                                        journey.Waypoints.Add(waypointToAdd);
+
+                                        if (journey.Waypoints.Count == endPoint) finish = false;
+                                        if (endPoint == 1) finish = false;
+                                    }
                                 }
+
+                                var first = journey.Waypoints.OrderBy(w => w.Step).FirstOrDefault();
+
+                                first.Label = (await Host.GeocodingService.GetAddress(first.PlaceId)).Label;
+
+                                var last = journey.Waypoints.OrderBy(w => w.Step).LastOrDefault();
+
+                                last.Label = (await Host.GeocodingService.GetAddress(last.PlaceId)).Label;
+
+                                transaction.Commit();
+                                transaction.Dispose();
                             }
+                        else
+                            using (var transaction = DatabaseService.Realm.BeginWrite())
+                            {
+                                existingJourney.Date = journeyData.Date;
+                                existingJourney.Accepted = journeyData.Accepted;
+                                existingJourney.Rejected = journeyData.Rejected;
+                                existingJourney.Cost = journeyData.Cost;
+                                existingJourney.Distance = journeyData.Distance;
+                                existingJourney.Reason = journeyData.Reason;
+                                existingJourney.Invoiced = journeyData.Invoiced;
+                                existingJourney.Passengers = journeyData.Passengers;
+                                existingJourney.Company = company;
 
-                            var first = journey.Waypoints.OrderBy(w => w.Step).FirstOrDefault();
-
-                            first.Label = (await Host.GeocodingService.GetAddress(first.PlaceId)).Label;
-
-                            var last = journey.Waypoints.OrderBy(w => w.Step).LastOrDefault();
-
-                            last.Label = (await Host.GeocodingService.GetAddress(last.PlaceId)).Label;
-
-                            transaction.Commit();
-                            transaction.Dispose();
-                        }
-                    else
-                        using (var transaction = DatabaseService.Realm.BeginWrite())
-                        {
-                            existingJourney.Date = journeyData.Date;
-                            existingJourney.Accepted = journeyData.Accepted;
-                            existingJourney.Rejected = journeyData.Rejected;
-                            existingJourney.Cost = journeyData.Cost;
-                            existingJourney.Distance = journeyData.Distance;
-                            existingJourney.Reason = journeyData.Reason;
-                            existingJourney.Invoiced = journeyData.Invoiced;
-                            existingJourney.Passengers = journeyData.Passengers;
-                            existingJourney.Company = company;
-
-                            transaction.Commit();
-                            transaction.Dispose();
-                        }
+                                transaction.Commit();
+                                transaction.Dispose();
+                            }
+                    }
                 }
+                Busy = false;
+            } catch (Exception)
+            {
+                Busy = false;
+                return;
             }
-            Busy = false;
         }
-
-        private bool _busy;
 
         private async Task PushNew()
         {
@@ -347,8 +346,8 @@ namespace MileEyes.Services
 
             foreach (var j in journeysEnumerable.Where(j => j.MarkedForDeletion == false))
             {
-                //try
-                //{
+                try
+                {
                     if (!string.IsNullOrEmpty(j.CloudId)) continue;
 
                     if (j.Company == null)
@@ -357,7 +356,7 @@ namespace MileEyes.Services
 
                         var companiesEnumerable = companies.ToArray();
 
-                        var personalCompany = companiesEnumerable.FirstOrDefault(c => c.Personal);
+                        var personalCompany = companiesEnumerable.FirstOrDefault(c => c.Name == "Personal");
 
                         using (var transaction = DatabaseService.Realm.BeginWrite())
                         {
@@ -377,7 +376,6 @@ namespace MileEyes.Services
                             CloudId = j.Company.CloudId,
                             Id = j.Company.Id,
                             Name = j.Company.Name,
-                            Personal = j.Company.Personal
                         },
                         Date = j.Date,
                         Distance = j.Distance,
@@ -403,6 +401,8 @@ namespace MileEyes.Services
                     };
 
                     var data = new StringContent(JsonConvert.SerializeObject(journey), Encoding.UTF8, "application/json");
+
+                    RestService.Client.Timeout = new TimeSpan(0,0,30);
 
                     var response = await RestService.Client.PostAsync("/api/Journeys/", data);
 
@@ -461,7 +461,9 @@ namespace MileEyes.Services
                             
                             data = new StringContent(JsonConvert.SerializeObject(waypointsModel), Encoding.UTF8, "application/json");
 
-                            response = await RestService.Client.PostAsync("/api/Waypoints/", data);
+                        RestService.Client.Timeout = new TimeSpan(0, 0, 30);
+
+                        response = await RestService.Client.PostAsync("/api/Waypoints/", data);
 
                             if (response == null)
                             {
@@ -494,21 +496,15 @@ namespace MileEyes.Services
                         transaction.Commit();
                         transaction.Dispose();
                     }
-                //}
-                //catch (Exception ex)
+                }
+                catch (Exception ex)
 
-                //{
-                //    var message = ex.Message;
-                //}
+                {
+                    var message = ex.Message;
+                }
                 Busy = false;
             }
             Busy = false;
-        }
-
-        private bool Wait()
-        {
-            Busy = false;
-            return false;
-        }
+        }               
     }
 }

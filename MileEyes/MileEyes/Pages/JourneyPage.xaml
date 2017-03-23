@@ -121,7 +121,23 @@
                             </Label>
                         </StackLayout>
                     </StackLayout>
-                    <StackLayout Grid.Column="1" Grid.Row="0" HorizontalOptions="Fill"
+                    <StackLayout Grid.Column="1" Grid.Row="0" HorizontalOptions="Fill">
+                        <Label Text="Company" FontSize="Medium">
+                            <Label.TextColor>
+                                <OnPlatform x:TypeArguments="Color"
+                                            iOS="#80FFFFFF"
+                                            Android="Gray" />
+                            </Label.TextColor>
+                        </Label>
+                        <Label Text="{Binding CompanyName}" FontSize="Medium">
+                            <Label.TextColor>
+                                <OnPlatform x:TypeArguments="Color"
+                                            iOS="{StaticResource premiumTextColor}"
+                                            Android="Black" />
+                            </Label.TextColor>
+                        </Label>
+                    </StackLayout>
+                    <!--StackLayout Grid.Column="1" Grid.Row="0" HorizontalOptions="Fill"
                                  IsVisible="{Binding NotAuthenticated}">
                         <Label Text="Cloud Syncing" HorizontalOptions="End">
                             <Label.TextColor>
@@ -131,7 +147,7 @@
                             </Label.TextColor>
                         </Label>
                         <Switch BackgroundColor="Transparent" HorizontalOptions="End" Toggled="Switch_OnToggled" />
-                    </StackLayout>
+                    </StackLayout-->
                     <StackLayout Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" HorizontalOptions="Fill">
                         <Label Text="From">
                             <Label.TextColor>

@@ -46,20 +46,7 @@ namespace MileEyes.ViewModels
                 OnPropertyChanged(nameof(Name));
             }
         }
-
-        private bool _personal;
-
-        public bool Personal
-        {
-            get { return _personal; }
-            set
-            {
-                if (_personal == value) return;
-                _personal = value;
-                OnPropertyChanged(nameof(Personal));
-            }
-        }
-
+        
         private bool _default;
 
         public bool Default
@@ -80,7 +67,6 @@ namespace MileEyes.ViewModels
             Id = company.Id;
             CloudId = company.CloudId;
             Name = company.Name;
-            Personal = company.Personal;
             Default = company.Default;
         }
     }

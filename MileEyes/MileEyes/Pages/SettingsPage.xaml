@@ -108,7 +108,7 @@
                     </customControls:CustomImageCell.DetailColor>
                 </customControls:CustomImageCell>
 
-                <customControls:CustomImageCell ImageSource="vehicle.png" Text="Default Passengers"
+                <customControls:CustomImageCell ImageSource="passenger.png" Text="Default Passengers"
                                                 Detail="{Binding DefaultPassenger.Name}"
                                                 Tapped="DefaultPassengersCell_OnTapped">
                     <customControls:CustomImageCell.TextColor>

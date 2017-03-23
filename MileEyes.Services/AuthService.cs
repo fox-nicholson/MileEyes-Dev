@@ -117,7 +117,7 @@ namespace MileEyes.Services
                 };
             }
         }
-
+        /*
         public async Task<RegisterResponse> Register(string firstName, string lastName, string email, string password,
             string confirmPassword)
         {
@@ -132,6 +132,8 @@ namespace MileEyes.Services
 
             try
             {
+                RestService.Client.Timeout = new TimeSpan(0, 0, 30);
+
                 var response = await RestService.Client.PostAsync("api/Account/Register", data);
 
                 if (response == null) return new RegisterResponse()
@@ -163,6 +165,6 @@ namespace MileEyes.Services
                     Message = ex.Message
                 };
             }
-        }
+        }*/
     }
 }

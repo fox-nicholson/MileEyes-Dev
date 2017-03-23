@@ -155,7 +155,7 @@ namespace MileEyes.ViewModels
             if (currentWaypoints.Count() < 2)
             {
                 await Host.TrackerService.Cancel();
-                StopRequested?.Invoke(this, EventArgs.Empty);
+                //StopRequested?.Invoke(this, EventArgs.Empty);
                 return;
             }
             StopRequested?.Invoke(this, EventArgs.Empty);

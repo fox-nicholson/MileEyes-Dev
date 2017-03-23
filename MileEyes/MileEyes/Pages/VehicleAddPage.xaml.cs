@@ -25,7 +25,6 @@ namespace MileEyes.Pages
             Device.BeginInvokeOnMainThread(async () =>
             {
                 await DisplayAlert("Vehicle Saved", e, "Ok");
-                Services.Host.VehicleService.Sync();
                 await Navigation.PopAsync();
             });
         }

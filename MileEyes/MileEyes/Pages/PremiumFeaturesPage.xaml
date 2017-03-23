@@ -70,7 +70,7 @@
                                     Android="{StaticResource premiumTextColor}" />
                     </Button.BackgroundColor>
                 </Button>
-                <Label Text="£0.99/Month" HorizontalOptions="Center" FontSize="Small" HorizontalTextAlignment="Center"
+                <Label Text="Opens in Browser" HorizontalOptions="Center" FontSize="Small" HorizontalTextAlignment="Center"
                        TextColor="{StaticResource premiumTextColor}" BackgroundColor="Transparent" />
             </StackLayout>
         </Grid>

@@ -27,7 +27,7 @@
         </ListView.BackgroundColor>
         <ListView.ItemTemplate>
             <DataTemplate>
-                <customControls:CustomImageCell ImageSource="engine_type.png" Text="{Binding Name}">
+                <customControls:CustomImageCell ImageSource="vehicle_type.png" Text="{Binding Name}">
                     <customControls:CustomImageCell.TextColor>
                         <OnPlatform x:TypeArguments="Color"
                                     iOS="#FFFFFF"

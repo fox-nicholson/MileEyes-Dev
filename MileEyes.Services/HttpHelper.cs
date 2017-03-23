@@ -10,15 +10,23 @@ namespace MileEyes.Services
 
         public async Task<string> FileGetContents(string url)
         {
-            _client = new HttpClient();
-            var uri = new Uri(url);
-            
-            var response = await _client.GetAsync(uri);
+            try
+            {
+                _client = new HttpClient();
+                var uri = new Uri(url);
 
-            if (response.IsSuccessStatusCode) return await response.Content.ReadAsStringAsync();
-            
+                _client.Timeout = new TimeSpan(0, 0, 30);
 
-            return null;
+                var response = await _client.GetAsync(uri);
+
+                if (response.IsSuccessStatusCode) return await response.Content.ReadAsStringAsync();
+
+
+                return null;
+            } catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }

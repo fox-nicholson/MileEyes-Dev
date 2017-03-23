@@ -272,10 +272,18 @@ namespace MileEyes.ViewModels
 
             journey.Distance = await journey.CalculateDistance();
 
-            await Services.Host.JourneyService.SaveJourney(journey);
+            try
+            {
+                await Services.Host.JourneyService.SaveJourney(journey);
+            } catch (NullReferenceException)
+            {
+                SaveFailed?.Invoke(this, "A network connection is required to save journeys.");
+                return;
+            }
 
             Saved?.Invoke(this, EventArgs.Empty);
 
+            if (Authenticated)
             Services.Host.JourneyService.Sync();
 
             Busy = false;

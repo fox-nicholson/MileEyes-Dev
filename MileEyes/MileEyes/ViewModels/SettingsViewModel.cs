@@ -187,7 +187,9 @@ namespace MileEyes.ViewModels
 
             if (defaultVehicle == null)
             {
-                DefaultVehicle = (await Host.VehicleService.GetVehicles()).FirstOrDefault();
+                await Host.VehicleService.SetDefault(null);
+                defaultVehicle = (await Host.VehicleService.GetVehicles()).FirstOrDefault(v => v.Default);
+                DefaultVehicle = defaultVehicle;
             }
             else
             {
@@ -212,7 +214,16 @@ namespace MileEyes.ViewModels
             var defaultCompany =
                 (await Host.CompanyService.GetCompanies()).FirstOrDefault(v => v.Default);
 
-            DefaultCompany = defaultCompany;
+            if (defaultVehicle == null)
+            {
+                await Host.CompanyService.SetDefault(null);
+                defaultCompany = (await Host.CompanyService.GetCompanies()).FirstOrDefault(v => v.Default);
+                DefaultCompany = defaultCompany;
+            }
+            else
+            {
+                DefaultCompany = defaultCompany;
+            }
         }
     }
 }

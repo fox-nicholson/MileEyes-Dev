@@ -22,9 +22,9 @@ namespace MileEyes.Services
 
             var response = await Host.HttpHelper.FileGetContents(url);
 
-                if (response == null) return null;
+                if (response == null) return new[] { new Address() { PlaceId = "", Label = "No Internet" } };
 
-                if (string.IsNullOrEmpty(response))
+            if (string.IsNullOrEmpty(response))
             {
                 return new[] {new Address() {PlaceId = "", Label = "Unknown Address"}};
             }

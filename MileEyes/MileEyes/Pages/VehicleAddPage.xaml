@@ -44,7 +44,7 @@
             </TableSection>
 
           <TableSection Title="Vehicle Type">
-            <customControls:CustomImageCell ImageSource="engine_type.png" Text="Vehicle Type"
+            <customControls:CustomImageCell ImageSource="vehicle_type.png" Text="Vehicle Type"
                                             Detail="{Binding VehicleType.Name}" Tapped="VehicleTypeCell_OnTapped">
               <customControls:CustomImageCell.TextColor>
                 <OnPlatform x:TypeArguments="Color"

@@ -4,7 +4,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:customControls="clr-namespace:MileEyes.CustomControls;assembly=MileEyes"
              xmlns:viewModels="clr-namespace:MileEyes.ViewModels;assembly=MileEyes"
-             x:Class="MileEyes.Pages.LoginPage" Title="Login" BackgroundColor="{StaticResource mileeyesBlue}">
+             x:Class="MileEyes.Pages.LoginPage" Title="Login">
+    <ContentPage.BackgroundColor>
+        <OnPlatform x:TypeArguments="Color"
+                    iOS="{StaticResource primaryiOSBackgroundColor}"
+                    Android="{StaticResource primaryAndroidBackgroundColor}" />
+    </ContentPage.BackgroundColor>
     <ContentPage.BindingContext>
         <viewModels:LoginViewModel />
     </ContentPage.BindingContext>
@@ -16,40 +21,46 @@
             <ActivityIndicator IsRunning="{Binding Busy}" Color="White" HorizontalOptions="Center"
                                VerticalOptions="Center" />
         </StackLayout>
-        <TableView IsVisible="{Binding NotBusy}">
-          <TableView.BackgroundColor>
-            <OnPlatform x:TypeArguments="Color"
-                        iOS="{StaticResource mileeyesBlue}"
-                        Android="#52a9f2" />
-          </TableView.BackgroundColor>
+        <customControls:CustomTableView Intent="Form">
+            <customControls:CustomTableView.BackgroundColor>
+                <OnPlatform x:TypeArguments="Color"
+                            iOS="{StaticResource primaryiOSBackgroundColor}"
+                            Android="{StaticResource primaryAndroidBackgroundColor}" />
+            </customControls:CustomTableView.BackgroundColor>
             <TableRoot>
-              <TableSection Title="Login Details">
-                <ViewCell>
-                  <Label Text="  Email" TextColor="{StaticResource premiumTextColor}" FontSize="Medium" VerticalTextAlignment="Center"/>
-                </ViewCell>
-                <ViewCell>
-                  <Entry IsPassword="False" Placeholder=" Required" PlaceholderColor="#707070" Text="{Binding Email}" TextColor="Black" FontSize="Medium" Keyboard="Email">
-                    <Entry.BackgroundColor>
-                      <OnPlatform x:TypeArguments="Color"
-                                  iOS="{StaticResource mileeyesBlue}"
-                                  Android="#52a9f2" />
-                    </Entry.BackgroundColor>
-                  </Entry>
-                </ViewCell>
-                <ViewCell>
-                  <Label Text="  Password" TextColor="{StaticResource premiumTextColor}" FontSize="Medium" VerticalTextAlignment="Center"/>
-                </ViewCell>
-                <ViewCell>
-                  <Entry IsPassword="True" Placeholder=" Required" PlaceholderColor="#707070" Text="{Binding Password}" TextColor="Black" FontSize="Medium" Keyboard="Text">
-                    <Entry.BackgroundColor>
-                      <OnPlatform x:TypeArguments="Color"
-                                  iOS="{StaticResource mileeyesBlue}"
-                                  Android="#52a9f2" />
-                    </Entry.BackgroundColor>
+                <TableSection Title="Email">
+                    <ViewCell>
+                        <Entry IsPassword="False" Placeholder="Required" Text="{Binding Email}" FontSize="Medium" Keyboard="Email" Margin="10,0,0,0">
+                            <Entry.BackgroundColor>
+                                <OnPlatform x:TypeArguments="Color"
+                                            iOS="{StaticResource primaryiOSBackgroundColor}"
+                                            Android="{StaticResource primaryAndroidBackgroundColor}" />
+                            </Entry.BackgroundColor>
+                            <Entry.TextColor>
+                                <OnPlatform x:TypeArguments="Color"
+                                            iOS="White"
+                                            Android="Black"/>
+                            </Entry.TextColor>
+                        </Entry>
+                    </ViewCell>
+                </TableSection>
+                <TableSection Title="Password">
+                   <ViewCell>
+                    <Entry IsPassword="True" Placeholder="Required" Text="{Binding Password}" FontSize="Medium" Keyboard="Text" Margin="10,0,0,0">
+                        <Entry.BackgroundColor>
+                            <OnPlatform x:TypeArguments="Color"
+                                        iOS="{StaticResource primaryiOSBackgroundColor}"
+                                        Android="{StaticResource primaryAndroidBackgroundColor}" />
+                        </Entry.BackgroundColor>
+                        <Entry.TextColor>
+                            <OnPlatform x:TypeArguments="Color"
+                                        iOS="White"
+                                        Android="Black"/>
+                        </Entry.TextColor>
                   </Entry>
                 </ViewCell>
               </TableSection>
             </TableRoot>
-        </TableView>
+        </customControls:CustomTableView>
     </StackLayout>
 </ContentPage>

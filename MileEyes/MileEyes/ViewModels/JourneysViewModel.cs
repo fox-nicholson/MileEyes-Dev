@@ -150,9 +150,20 @@ namespace MileEyes.ViewModels
             Refreshing = false;
         }
 
+        public event EventHandler<string> ExportSuccess = delegate { };
+        public event EventHandler<string> ExportFailed = delegate { };
+
         public async void Export()
         {
-            await Host.JourneyService.ExportJourneys();
+            try
+            {
+                await Host.JourneyService.ExportJourneys();
+                ExportSuccess?.Invoke(this, "An email has been sent to you with your exported journeys");
+            } catch (Exception)
+            {
+                ExportFailed?.Invoke(this, "A network connection is required to export");
+                return;
+            }
         }
     }
 }

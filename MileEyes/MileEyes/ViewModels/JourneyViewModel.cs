@@ -13,6 +13,7 @@ namespace MileEyes.ViewModels
     public class JourneyViewModel : ViewModel
     {
         private Company _company;
+        private string _companyName;
 
         private string _status;
         private DateTimeOffset _date;
@@ -112,6 +113,7 @@ namespace MileEyes.ViewModels
             Passengers = j.Passengers;
             Vehicle = j.Vehicle;
             Company = j.Company;
+            CompanyName = j.Company.Name;
             Reason = j.Reason;
 
             ShareCommand = new Command(Share);
@@ -169,6 +171,17 @@ namespace MileEyes.ViewModels
                 if (_company == value) return;
                 _company = value;
                 OnPropertyChanged(nameof(Company));
+            }
+        }
+
+        public string CompanyName
+        {
+            get { return _companyName; }
+            set
+            {
+                if (_companyName == value) return;
+                _companyName = value;
+                OnPropertyChanged(nameof(CompanyName));
             }
         }
 

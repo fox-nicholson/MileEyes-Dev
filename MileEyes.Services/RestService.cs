@@ -7,7 +7,8 @@ namespace MileEyes.Services
     {
         public static HttpClient Client { get; set; } = new HttpClient()
         {
-            BaseAddress = new Uri("http://mileyesapi.azurewebsites.net/")
+            Timeout = new TimeSpan(0,0,30),
+            BaseAddress = new Uri("http://mileeyesdevelopment.azurewebsites.net/")
         };
     }
 }

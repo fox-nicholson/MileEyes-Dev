@@ -9,7 +9,7 @@ namespace MileEyes.Services
         void Logout();
         Task<AuthResponse> Authenticate(string email, string password);
 
-        Task<RegisterResponse> Register(string firstName, string lastName, string email, string password,
-            string confirmPassword);
+        //Task<RegisterResponse> Register(string firstName, string lastName, string email, string password,
+        //    string confirmPassword);
     }
 }

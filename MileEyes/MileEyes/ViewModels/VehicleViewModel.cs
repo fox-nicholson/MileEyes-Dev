@@ -206,6 +206,9 @@ namespace MileEyes.ViewModels
             }
 
             VehicleSaved?.Invoke(this, Registration + " was saved.");
+
+            if (Authenticated)
+            Services.Host.VehicleService.Sync();
             Busy = false;
         }
     }

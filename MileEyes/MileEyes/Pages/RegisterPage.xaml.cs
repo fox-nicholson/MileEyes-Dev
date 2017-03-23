@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using MileEyes.ViewModels;
 using Xamarin.Forms;
 
@@ -24,4 +24,4 @@ namespace MileEyes.Pages
             Device.BeginInvokeOnMainThread(async () => { await DisplayAlert("Registration Failed", e, "Ok"); });
         }                
     }
-}
+}*/

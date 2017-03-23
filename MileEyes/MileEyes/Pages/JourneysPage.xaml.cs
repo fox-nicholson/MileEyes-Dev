@@ -15,6 +15,18 @@ namespace MileEyes.Pages
         public JourneysPage()
         {
             InitializeComponent();
+            (BindingContext as JourneysViewModel).ExportFailed += JourneysPage_ExportFailed;
+            (BindingContext as JourneysViewModel).ExportSuccess += JourneysPage_ExportSuccess;
+        }
+
+        private void JourneysPage_ExportSuccess(object sender, string e)
+        {
+            Device.BeginInvokeOnMainThread(async () => { await DisplayAlert("Export Successful", e, "Ok"); });
+        }
+
+        private void JourneysPage_ExportFailed(object sender, string e)
+        {
+            Device.BeginInvokeOnMainThread(async () => { await DisplayAlert("Unable to Export", e, "Ok"); });
         }
 
         public static event EventHandler GotoTrackPage = delegate { };

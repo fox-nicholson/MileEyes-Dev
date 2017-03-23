@@ -38,7 +38,7 @@ namespace MileEyes.API.Controllers
 					bool found = false;
 					foreach (var c in d.Companies)
 					{
-						if (c.Personal)
+						if (c.Name == "Personal")
 						{
 							found = true;
 							break;
@@ -106,35 +106,7 @@ namespace MileEyes.API.Controllers
                 return BadRequest(ModelState);
             }
             var user = db.Users.Find(User.Identity.GetUserId());
-
-            var drivers = user.Profiles.OfType<Driver>();
-            
-            Driver driver = null;
-			foreach (var d in drivers)
-			{
-				if (user.Email == d.User.Email)
-				{
-					bool found = false;
-					foreach (var c in d.Companies)
-					{
-						if (c.Personal)
-						{
-							found = true;
-							break;
-						}
-					}
-					if (found)
-					{
-						driver = d;
-						break;
-					}
-				}
-			}
-
-			if (driver == null)
-			{
-				return BadRequest();
-			}
+                        
             var engineType = new EngineType();
             if (model.EngineType != null)
             {
@@ -191,13 +163,19 @@ namespace MileEyes.API.Controllers
                     VehicleType = vehicleType,
                     RegDate = regDate
                 };
+
+            var vehicleInfo = new VehicleInfo()
+            {
+                Id = Guid.NewGuid(),
+                UserId = Guid.Parse(user.Id),
+                VehicleId = vehicle.Id
+            };
 //            }
 
             try
             {
-                driver.Vehicles.Add(vehicle);
-
                 db.Vehicles.Add(vehicle);
+                db.VehicleInfo.Add(vehicleInfo);
             }
             catch (NullReferenceException e)
             {
@@ -271,7 +249,7 @@ namespace MileEyes.API.Controllers
 					bool found = false;
 					foreach (var c in d.Companies)
 					{
-						if (c.Personal)
+						if (c.Name == "Personal")
 						{
 							found = true;
 							break;

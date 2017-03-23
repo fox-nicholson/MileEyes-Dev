@@ -30,9 +30,9 @@ namespace MileEyes.Services
 
         private static int MIN_MOVED_DISTANCE = 2; // The minmum distance the user has to move before we push another waypoint in meters.
 
-        private static int MIN_SLOW_MOVED_DISTANCE = 8;
+        private static int MIN_SLOW_MOVED_DISTANCE = 10;
 
-        private static int MIN_SLOW_MOVED_TIME = 16;
+        private static int MIN_SLOW_MOVED_TIME = 18;
 
         private static int POLL_DELAY = 2000; // How often we poll the gps for current position.
 

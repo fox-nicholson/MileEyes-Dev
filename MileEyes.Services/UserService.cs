@@ -22,6 +22,8 @@ namespace MileEyes.Services
 
             try
             {
+                RestService.Client.Timeout = new TimeSpan(0, 0, 30);
+
                 var response = await RestService.Client.PostAsync("account/userinfo", data);
 
                 if (response == null) return new UserInfoResponse()
@@ -49,29 +51,37 @@ namespace MileEyes.Services
 
         public async Task<UserInfoResponse> GetDetails()
         {
-            var response = await RestService.Client.GetAsync("api/account/userinfo");
-
-            if (response == null) return new UserInfoResponse()
+            try
             {
-                Error = true
-            };
+                RestService.Client.Timeout = new TimeSpan(0, 0, 30);
 
-            if (!response.IsSuccessStatusCode)
+                var response = await RestService.Client.GetAsync("api/account/userinfo");
+
+                if (response == null) return new UserInfoResponse()
+                {
+                    Error = true
+                };
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorResult =
+                        JsonConvert.DeserializeObject<UserInfoResponse>(await response.Content.ReadAsStringAsync());
+
+                    errorResult.Error = true;
+
+                    return errorResult;
+                }
+
+                var result = JsonConvert.DeserializeObject<UserInfoViewModel>(await response.Content.ReadAsStringAsync());
+
+                return new UserInfoResponse()
+                {
+                    Result = result
+                };
+            } catch (Exception)
             {
-                var errorResult =
-                    JsonConvert.DeserializeObject<UserInfoResponse>(await response.Content.ReadAsStringAsync());
-
-                errorResult.Error = true;
-
-                return errorResult;
+                return new UserInfoResponse();
             }
-
-            var result = JsonConvert.DeserializeObject<UserInfoViewModel>(await response.Content.ReadAsStringAsync());
-
-            return new UserInfoResponse()
-            {
-                Result = result
-            };
         }
     }
 }

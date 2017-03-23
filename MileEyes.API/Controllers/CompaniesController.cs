@@ -50,7 +50,6 @@ namespace MileEyes.API.Controllers
 						{
 							Id = c.Id.ToString(),
 							Name = c.Name,
-							Personal = c.Personal,
 							LowRate = c.LowRate,
 							HighRate = c.HighRate,
 							rank = 3
@@ -70,7 +69,6 @@ namespace MileEyes.API.Controllers
 						{
 							Id = c.Id.ToString(),
 							Name = c.Name,
-							Personal = c.Personal,
 							LowRate = c.LowRate,
 							HighRate = c.HighRate,
 							rank = 2
@@ -90,7 +88,6 @@ namespace MileEyes.API.Controllers
 						{
 							Id = c.Id.ToString(),
 							Name = c.Name,
-							Personal = c.Personal,
 							LowRate = c.LowRate,
 							HighRate = c.HighRate,
 							rank = 1
@@ -112,45 +109,7 @@ namespace MileEyes.API.Controllers
         {
             // Get the current User
             var user = db.Users.Find(User.Identity.GetUserId());
-
-
-            // Get existing addresses with the same PlaceId
-            var existingAddress = db.Addresses.FirstOrDefault(a => a.PlaceId == model.PlaceId);
-
-            // Checks if the posted company name has already been taken.
-            var existingCompany = db.Companies.FirstOrDefault(c => c.Name == model.Name);
-            if (existingCompany != null)
-            {
-                return BadRequest("Company name already taken!");
-            }
-
-            Address address;
-
-            // Is there any addresses?
-            if (existingAddress == null)
-            {
-                // No so we need to check with Google and get the details
-                var addressResult = await GeocodingService.GetAddress(model.PlaceId);
-
-                // Create the new Address in database
-                address = new Address()
-                {
-                    Id = Guid.NewGuid(),
-                    PlaceId = addressResult.PlaceId,
-                    Coordinates = new Coordinates()
-                    {
-                        Id = Guid.NewGuid(),
-                        Latitude = addressResult.Latitude,
-                        Longitude = addressResult.Longitude
-                    }
-                };
-            }
-            else
-            {
-                // Theres an existing adress stored so use that one
-                address = existingAddress;
-            }
-
+                        
             var owner = new Owner
             {
                 Id = Guid.NewGuid(),
@@ -177,15 +136,9 @@ namespace MileEyes.API.Controllers
             {
                 Id = Guid.NewGuid(),
                 Name = model.Name,
-                AutoAccept = model.AutoAccept,
                 HighRate = model.HighRate,
                 LowRate = model.LowRate,
-                Vat = model.Vat,
-                VatNumber = model.VatNumber,
-                Address = address,
-                AutoAcceptDistance = model.AutoAcceptDistance,
                 Owner = owner,
-                Personal = false
             };
 
             user.Profiles.Add(owner);
@@ -210,7 +163,6 @@ namespace MileEyes.API.Controllers
                 Name = model.Name,
                 HighRate = model.HighRate,
                 LowRate = model.LowRate,
-                Personal = false
             });
         }
 
@@ -243,6 +195,7 @@ namespace MileEyes.API.Controllers
                             },
                             Cost = Convert.ToDouble(j.Cost),
                             Date = j.Date,
+                            Modified = j.Modified,
                             Driver = new DriverViewModel()
                             {
                                 Id = j.Driver.Id.ToString(),
@@ -287,6 +240,7 @@ namespace MileEyes.API.Controllers
                             },
                             Cost = Convert.ToDouble(j.Cost),
                             Date = j.Date,
+                            Modified = j.Modified,
                             Driver = new DriverViewModel()
                             {
                                 Id = j.Driver.Id.ToString(),
@@ -428,13 +382,13 @@ namespace MileEyes.API.Controllers
                     foreach (var d in drivers)
                     {
 						DriverInfo driverInfo = db.DriverInfo.FirstOrDefault(info => info.DriverId == d.Id);
-                        Company personal = db.Companies.FirstOrDefault(c => c.Personal && c.Owner.User.Email == d.User.Email);
+                        Company personal = db.Companies.FirstOrDefault(c => c.Name == "Personal" && c.Owner.User.Email == d.User.Email);
                         if (personal != null)
                         {
                             result.Add(new DriverViewModel()
                             {
                                 Id = d.Id.ToString(),
-								//AutoAccept = driverInfo.AutoAccept,
+								AutoAccept = driverInfo.AutoAccept,
                                 FirstName = d.User.FirstName,
                                 LastName = d.User.LastName,
                                 Email = d.User.Email,
@@ -459,13 +413,13 @@ namespace MileEyes.API.Controllers
 				else if (driver != null)
                 {
 					DriverInfo driverInfo = db.DriverInfo.FirstOrDefault(info => info.DriverId == driver.Id);
-                    Company personal = db.Companies.FirstOrDefault(c => c.Personal && c.Owner.User.Email == driver.User.Email);
+                    Company personal = db.Companies.FirstOrDefault(c => c.Name == "Personal" && c.Owner.User.Email == driver.User.Email);
                     if (personal != null)
                     {
                         result.Add(new DriverViewModel()
                         {
                             Id = driver.Id.ToString(),
-							//AutoAccept = driverInfo.AutoAccept,
+							AutoAccept = driverInfo.AutoAccept,
                             FirstName = driver.User.FirstName,
                             LastName = driver.User.LastName,
                             Email = driver.User.Email,
@@ -487,9 +441,8 @@ namespace MileEyes.API.Controllers
                     }
                 }
             }
-            catch (Exception e)
-            {
-                //return BadRequest(e.ToString());
+            catch (Exception)
+            {                
                 return null;
             }
             return result.AsQueryable();
@@ -526,7 +479,7 @@ namespace MileEyes.API.Controllers
 				// Check if the current users has rights, if not respond with bad request
 				if (owner != null || manager != null || accountant != null)
 				{
-					Company personal = db.Companies.FirstOrDefault(c => c.Personal && c.Owner.User.Email == driver.User.Email);
+					Company personal = db.Companies.FirstOrDefault(c => c.Name == "Personal" && c.Owner.User.Email == driver.User.Email);
 					result.Add(new DriverViewModel()
 					{
 						Id = driver.Id.ToString(),
@@ -548,7 +501,7 @@ namespace MileEyes.API.Controllers
 				}
 				else if (driver != null && driver.User.Email == user.Email)
 				{
-					Company personal = db.Companies.FirstOrDefault(c => c.Personal && c.Owner.User.Email == driver.User.Email);
+					Company personal = db.Companies.FirstOrDefault(c => c.Name == "Personal" && c.Owner.User.Email == driver.User.Email);
 					if (personal != null)
 					{
 						result.Add(new DriverViewModel()
@@ -572,9 +525,8 @@ namespace MileEyes.API.Controllers
 					}
 				}
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
-				//return BadRequest(e.ToString());
 				return null;
 			}
 			return result.AsQueryable();
@@ -803,19 +755,6 @@ namespace MileEyes.API.Controllers
 
 		[HttpGet]
 		[HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
-		[Route("api/Companies/CheckName")]
-		public async Task<IHttpActionResult> CheckCompanyName(String name)
-		{
-			var result = db.Companies.FirstOrDefault(c => c.Name.ToLower() == name.ToLower());
-			if (result != null)
-			{
-				return BadRequest("The company name has been taken!");
-			}
-			return Ok();
-		}
-
-		[HttpGet]
-		[HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
 		[Route("api/Companies/{companyId}/DriverJourneysInfo/{driverId}")]
 		public IQueryable<JourneyInfoViewModel> getDriverJourneysInfo(Guid companyId, Guid driverId, long start, long end)
 		{
@@ -913,6 +852,7 @@ namespace MileEyes.API.Controllers
 										},
 										Cost = Convert.ToDouble(journey.Cost),
 										Date = journey.Date,
+                                        Modified = journey.Modified,
 										Driver = new DriverViewModel()
 										{
 											Id = journey.Driver.Id.ToString(),
@@ -935,7 +875,8 @@ namespace MileEyes.API.Controllers
 										Invoiced = journey.Invoiced,
 										Passengers = journey.Passengers,
 										Reason = journey.Reason,
-										Rejected = journey.Rejected
+										Rejected = journey.Rejected,
+                                        Waypoints = journey.Waypoints.Count
 									});
 								}
 							}
@@ -953,6 +894,7 @@ namespace MileEyes.API.Controllers
 										},
 										Cost = Convert.ToDouble(journey.Cost),
 										Date = journey.Date,
+                                        Modified = journey.Modified,
 										Driver = new DriverViewModel()
 										{
 											Id = journey.Driver.Id.ToString(),
@@ -975,8 +917,9 @@ namespace MileEyes.API.Controllers
 										Invoiced = journey.Invoiced,
 										Passengers = journey.Passengers,
 										Reason = journey.Reason,
-										Rejected = journey.Rejected
-									});
+										Rejected = journey.Rejected,
+                                        Waypoints = journey.Waypoints.Count
+                                    });
 								}
 							}
 						}
@@ -999,6 +942,7 @@ namespace MileEyes.API.Controllers
 											},
 											Cost = Convert.ToDouble(journey.Cost),
 											Date = journey.Date,
+                                            Modified = journey.Modified,
 											Driver = new DriverViewModel()
 											{
 												Id = journey.Driver.Id.ToString(),
@@ -1021,8 +965,9 @@ namespace MileEyes.API.Controllers
 											Invoiced = journey.Invoiced,
 											Passengers = journey.Passengers,
 											Reason = journey.Reason,
-											Rejected = journey.Rejected
-										});
+											Rejected = journey.Rejected,
+                                            Waypoints = journey.Waypoints.Count
+                                        });
 									}
 								}
 							}
@@ -1043,7 +988,8 @@ namespace MileEyes.API.Controllers
 							                },
 							                Cost = Convert.ToDouble(journey.Cost),
 							                Date = journey.Date,
-							                Driver = new DriverViewModel()
+                                            Modified = journey.Modified,
+                                            Driver = new DriverViewModel()
 							                {
 							                    Id = journey.Driver.Id.ToString(),
 							                    Email = journey.Driver.User.Email,
@@ -1065,8 +1011,9 @@ namespace MileEyes.API.Controllers
 							                Invoiced = journey.Invoiced,
 							                Passengers = journey.Passengers,
 							                Reason = journey.Reason,
-							                Rejected = journey.Rejected
-							            });
+							                Rejected = journey.Rejected,
+                                            Waypoints = journey.Waypoints.Count
+                                        });
 							        }
 							    }
 							}

@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using MileEyes.Services.Models;
 using Xamarin.Forms;
+using System;
 
 namespace MileEyes.ViewModels
 {
@@ -48,6 +49,8 @@ namespace MileEyes.ViewModels
             SearchCommand = new Command(Search);
         }
 
+        public event EventHandler<string> SearchFailed = delegate { };
+
         public async void Search()
         {
             Refreshing = true;
@@ -56,8 +59,11 @@ namespace MileEyes.ViewModels
 
             Addresses.Clear();
 
+            if (_searchTerm == "") return;
+
             foreach (var address in addresses)
             {
+                if (address.Label == "No Internet") { SearchFailed?.Invoke(this, "Unable to connect to addressing services. \nPlease check your network connection."); return; }
                 Addresses.Add(address);
             }
 

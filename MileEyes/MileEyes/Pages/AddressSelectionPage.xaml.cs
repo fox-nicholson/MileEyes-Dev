@@ -1,6 +1,7 @@
 ﻿using System;
 using MileEyes.Services.Models;
 using Xamarin.Forms;
+using MileEyes.ViewModels;
 
 namespace MileEyes.Pages
 {
@@ -9,6 +10,13 @@ namespace MileEyes.Pages
         public AddressSelectionPage()
         {
             InitializeComponent();
+
+            (BindingContext as AddressSelectionViewModel).SearchFailed += AddressSelectionPage_SearchFailed;
+        }
+
+        private void AddressSelectionPage_SearchFailed(object sender, string e)
+        {
+            Device.BeginInvokeOnMainThread(async () => { await DisplayAlert("Unable to Search", e, "Ok"); });
         }
 
         public event EventHandler<Address> AddressSelected = delegate { };
