@@ -391,7 +391,7 @@ namespace MileEyes.API.Controllers
                 db.DriverInvites.Remove(driverInvite);
             }
             var otherUser = UserManager.FindByEmail(email);
-            if (otherUser != null)
+            if (otherUser != null && otherUser != user)
             {
                 var drivers = company.Profiles.OfType<Driver>();
                 foreach (var d in drivers)
@@ -402,6 +402,16 @@ namespace MileEyes.API.Controllers
                     }
                 }
 
+            } else if (otherUser == user)
+            {
+                var drivers = company.Profiles.OfType<Driver>();
+                foreach (var d in drivers)
+                {
+                    if (d.User.Id == otherUser.Id)
+                    {
+                        return BadRequest("You are already a driver for this company.");
+                    }
+                }
             }
             var invite = new DriverInvite
             {
