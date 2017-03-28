@@ -55,20 +55,20 @@ namespace MileEyes.Services
                         JsonConvert.DeserializeObject<IEnumerable<EngineTypeViewModel>>(
                             await response.Content.ReadAsStringAsync());
 
-                    using (var transaction = DatabaseService.Realm.BeginWrite())
-                    {
-                        DatabaseService.Realm.RemoveAll<EngineType>();
-
-                        foreach (var et in result)
+                        using (var transaction = DatabaseService.Realm.BeginWrite())
                         {
-                            var realmEt = DatabaseService.Realm.CreateObject<EngineType>();
-                            realmEt.Id = et.Id;
-                            realmEt.Name = et.Name;
-                        }
+                            DatabaseService.Realm.RemoveAll<EngineType>();
 
-                        transaction.Commit();
-                        transaction.Dispose();
-                    }
+                            foreach (var et in result)
+                            {
+                                var realmEt = DatabaseService.Realm.CreateObject<EngineType>();
+                                realmEt.Id = et.Id;
+                                realmEt.Name = et.Name;
+                            }
+
+                            transaction.Commit();
+                            transaction.Dispose();
+                        }
                     EngineTypeSyncing = false;
                 } catch (Exception)
                 {

@@ -9,7 +9,7 @@ namespace MileEyes.Services
         Task<IQueryable<Vehicle>> GetVehicles();
         Task<IQueryable<Vehicle>> GetAllVehicles();
 
-        Task<Vehicle> GetVehicle(string id);
+        Vehicle GetVehicle(string id);
 
         Task<Vehicle> AddVehicle(Vehicle v);
 

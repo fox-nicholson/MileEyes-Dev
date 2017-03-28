@@ -373,11 +373,18 @@ namespace MileEyes.ViewModels
 
             try
             {
-                await Services.Host.JourneyService.SaveJourney(journey);
+                var response = await Services.Host.JourneyService.SaveJourney(journey);
+                if (response == null)
+                {
+                    SaveFailed?.Invoke(this, "An error has occured, please try again.");
+                    Device.StartTimer(TimeSpan.FromSeconds(1), Wait);
+                    return;
+                }
             }
             catch (NullReferenceException)
             {
                 SaveFailed?.Invoke(this, "A network connection is required to save journeys.");
+                Device.StartTimer(TimeSpan.FromSeconds(1), Wait);
                 return;
             }
 
@@ -401,7 +408,13 @@ namespace MileEyes.ViewModels
 
                 journey.Distance = await journey.CalculateDistance();
 
-                await Services.Host.JourneyService.SaveJourney(journey);
+                var response = await Services.Host.JourneyService.SaveJourney(journey);
+                if (response == null)
+                {
+                    SaveFailed?.Invoke(this, "An error has occured, please try again.");
+                    Device.StartTimer(TimeSpan.FromSeconds(1), Wait);
+                    return;
+                }
             }
 
             Saved?.Invoke(this, EventArgs.Empty);

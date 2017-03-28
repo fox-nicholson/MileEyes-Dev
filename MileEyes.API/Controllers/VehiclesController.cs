@@ -24,52 +24,29 @@ namespace MileEyes.API.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: api/Vehicles
+        [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
         public IQueryable<VehicleViewModel> GetVehicles()
         {
             var user = db.Users.Find(User.Identity.GetUserId());
 
-            var drivers = user.Profiles.OfType<Driver>();
+            var driverInfos = new List<DriverInfo>();
 
-            Driver driver = null;
-            foreach (var d in drivers)
-            {
-				if (user.Email == d.User.Email)
-				{
-					bool found = false;
-					foreach (var c in d.Companies)
-					{
-						if (c.Name == "Personal")
-						{
-							found = true;
-							break;
-						}
-					}
-					if (found)
-					{
-						driver = d;
-						break;
-					}
-                }
-            }
-
-            if (driver != null)
-            {
-                return driver.Vehicles.Select(v => new VehicleViewModel()
+                IList<VehicleViewModel> vehicles = db.VehicleInfo.Where(v => v.UserId.ToString() == user.Id.ToString()).Join(db.Vehicles, vehicleInfo => vehicleInfo.VehicleId, vehicle => vehicle.Id, (vehicleInfo, vehicle) => new { Vehicle = vehicle }).Select(v => new VehicleViewModel()
                 {
-                    Id = v.Id.ToString(),
-                    Registration = v.Registration,
+                    Id = v.Vehicle.Id.ToString(),
+                    Registration = v.Vehicle.Registration,
                     EngineType = new EngineTypeViewModel()
                     {
-                        Id = v.EngineType.Id.ToString()
+                        Id = v.Vehicle.EngineType.Id.ToString(),
+                        Name = v.Vehicle.EngineType.Name
                     },
                     VehicleType = new VehicleTypeViewModel()
                     {
-                        Id = v.VehicleType.Id.ToString()
+                        Id = v.Vehicle.VehicleType.Id.ToString()
                     }
-                }).AsQueryable();
-            }
-
-            return new List<VehicleViewModel>().AsQueryable();
+                }).ToList();                
+            
+                return vehicles.AsQueryable();
         }
 
         // GET: api/Vehicles/5

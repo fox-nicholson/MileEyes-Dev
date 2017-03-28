@@ -12,6 +12,6 @@ namespace MileEyes.PublicModels.Company
 
         public decimal HighRate { get; set; }
 
-		public int rank { get; set; }
+		public string Rights { get; set; }
     }
 }

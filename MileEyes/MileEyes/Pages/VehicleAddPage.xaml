@@ -18,63 +18,67 @@
         <ToolbarItem Text="Save" Command="{Binding SaveCommand}" />
     </ContentPage.ToolbarItems>
 
-  <StackLayout>
-  
-  <customControls:CustomDatePicker Date="{Binding RegDate}" MaximumDate="{Binding MaxDate}"
-                                         MinimumDate="{Binding MinDate}"
-                                         HorizontalOptions="Center" TextColor="Gray" />
+    <StackLayout>
 
-    <customControls:CustomTableView Intent="Form">
+        <customControls:CustomTableView Intent="Form">
         <customControls:CustomTableView.BackgroundColor>
             <OnPlatform x:TypeArguments="Color"
                         iOS="{StaticResource primaryiOSBackgroundColor}"
                         Android="{StaticResource primaryAndroidBackgroundColor}" />
         </customControls:CustomTableView.BackgroundColor>
       
-        <TableRoot>
-            <TableSection Title="Vehicle Details">
-                <customControls:CustomEntryCell Label="Registration" Text="{Binding Registration}"
-                                                Placeholder="Required">
-                    <customControls:CustomEntryCell.LabelColor>
-                        <OnPlatform x:TypeArguments="Color"
-                                    iOS="{StaticResource premiumTextColor}"
-                                    Android="Black" />
-                    </customControls:CustomEntryCell.LabelColor>
-                </customControls:CustomEntryCell>
-            </TableSection>
+            <TableRoot>                
+                <TableSection Title="Vehicle Details">
+                    <customControls:CustomEntryCell Label="Registration" Text="{Binding Registration}"
+                                                    Placeholder="Required">
+                        <customControls:CustomEntryCell.LabelColor>
+                            <OnPlatform x:TypeArguments="Color"
+                                        iOS="{StaticResource premiumTextColor}"
+                                        Android="Black" />
+                        </customControls:CustomEntryCell.LabelColor>
+                    </customControls:CustomEntryCell>
+                </TableSection>
 
-          <TableSection Title="Vehicle Type">
-            <customControls:CustomImageCell ImageSource="vehicle_type.png" Text="Vehicle Type"
-                                            Detail="{Binding VehicleType.Name}" Tapped="VehicleTypeCell_OnTapped">
-              <customControls:CustomImageCell.TextColor>
-                <OnPlatform x:TypeArguments="Color"
-                            iOS="#FFFFFF"
-                            Android="Black" />
-              </customControls:CustomImageCell.TextColor>
-              <customControls:CustomImageCell.DetailColor>
-                <OnPlatform x:TypeArguments="Color"
-                            iOS="#80FFFFFF"
-                            Android="#80000000" />
-              </customControls:CustomImageCell.DetailColor>
-            </customControls:CustomImageCell>
-          </TableSection>
-
-            <TableSection Title="Vehicle Details">
-                <customControls:CustomImageCell ImageSource="engine_type.png" Text="Engine Type"
-                                                Detail="{Binding EngineType.Name}" Tapped="EngineTypeCell_OnTapped">
-                    <customControls:CustomImageCell.TextColor>
+                <TableSection Title="Vehicle Type">
+                    <customControls:CustomImageCell ImageSource="vehicle_type.png" Text="Vehicle Type"
+                                                    Detail="{Binding VehicleType.Name}" Tapped="VehicleTypeCell_OnTapped">
+                      <customControls:CustomImageCell.TextColor>
                         <OnPlatform x:TypeArguments="Color"
                                     iOS="#FFFFFF"
                                     Android="Black" />
-                    </customControls:CustomImageCell.TextColor>
-                    <customControls:CustomImageCell.DetailColor>
+                      </customControls:CustomImageCell.TextColor>
+                      <customControls:CustomImageCell.DetailColor>
                         <OnPlatform x:TypeArguments="Color"
                                     iOS="#80FFFFFF"
                                     Android="#80000000" />
-                    </customControls:CustomImageCell.DetailColor>
-                </customControls:CustomImageCell>
-            </TableSection>
-        </TableRoot>
-    </customControls:CustomTableView>
+                      </customControls:CustomImageCell.DetailColor>
+                    </customControls:CustomImageCell>
+                </TableSection>
+
+                <TableSection Title="Vehicle Details">
+                    <customControls:CustomImageCell ImageSource="engine_type.png" Text="Engine Type"
+                                                    Detail="{Binding EngineType.Name}" Tapped="EngineTypeCell_OnTapped">
+                        <customControls:CustomImageCell.TextColor>
+                            <OnPlatform x:TypeArguments="Color"
+                                        iOS="#FFFFFF"
+                                        Android="Black" />
+                        </customControls:CustomImageCell.TextColor>
+                        <customControls:CustomImageCell.DetailColor>
+                            <OnPlatform x:TypeArguments="Color"
+                                        iOS="#80FFFFFF"
+                                        Android="#80000000" />
+                        </customControls:CustomImageCell.DetailColor>
+                    </customControls:CustomImageCell>
+                </TableSection>
+
+                <TableSection Title="Vehicle Registration Date">
+                    <ViewCell>
+                        <customControls:CustomDatePicker Date="{Binding RegDate}" MaximumDate="{Binding MaxDate}"
+                                            MinimumDate="{Binding MinDate}"
+                                            HorizontalOptions="Center" TextColor="Gray" />
+                    </ViewCell>
+                </TableSection>
+            </TableRoot>
+        </customControls:CustomTableView>
     </StackLayout>
 </ContentPage>

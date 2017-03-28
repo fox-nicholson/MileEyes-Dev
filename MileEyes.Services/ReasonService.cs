@@ -19,71 +19,71 @@ namespace MileEyes.Services
 
         public async Task<Reason> SaveReason(Reason r)
         {
-            using (var transaction = DatabaseService.Realm.BeginWrite())
-            {
-                var reason = DatabaseService.Realm.CreateObject<Reason>();
+                using (var transaction = DatabaseService.Realm.BeginWrite())
+                {
+                    var reason = DatabaseService.Realm.CreateObject<Reason>();
 
-                reason.Id = Guid.NewGuid().ToString();
-                reason.Text = r.Text;
+                    reason.Id = Guid.NewGuid().ToString();
+                    reason.Text = r.Text;
 
-                transaction.Commit();
-                transaction.Dispose();
+                    transaction.Commit();
+                    transaction.Dispose();
 
-                return reason;
-            }
+                    return reason;
+                }
         }
 
         public async Task<Reason> DeleteReason(string id)
         {
-            using (var transaction = DatabaseService.Realm.BeginWrite())
-            {
-                var reason = DatabaseService.Realm.Find<Reason>(id);
+                using (var transaction = DatabaseService.Realm.BeginWrite())
+                {
+                    var reason = DatabaseService.Realm.Find<Reason>(id);
 
-                DatabaseService.Realm.Remove(reason);
+                    DatabaseService.Realm.Remove(reason);
 
-                transaction.Commit();
-                transaction.Dispose();
+                    transaction.Commit();
+                    transaction.Dispose();
 
-                return reason;
-            }
+                    return reason;
+                }
         }
 
         public async Task SetDefault(string id)
         {
-            using (var transaction = DatabaseService.Realm.BeginWrite())
-            {
-                var reasons = DatabaseService.Realm.All<Reason>();
-
-                foreach (var reason in reasons)
+                using (var transaction = DatabaseService.Realm.BeginWrite())
                 {
-                    reason.Default = reason.Id == id;
-                }
+                    var reasons = DatabaseService.Realm.All<Reason>();
 
-                transaction.Commit();
-                transaction.Dispose();
-            }
+                    foreach (var reason in reasons)
+                    {
+                        reason.Default = reason.Id == id;
+                    }
+
+                    transaction.Commit();
+                    transaction.Dispose();
+                }
         }
 
         public async Task CreateStartReasons()
         {
-            using (var transaction = DatabaseService.Realm.BeginWrite())
-            {
-                var reason = DatabaseService.Realm.CreateObject<Reason>();
+                using (var transaction = DatabaseService.Realm.BeginWrite())
+                {
+                    var reason = DatabaseService.Realm.CreateObject<Reason>();
 
-                reason.Id = Guid.NewGuid().ToString();
-                reason.Text = "Personal";
-                reason.Default = true;
+                    reason.Id = Guid.NewGuid().ToString();
+                    reason.Text = "Personal";
+                    reason.Default = true;
 
-                transaction.Commit();
-                transaction.Dispose();
-            }
+                    transaction.Commit();
+                    transaction.Dispose();
+                }
 
                 var meeting = new Reason()
-            {
-                Text = "Meeting"
-            };
+                {
+                    Text = "Meeting"
+                };
 
-            await SaveReason(meeting);
+                await SaveReason(meeting);
         }
     }
 }

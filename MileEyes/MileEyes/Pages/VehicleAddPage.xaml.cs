@@ -13,11 +13,18 @@ namespace MileEyes.Pages
 
             (BindingContext as VehicleViewModel).VehicleSaved += VehicleAddPage_VehicleSaved;
             (BindingContext as VehicleViewModel).VehicleNotSaved += VehicleAddPage_VehicleNotSaved;
+            (BindingContext as VehicleViewModel).RegDateNotChanged += VehicleAddPage_RegDateNotChanged;
         }
 
         private void VehicleAddPage_VehicleNotSaved(object sender, string e)
         {
             Device.BeginInvokeOnMainThread(async () => { await DisplayAlert("Vehicle Not Saved", e, "Try Again"); });
+        }
+
+        private void VehicleAddPage_RegDateNotChanged(object sender, string e)
+        {
+            Device.BeginInvokeOnMainThread(async () => { await DisplayAlert("Vehicle Not Saved", e, "Ok"); });
+            (BindingContext as VehicleViewModel).RegDate = DateTime.UtcNow.AddHours(1);
         }
 
         private void VehicleAddPage_VehicleSaved(object sender, string e)

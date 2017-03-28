@@ -34,7 +34,7 @@ namespace MileEyes.Services
 
                     RestService.Client.Timeout = new TimeSpan(0, 0, 30);
 
-                    var response = await RestService.Client.GetAsync("api/Companies/");
+                    var response = await RestService.Client.GetAsync("api/DriverCompanies/");
 
                     if (response == null)
                     {
@@ -70,30 +70,30 @@ namespace MileEyes.Services
 
                         if (currentCompany == null)
                         {
-                            using (var transaction = DatabaseService.Realm.BeginWrite())
-                            {
-                                var newCompany = DatabaseService.Realm.CreateObject<Company>();
+                                using (var transaction = DatabaseService.Realm.BeginWrite())
+                                {
+                                    var newCompany = DatabaseService.Realm.CreateObject<Company>();
 
-                                newCompany.CloudId = company.CloudId;
-                                newCompany.Id = Guid.NewGuid().ToString();
+                                    newCompany.CloudId = company.CloudId;
+                                    newCompany.Id = Guid.NewGuid().ToString();
 
-                                newCompany.Name = company.Name;
+                                    newCompany.Name = company.Name;
 
-                                transaction.Commit();
-                                transaction.Dispose();
-                            }
+                                    transaction.Commit();
+                                    transaction.Dispose();
+                                }
                         }
                         else
                         {
-                            using (var transaction = DatabaseService.Realm.BeginWrite())
-                            {
-                                var existingCompany = DatabaseService.Realm.Find<Company>(currentCompany.Id);
+                                using (var transaction = DatabaseService.Realm.BeginWrite())
+                                {
+                                    var existingCompany = DatabaseService.Realm.Find<Company>(currentCompany.Id);
 
-                                existingCompany.Name = company.Name;
+                                    existingCompany.Name = company.Name;
 
-                                transaction.Commit();
-                                transaction.Dispose();
-                            }
+                                    transaction.Commit();
+                                    transaction.Dispose();
+                                }
                         }
                     }
 
@@ -119,25 +119,25 @@ namespace MileEyes.Services
 
         public async Task SetDefault(string id)
         {
-            using (var transaction = DatabaseService.Realm.BeginWrite())
-            {
-                var companies = DatabaseService.Realm.All<Company>();
-
-                if (!(companies.Where(d => d.Default).Any()) && companies.Any())
+                using (var transaction = DatabaseService.Realm.BeginWrite())
                 {
-                    companies.FirstOrDefault().Default = true;
+                    var companies = DatabaseService.Realm.All<Company>();
+
+                    if (!(companies.Where(d => d.Default).Any()) && companies.Any())
+                    {
+                        companies.FirstOrDefault().Default = true;
+                        transaction.Commit();
+                        transaction.Dispose();
+                        return;
+                    }
+
+                    foreach (var company in companies)
+                    {
+                        company.Default = company.Id == id;
+                    }
+
                     transaction.Commit();
                     transaction.Dispose();
-                    return;
-                }
-
-                foreach (var company in companies)
-                {
-                    company.Default = company.Id == id;
-                }
-
-                transaction.Commit();
-                transaction.Dispose();
             }
         }
     }

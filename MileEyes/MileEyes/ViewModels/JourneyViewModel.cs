@@ -7,6 +7,7 @@ using MileEyes.Services.Helpers;
 using MileEyes.Services.Models;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
+using System.Globalization;
 
 namespace MileEyes.ViewModels
 {
@@ -46,8 +47,8 @@ namespace MileEyes.ViewModels
         {
             Distance = Units.MetersToMiles(j.Distance);
             if (j.Cost != 0.00 && j.Accepted == true)
-            {
-                Status = "£" + Convert.ToString(j.Cost);
+            {                
+                Status = j.Cost.ToString("C", CultureInfo.CurrentCulture);
             }
             else if (j.Rejected == true)
             {

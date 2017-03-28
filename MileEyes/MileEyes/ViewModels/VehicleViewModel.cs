@@ -142,7 +142,7 @@ namespace MileEyes.ViewModels
 
         public async void Load(string id)
         {
-            _vehicle = await Services.Host.VehicleService.GetVehicle(id);
+            _vehicle = Services.Host.VehicleService.GetVehicle(id);
 
             Refresh();
         }
@@ -161,6 +161,7 @@ namespace MileEyes.ViewModels
 
         public event EventHandler<string> VehicleNotSaved = delegate { };
         public event EventHandler<string> VehicleSaved = delegate { };
+        public event EventHandler<string> RegDateNotChanged = delegate { };
 
         public ICommand SaveCommand { get; set; }
 
@@ -187,6 +188,13 @@ namespace MileEyes.ViewModels
             if (string.IsNullOrEmpty(EngineType.Id))
             {
                 VehicleNotSaved?.Invoke(this, "Engine Type is required.");
+                Busy = false;
+                return;
+            }
+
+            if (RegDate.Date == DateTime.UtcNow.Date && !(RegDate.Hour == DateTime.UtcNow.Hour + 1))
+            {
+                RegDateNotChanged?.Invoke(this, "Registration Date not changed, please confirm date.");
                 Busy = false;
                 return;
             }

@@ -29,11 +29,108 @@ namespace MileEyes.API.Controllers
 
             var result = new List<CompanyViewModel>();
             try
-			{
+            {
                 var drivers = user.Profiles.OfType<Driver>();
                 var managers = user.Profiles.OfType<Manager>();
                 var owners = user.Profiles.OfType<Owner>();
 
+                var companies = new List<Company>();
+
+                var companiesOwner = new List<Company>();
+                var companiesManager = new List<Company>();
+                var companiesDriver = new List<Company>();
+
+                foreach (var d in drivers)
+                {
+                    foreach (var c in d.Companies)
+                    {
+                        if (!companies.Contains(c))
+                        {
+                            companies.Add(c);
+                        }
+                        companiesDriver.Add(c);
+                    }
+                }
+                foreach (var m in managers)
+                {
+                    foreach (var c in m.Companies)
+                    {
+                        if (!companies.Contains(c))
+                        {
+                            companies.Add(c);
+                        }
+                        companiesManager.Add(c);
+                    }
+                }
+                foreach (var o in owners)
+                {
+                    foreach (var c in o.Companies)
+                    {
+                        if (!companies.Contains(c))
+                        {
+                            companies.Add(c);
+                        }
+                        companiesOwner.Add(c);
+                    }
+                }
+
+                foreach (var c in companies)
+                {
+                    var rights = "";
+                    if (companiesOwner.Contains(c))
+                    {
+                        rights = "3";
+                    }
+                    if (companiesManager.Contains(c))
+                    {
+                        if (rights == "")
+                        {
+                            rights = "2";
+                        }
+                        else
+                        {
+                            rights += ",2";
+                        }
+                    }
+                    if (companiesDriver.Contains(c))
+                    {
+                        if (rights == "")
+                        {
+                            rights = "1";
+                        }
+                        else
+                        {
+                            rights += ",1";
+                        }
+                    }
+                    result.Add(new CompanyViewModel()
+                    {
+                        Id = c.Id.ToString(),
+                        Name = c.Name,
+                        LowRate = c.LowRate,
+                        HighRate = c.HighRate,
+                        Rights = rights
+                    });
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+            return result.AsQueryable();
+        }
+
+        // GET: api/DriverCompanies
+        [Route("api/DriverCompanies")]
+        public IQueryable<CompanyViewModel> GetDriverCompanies()
+        {
+            var user = db.Users.Find(User.Identity.GetUserId());
+
+            var result = new List<CompanyViewModel>();
+            try
+            {
+                var drivers = user.Profiles.OfType<Driver>();
 
                 var companies = new List<Company>();
 
@@ -46,55 +143,15 @@ namespace MileEyes.API.Controllers
                             continue;
                         }
                         companies.Add(c);
-						result.Add(new CompanyViewModel()
-						{
-							Id = c.Id.ToString(),
-							Name = c.Name,
-							LowRate = c.LowRate,
-							HighRate = c.HighRate,
-							rank = 3
-						});
-                    }
-                }
-                foreach (var m in managers)
-                {
-                    foreach (var c in m.Companies)
-                    {
-                        if (companies.Contains(c))
+                        result.Add(new CompanyViewModel()
                         {
-                            continue;
-                        }
-                        companies.Add(c);
-						result.Add(new CompanyViewModel()
-						{
-							Id = c.Id.ToString(),
-							Name = c.Name,
-							LowRate = c.LowRate,
-							HighRate = c.HighRate,
-							rank = 2
-						});
+                            Id = c.Id.ToString(),
+                            Name = c.Name,
+                            LowRate = c.LowRate,
+                            HighRate = c.HighRate
+                        });
                     }
                 }
-                foreach (var o in owners)
-                {
-                    foreach (var c in o.Companies)
-                    {
-                        if (companies.Contains(c))
-                        {
-                            continue;
-                        }
-                        companies.Add(c);
-						result.Add(new CompanyViewModel()
-						{
-							Id = c.Id.ToString(),
-							Name = c.Name,
-							LowRate = c.LowRate,
-							HighRate = c.HighRate,
-							rank = 1
-						});
-                    }
-                }
-                    
             }
             catch (Exception e)
             {
@@ -131,6 +188,8 @@ namespace MileEyes.API.Controllers
                 User = user
             };
 
+
+
             // Setup the new company
             var newCompany = new Company()
             {
@@ -142,14 +201,8 @@ namespace MileEyes.API.Controllers
             };
 
             user.Profiles.Add(owner);
-            user.Profiles.Add(driver);
-            user.Profiles.Add(manager);
-            user.Profiles.Add(accountant);
 
             newCompany.Profiles.Add(owner);
-            newCompany.Profiles.Add(driver);
-            newCompany.Profiles.Add(manager);
-            newCompany.Profiles.Add(accountant);
 
             db.Companies.Add(newCompany);
 
@@ -378,70 +431,64 @@ namespace MileEyes.API.Controllers
                 // Check if the current users has rights, if not respond with bad request
                 if (owner != null || manager != null || accountant != null)
                 {
-                    var drivers = company.Profiles.OfType<Driver>();
-                    foreach (var d in drivers)
+                    var companyDrivers = company.Profiles.OfType<Driver>();
+                    foreach (var d in companyDrivers)
                     {
-						DriverInfo driverInfo = db.DriverInfo.FirstOrDefault(info => info.DriverId == d.Id);
-                        Company personal = db.Companies.FirstOrDefault(c => c.Name == "Personal" && c.Owner.User.Email == d.User.Email);
-                        if (personal != null)
+						var driverInfo = db.DriverInfo.FirstOrDefault(info => info.DriverId == d.Id);
+                        IList<VehicleViewModel> vehicles = db.VehicleInfo.Where(v => v.UserId.ToString() == d.User.Id.ToString()).Join(db.Vehicles, vehicleInfo => vehicleInfo.VehicleId, vehicle => vehicle.Id, (vehicleInfo, vehicle) => new { Vehicle = vehicle }).Select(v => new VehicleViewModel()
                         {
-                            result.Add(new DriverViewModel()
+                            Id = v.Vehicle.Id.ToString(),
+                            Registration = v.Vehicle.Registration,
+                            EngineType = new EngineTypeViewModel()
                             {
-                                Id = d.Id.ToString(),
-								AutoAccept = driverInfo.AutoAccept,
-                                FirstName = d.User.FirstName,
-                                LastName = d.User.LastName,
-                                Email = d.User.Email,
-                                Vehicles = personal.Profiles.OfType<Driver>().FirstOrDefault().Vehicles.Select(v => new VehicleViewModel()
-                                {
-                                    Id = v.Id.ToString(),
-                                    Registration = v.Registration,
-                                    EngineType = new EngineTypeViewModel()
-                                    {
-                                        Id = v.EngineType.Id.ToString(),
-                                        Name = v.EngineType.Name
-                                    },
-									VehicleType = new VehicleTypeViewModel()
-				                    {
-				                        Id = v.VehicleType.Id.ToString()
-				                    }
-                                }).ToList()
-                            });
-                        }
+                                Id = v.Vehicle.EngineType.Id.ToString(),
+                                Name = v.Vehicle.EngineType.Name
+                            },
+                            VehicleType = new VehicleTypeViewModel()
+                            {
+                                Id = v.Vehicle.VehicleType.Id.ToString()
+                            }
+                        }).ToList();
+                        result.Add(new DriverViewModel()
+                        {
+                            Id = d.Id.ToString(),
+                            AutoAccept = driverInfo.AutoAccept,
+                            FirstName = d.User.FirstName,
+                            LastName = d.User.LastName,
+                            Email = d.User.Email,
+                            Vehicles = vehicles
+                        });
                     }
                 }
 				else if (driver != null)
                 {
-					DriverInfo driverInfo = db.DriverInfo.FirstOrDefault(info => info.DriverId == driver.Id);
-                    Company personal = db.Companies.FirstOrDefault(c => c.Name == "Personal" && c.Owner.User.Email == driver.User.Email);
-                    if (personal != null)
+                    var driverInfo = db.DriverInfo.FirstOrDefault(info => info.DriverId == driver.Id);
+                    IList<VehicleViewModel> vehicles = db.VehicleInfo.Where(v => v.UserId.ToString() == driver.User.Id.ToString()).Join(db.Vehicles, vehicleInfo => vehicleInfo.VehicleId, vehicle => vehicle.Id, (vehicleInfo, vehicle) => new { Vehicle = vehicle }).Select(v => new VehicleViewModel()
                     {
-                        result.Add(new DriverViewModel()
+                        Id = v.Vehicle.Id.ToString(),
+                        Registration = v.Vehicle.Registration,
+                        EngineType = new EngineTypeViewModel()
                         {
-                            Id = driver.Id.ToString(),
-							AutoAccept = driverInfo.AutoAccept,
-                            FirstName = driver.User.FirstName,
-                            LastName = driver.User.LastName,
-                            Email = driver.User.Email,
-                            Vehicles = personal.Profiles.OfType<Driver>().FirstOrDefault().Vehicles.Select(v => new VehicleViewModel()
-                            {
-                                Id = v.Id.ToString(),
-                                Registration = v.Registration,
-                                EngineType = new EngineTypeViewModel()
-                                {
-                                    Id = v.EngineType.Id.ToString(),
-                                    Name = v.EngineType.Name
-                                },
-								VehicleType = new VehicleTypeViewModel()
-			                    {
-			                        Id = v.VehicleType.Id.ToString()
-			                    }
-                            }).ToList()
-                        });
-                    }
+                            Id = v.Vehicle.EngineType.Id.ToString(),
+                            Name = v.Vehicle.EngineType.Name
+                        },
+                        VehicleType = new VehicleTypeViewModel()
+                        {
+                            Id = v.Vehicle.VehicleType.Id.ToString()
+                        }
+                    }).ToList();
+                    result.Add(new DriverViewModel()
+                    {
+                        Id = driver.Id.ToString(),
+						AutoAccept = driverInfo.AutoAccept,
+                        FirstName = driver.User.FirstName,
+                        LastName = driver.User.LastName,
+                        Email = driver.User.Email,
+                        Vehicles = vehicles
+                    });
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {                
                 return null;
             }
@@ -575,6 +622,7 @@ namespace MileEyes.API.Controllers
             {
                 // Add the driver to the company
                 company.Profiles.Add(newDriver);
+                user.Profiles.Add(newDriver);
             }
             catch (NullReferenceException e)
             {
@@ -1027,6 +1075,43 @@ namespace MileEyes.API.Controllers
 			}
 			return result.AsQueryable();
 		}
+
+        [Route("api/Companies/{companyId}/update")]
+        public async Task<IHttpActionResult> PostUpdateCompanyInfo(Guid companyId, CompanyViewModel model)
+        {
+            try
+            {
+                if (!ModelState.IsValid) return BadRequest(ModelState);
+
+                // Get the current User
+                var userId = User.Identity.GetUserId();
+                var user = db.Users.FirstOrDefault(u => u.Id == userId);
+
+                // Checks if the posted company exists in the database
+                var company = db.Companies.FirstOrDefault(c => c.Id == companyId);
+                //var company = db.Companies.FirstOrDefault(c => c.Id == model.Id);
+
+                if (company == null)
+                {
+                    return BadRequest();
+                }
+
+                company.Name = model.Name;
+                company.LowRate = model.LowRate;
+                company.HighRate = model.HighRate;
+
+                await db.SaveChangesAsync();
+
+                return Ok();
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Caught exception in Companies Controller, updateCompanyInfo: " + e);
+                return null;
+            }
+
+        }
 
         protected override void Dispose(bool disposing)
         {

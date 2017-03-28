@@ -274,7 +274,12 @@ namespace MileEyes.ViewModels
 
             try
             {
-                await Services.Host.JourneyService.SaveJourney(journey);
+                var response = await Services.Host.JourneyService.SaveJourney(journey);
+                if (response == null)
+                {
+                    SaveFailed?.Invoke(this, "An error has occured, please try again.");
+                    return;
+                }
             } catch (NullReferenceException)
             {
                 SaveFailed?.Invoke(this, "A network connection is required to save journeys.");

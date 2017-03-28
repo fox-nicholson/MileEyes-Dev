@@ -53,7 +53,7 @@ namespace MileEyes.ViewModels
             Journeys.Clear();
 
             // Get collection of Journey objects from Journey Service
-            var journeys = await Services.Host.JourneyService.GetJourneys();
+            var journeys = await Host.JourneyService.GetJourneys();
 
             // Dump to array to prevent multiple enumerations
             var enumerable = journeys as Journey[] ?? journeys.ToArray();

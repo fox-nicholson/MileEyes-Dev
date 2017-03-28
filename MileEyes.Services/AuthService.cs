@@ -19,13 +19,13 @@ namespace MileEyes.Services
         {
             Authenticated = false;
 
-            using (var transaction = DatabaseService.Realm.BeginWrite())
-            {
-                DatabaseService.Realm.RemoveAll();
+                using (var transaction = DatabaseService.Realm.BeginWrite())
+                {
+                    DatabaseService.Realm.RemoveAll();
 
-                transaction.Commit();
-                transaction.Dispose();
-            }
+                    transaction.Commit();
+                    transaction.Dispose();
+                }
 
             RestService.Client.DefaultRequestHeaders.Authorization = null;
         }
@@ -73,26 +73,26 @@ namespace MileEyes.Services
                     JsonConvert.DeserializeObject<AuthResponse>(await response.Content.ReadAsStringAsync());
 
                 // Write the access token to the database for use in future
-                using (var transaction = DatabaseService.Realm.BeginWrite())
-                {
-                    // Remove any tokens that already exist
-                    DatabaseService.Realm.RemoveAll<AuthToken>();
+                    using (var transaction = DatabaseService.Realm.BeginWrite())
+                    {
+                        // Remove any tokens that already exist
+                        DatabaseService.Realm.RemoveAll<AuthToken>();
 
-                    // Create new Realm database object
-                    var authToken = DatabaseService.Realm.CreateObject<AuthToken>();
+                        // Create new Realm database object
+                        var authToken = DatabaseService.Realm.CreateObject<AuthToken>();
 
-                    // Setup the access tokens properties
-                    authToken.access_token = tokenResult.access_token;
-                    authToken.expires = tokenResult.expires;
-                    authToken.expires_in = tokenResult.expires_in;
-                    authToken.token_type = tokenResult.token_type;
-                    authToken.issued = tokenResult.issued;
-                    authToken.userName = tokenResult.userName;
+                        // Setup the access tokens properties
+                        authToken.access_token = tokenResult.access_token;
+                        authToken.expires = tokenResult.expires;
+                        authToken.expires_in = tokenResult.expires_in;
+                        authToken.token_type = tokenResult.token_type;
+                        authToken.issued = tokenResult.issued;
+                        authToken.userName = tokenResult.userName;
 
-                    // Commit the transaction
-                    transaction.Commit();
-                    transaction.Dispose();
-                }
+                        // Commit the transaction
+                        transaction.Commit();
+                        transaction.Dispose();
+                    }
 
                 // Set the request headers bearer token to the access token.
                 RestService.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
