@@ -212,9 +212,9 @@ namespace MileEyes.API.Controllers
                 if (j.Accepted)
                 {
                     bool calc = true;
-                    foreach (var companyJourney in company.Journeys.OrderBy(cj => cj.Modified))
+                    foreach (var driverJourneys in driver.Journeys.OrderBy(dj => dj.Modified))
                     {
-                        if (companyJourney.Accepted == false && companyJourney.Rejected == false) calc = false; break;
+                        if (driverJourneys.Accepted == false && driverJourneys.Rejected == false) calc = false; break;
                     }
                     if (calc)
                     {

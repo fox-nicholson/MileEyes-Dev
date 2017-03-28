@@ -89,7 +89,9 @@ namespace MileEyes.API.Extensions
 
             var acceptedJourneys = journey.Driver.Journeys.Where(a => a.Accepted);
 
-            var currentMiles = currentMileage + acceptedJourneys.Sum(j => j.Distance);
+            var journeysToProcess = acceptedJourneys.Where(p => DateTimeOffset.Compare(p.Modified, journey.Modified) < 0);
+
+            var currentMiles = currentMileage + journeysToProcess.Sum(j => j.Distance);
 
             
 
