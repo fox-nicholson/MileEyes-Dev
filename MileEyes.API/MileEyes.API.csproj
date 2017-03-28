@@ -336,6 +336,10 @@
     <Compile Include="Migrations\201703231023273_removeCompanyObjects.Designer.cs">
       <DependentUpon>201703231023273_removeCompanyObjects.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703281401202_passwordReset.cs" />
+    <Compile Include="Migrations\201703281401202_passwordReset.Designer.cs">
+      <DependentUpon>201703281401202_passwordReset.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -351,6 +355,7 @@
     <Compile Include="Models\DatabaseModels\Driver.cs" />
     <Compile Include="Models\DatabaseModels\DriverInfo.cs" />
     <Compile Include="Models\DatabaseModels\DriverInvite.cs" />
+    <Compile Include="Models\DatabaseModels\PasswordReset.cs" />
     <Compile Include="Models\DatabaseModels\PendingUsers.cs" />
     <Compile Include="Models\DatabaseModels\VehicleInfo.cs" />
     <Compile Include="Models\DatabaseModels\VehicleType.cs" />
@@ -586,6 +591,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703231023273_removeCompanyObjects.resx">
       <DependentUpon>201703231023273_removeCompanyObjects.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703281401202_passwordReset.resx">
+      <DependentUpon>201703281401202_passwordReset.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

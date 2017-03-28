@@ -8,5 +8,7 @@ namespace MileEyes.API.Models.DatabaseModels
     public class DriverInvite : Invite
     {
         public virtual Company Company { get; set; }
+
+        public double CurrentMileage { get; set; }
     }
 }

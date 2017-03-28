@@ -74,6 +74,7 @@ namespace MileEyes.API.Models
 
         public DbSet<Invite> Invites { get; set; }
         public DbSet<DriverInvite> DriverInvites { get; set; }
+        public DbSet<PasswordReset> PasswordReset { get; set; }
 
         public DbSet<DriverInfo> DriverInfo { get; set; }
         public DbSet<VehicleInfo> VehicleInfo { get; set; }
